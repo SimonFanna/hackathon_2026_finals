@@ -1,16 +1,15 @@
 "use client";
 
 import { motion } from "motion/react";
-import type { DetectedIntent, JourneyState, JourneyStep, Scoreboard, Signal } from "@/engine";
-import { BUY_HOUSE_ASK_THRESHOLD, BUY_HOUSE_THRESHOLD } from "@/engine";
+import type { DetectedIntent, IntentModel, JourneyState, JourneyStep, Scoreboard, Signal } from "@/engine";
 import { eur, num } from "./format";
 
 /** Jury-only view (key P): what the engine sees and decides. Never shown to the customer. */
 export function PresenterPanel({
-  signals, weights, intent, step, state, board, weak, onToggleWeak,
+  signals, model, intent, step, state, board, weak, onToggleWeak,
 }: {
   signals: Signal[];
-  weights: Record<string, number>;
+  model: IntentModel;
   intent: DetectedIntent | undefined;
   step: JourneyStep | null;
   state: JourneyState | null;
@@ -40,7 +39,7 @@ export function PresenterPanel({
           {signals.map((s) => (
             <li key={s.id} className="flex justify-between gap-3">
               <span>{s.label}</span>
-              <span className="tabular shrink-0 font-semibold text-white">{weights[s.type]?.toFixed(2)}</span>
+              <span className="tabular shrink-0 font-semibold text-white">{model.weights[s.type]?.toFixed(2)}</span>
             </li>
           ))}
         </ul>
@@ -54,7 +53,7 @@ export function PresenterPanel({
               {intent.confidence.toFixed(2)} → {levelLabel[intent.level]}
             </p>
             <p className="tabular text-white/60">
-              no action &lt; {BUY_HOUSE_ASK_THRESHOLD.toFixed(2)} · ask · suggest ≥ {BUY_HOUSE_THRESHOLD.toFixed(2)}
+              no action &lt; {model.askThreshold.toFixed(2)} · ask · suggest ≥ {model.suggestThreshold.toFixed(2)}
             </p>
             <p className="mt-1">{levelText[intent.level]}</p>
           </>
@@ -66,7 +65,7 @@ export function PresenterPanel({
           onClick={onToggleWeak}
           className="press mt-3 rounded-full px-4 py-2 text-[14px] font-semibold text-white ring-1 ring-white/30 hover:bg-white/10"
         >
-          {weak ? "Back to Sofie's signals" : "Try weak signals (Kate stays silent)"}
+          {weak ? "Back to the real signals" : "Try weak signals (Kate stays silent)"}
         </button>
       </Block>
 
@@ -92,7 +91,7 @@ export function PresenterPanel({
       </Block>
 
       <Block title="Keys">
-        <p>→ next · ← back · S skip · R restart · W weak signals · P hide this panel</p>
+        <p>→ next · ← back · S skip · F fill the plan · 1–4 pick an option · R restart · C players · W weak signals · P hide this panel</p>
       </Block>
     </motion.aside>
   );

@@ -1,9 +1,9 @@
 "use client";
 
-import { House, Lightning, ShieldCheck, SlidersHorizontal } from "@phosphor-icons/react";
+import { House, Lightning, ShieldCheck, SlidersHorizontal, Storefront } from "@phosphor-icons/react";
 import type { Journey, JourneyState, JourneyStep, Scoreboard } from "@/engine";
 import { AnimatedNumber } from "./AnimatedNumber";
-import { chapterLabel, chapterOrder, outcomeLine, providerName, purposeFor } from "./copy";
+import { outcomeLine, providerName, purposeFor } from "./copy";
 import { eur, naturalList } from "./format";
 import { KateLine } from "./Kate";
 import { KbcLogo } from "./KbcLogo";
@@ -50,7 +50,7 @@ export function StepScreen({
           </div>
           <Progress journey={state.journey} state={state} index={index} />
           <p className="mt-2 text-[13px] font-semibold leading-[18px] text-night-300">
-            {chapterLabel[step.chapter]} · <span className="tabular">{index + 1} of {state.journey.steps.length}</span>
+            {state.journey.chapters.find((c) => c.id === step.chapter)?.label} · <span className="tabular">{index + 1} of {state.journey.steps.length}</span>
           </p>
         </>
       }
@@ -97,7 +97,7 @@ function ProviderRow({ step }: { step: JourneyStep }) {
       </div>
     );
   }
-  const Icon = step.ecosystem.startsWith("Energy") ? Lightning : House;
+  const Icon = step.ecosystem.startsWith("Energy") ? Lightning : step.ecosystem === "Housing" ? House : Storefront;
   return (
     <div className="flex items-center gap-2.5">
       <span className="grid size-[30px] place-items-center rounded-[4px] bg-element text-accent-600">
@@ -144,11 +144,11 @@ function ConsentBlock({ step, chosen, mode, onChoose }: { step: JourneyStep; cho
 function Progress({ journey, state, index }: { journey: Journey; state: JourneyState; index: number }) {
   return (
     <div className="mt-2 flex gap-2" role="progressbar" aria-valuemin={1} aria-valuemax={journey.steps.length} aria-valuenow={index + 1} aria-label="Journey progress">
-      {chapterOrder.map((c) => {
-        const steps = journey.steps.filter((s) => s.chapter === c);
+      {journey.chapters.map((c) => {
+        const steps = journey.steps.filter((s) => s.chapter === c.id);
         if (steps.length === 0) return null;
         return (
-          <div key={c} className="flex gap-[3px]" style={{ flex: steps.length }}>
+          <div key={c.id} className="flex gap-[3px]" style={{ flex: steps.length }}>
             {steps.map((s) => {
               const i = journey.steps.indexOf(s);
               const d = state.decisions[s.id];

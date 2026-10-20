@@ -1,24 +1,25 @@
-import { BUY_HOUSE_ASK_THRESHOLD, BUY_HOUSE_THRESHOLD, buyHouseSignalWeights, buyHouseSteps } from "./data";
+import { houseIntentModel, personas } from "./personas";
 import type {
-  Customer, DetectedIntent, Journey, JourneyState, Scoreboard, Signal, StepDecision,
+  Customer, DetectedIntent, IntentModel, Journey, JourneyState, Scoreboard, Signal, StepDecision,
 } from "./types";
 
-export function detectIntents(customer: Customer, signals: Signal[]): DetectedIntent[] {
+/** Placeholder scoring until the DB + ML team's model lands; the DetectedIntent contract stays. */
+export function detectIntents(customer: Customer, signals: Signal[], model: IntentModel = houseIntentModel): DetectedIntent[] {
   const own = signals.filter((s) => s.customerId === customer.id);
   const types = new Set(own.map((s) => s.type));
   if (types.size === 0) return [];
 
   // Independent evidence: each distinct signal type lowers the chance we are wrong.
   let miss = 1;
-  for (const t of types) miss *= 1 - buyHouseSignalWeights[t];
+  for (const t of types) miss *= 1 - (model.weights[t] ?? 0);
   const confidence = Math.round((1 - miss) * 100) / 100;
 
   return [{
-    intentId: "buy_house",
-    label: "Buying a home",
+    intentId: model.intentId,
+    label: model.label,
     confidence,
-    level: confidence < BUY_HOUSE_ASK_THRESHOLD ? "none" : confidence < BUY_HOUSE_THRESHOLD ? "ask" : "suggest",
-    needsConfirmation: confidence < BUY_HOUSE_THRESHOLD,
+    level: confidence < model.askThreshold ? "none" : confidence < model.suggestThreshold ? "ask" : "suggest",
+    needsConfirmation: confidence < model.suggestThreshold,
     reasons: own.map((s) => `${s.label} (${s.source})`),
   }];
 }
@@ -26,12 +27,9 @@ export function detectIntents(customer: Customer, signals: Signal[]): DetectedIn
 // Customer is part of the contract for future personalisation of steps.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function buildJourney(intentId: string, _customer: Customer): Journey {
-  if (intentId !== "buy_house") throw new Error(`Unknown intent: ${intentId}`);
-  return {
-    intentId,
-    title: "From house hunt to an energy-efficient home",
-    steps: [...buyHouseSteps].sort((a, b) => a.order - b.order),
-  };
+  const journey = personas.find((p) => p.journey.intentId === intentId)?.journey;
+  if (!journey) throw new Error(`Unknown intent: ${intentId}`);
+  return { ...journey, steps: [...journey.steps].sort((a, b) => a.order - b.order) };
 }
 
 export function initState(journey: Journey): JourneyState {

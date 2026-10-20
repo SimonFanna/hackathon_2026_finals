@@ -81,6 +81,7 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 | Intent detection & confidence scoring (signals → intent, levels none/ask/suggest) | DB + ML team | todo — engine has a placeholder (`detectIntents`, thresholds 0.4/0.75) to replace; keep the `DetectedIntent` contract | `backend/backend.md` |
 | Journey UI V0 | peer agent (kepa) | replaced by UX redesign V1 | `journey-house-v0.md` |
 | UX redesign V1 (KBC brand, Kate voice, phone stage, triple-win finale) | peer agent (kepa) | done (V1) | `ux-redesign.md` |
+| Adaptive Outcome Engine: players screen (home + business), live plan, 4 unexpected events per goal, scored re-planning, engine HUD | Victor | done (V1, branch `victor`) | `outcome-engine.md` |
 | Supabase catalogue + data | Simon | in progress | — (Simon to add `supabase.md`) |
 | Deck + demo (GIF/video) | — | todo | — |
 | Security (Aikido) + public repo | — | todo | — |
@@ -99,3 +100,4 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 - **10:05** — Supabase access OK (empty DB). V0 UI judged too cluttered → UX redesign started (KBC brand + market benchmark). `CLAUDE.md` team rules added; docs switched to English.
 - **10:20** — UX redesign V1 shipped in `web/`: a KBC Design Language look (tokens read live from kbc.be), Kate's voice, one step at a time with a consent sentence per partner, a hidden presenter panel (key P) and a triple-win finale. Screenshots in `docs/screenshots/`. MyHome finding added (Differentiation, Open questions).
 - **10:32** — MyHome verified (KBC press release, 29 Jan 2026, opt-in "extra convenience"). Immoscoop × KBC integration and haalbaarheidsattest documented. Our Immoscoop-signal assumption is labelled and gated on the same opt-in.
+- **11:10** — Adaptive Outcome Engine (branch `victor`): a "Choose your player" start screen (Thomas, first home · Lina, first business), the plan goes live, and 4 unexpected events per goal (cost overrun, partner 3 months late, rate rise / late payer, job loss / injury declared to Kate). The engine recalculates constraints, scores every option and recommends one; the customer decides. One engine with no goal-specific code: Lina is a data file. 30/30 tests.
