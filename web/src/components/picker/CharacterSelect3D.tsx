@@ -145,7 +145,7 @@ export function CharacterSelect3D({
           </h1>
         </div>
 
-        <div className="mt-auto flex flex-col items-center">
+        <div className="-mb-1 mt-auto flex flex-col items-center">
           <section className="pointer-events-auto w-full max-w-[860px]">
             <PlayerCard persona={persona} onPlay={() => void play(persona.id)} disabled={playing} reduce={reduce} />
           </section>

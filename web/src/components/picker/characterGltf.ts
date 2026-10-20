@@ -31,6 +31,21 @@ const SILHOUETTE = "#24426b";
 
 const CLIPS: Record<Pose, string> = { idle: "Idle", wave: "Wave", cheer: "Wave" };
 
+// A thin cool rim (fresnel) that separates the people from brick walls and the navy background.
+const RIM = new THREE.Color("#9cc8ff");
+function addRim(mat: THREE.MeshStandardMaterial) {
+  mat.onBeforeCompile = (shader) => {
+    shader.uniforms.uRim = { value: RIM };
+    shader.fragmentShader = shader.fragmentShader
+      .replace("#include <common>", "#include <common>\nuniform vec3 uRim;")
+      .replace(
+        "#include <dithering_fragment>",
+        "float rimF = pow(1.0 - saturate(dot(normalize(normal), normalize(vViewPosition))), 3.0);\ngl_FragColor.rgb += uRim * rimF * 0.32;\n#include <dithering_fragment>",
+      );
+  };
+  mat.customProgramCacheKey = () => "picker-rim";
+}
+
 let cache: Promise<Record<keyof typeof FILES, GLTF>> | null = null;
 
 function loadAll(): Promise<Record<keyof typeof FILES, GLTF>> {
@@ -65,6 +80,7 @@ function makeCharacter(id: CharacterId, gltf: GLTF): Character {
       if (hex) mat.color.set(hex);
       mat.roughness = Math.min(1, Math.max(0.55, mat.roughness ?? 0.8));
       mat.metalness = 0;
+      addRim(mat);
       materials.push(mat);
       base.set(mat, mat.color.clone());
       return mat;

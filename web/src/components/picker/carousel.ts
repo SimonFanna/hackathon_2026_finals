@@ -7,8 +7,8 @@ export const ORDER: DioramaId[] = ["retire", "house", "business", "baby", "car"]
 export const PLAYABLE = ["house", "business"] as const;
 export type PlayableId = (typeof PLAYABLE)[number];
 
-const SPACING = 3.25; // x distance of the first neighbour
-const DEPTH = 2.4; // how far each step recedes
+const SPACING = 3.75; // x distance of the first neighbour (no overlap with the centre plinth)
+const DEPTH = 2.2; // how far each step recedes
 const TURN = 0.42; // radians a side item turns towards the centre
 
 export const indexOfId = (id: DioramaId) => ORDER.indexOf(id);

@@ -33,8 +33,8 @@ export interface PickerCanvasProps {
 
 const NIGHT = "#021e43";
 const PERSON: Record<DioramaId, CharacterId> = { house: "thomas", business: "lina", retire: "retiree", baby: "parent", car: "driver" };
-const CAM_POS = new THREE.Vector3(0, 3.0, 13.6);
-const CAM_LOOK = new THREE.Vector3(0, 0.55, -1.4);
+const CAM_POS = new THREE.Vector3(0, 2.9, 11.9);
+const CAM_LOOK = new THREE.Vector3(0, 0.5, -1.4);
 const ease = {
   inCubic: (x: number) => x * x * x,
   inOutCubic: (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
@@ -350,7 +350,9 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         const s = layout(i, focus);
         h.position.set(s.x, 0, s.z);
         h.scale.setScalar(s.scale);
-        h.visible = Math.abs(i - focus) < 2.35; // the far end of the list stays out of frame
+        // One neighbour per side at full size; the far ones fade out instead of crowding the frame.
+        const far = Math.abs(i - focus);
+        h.visible = far < 1.75;
         const spin = reduceMotion() ? 0 : Math.sin(t * 0.32 + i * 1.7) * 0.32 * s.light;
         const settle = (h.userData.settle as number | undefined) ?? 0;
         wiggle[i] = Math.max(0, wiggle[i] - dt * 2.4);
@@ -392,9 +394,10 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         }
         const c = captions.current[i];
         if (c) {
-          proj.set(s.x, -0.45, s.z + 1.2 * s.scale).project(camera);
-          c.style.transform = `translate(${(proj.x * 0.5 + 0.5) * r.width}px, ${(-proj.y * 0.5 + 0.5) * r.height}px) translateX(-50%)`;
-          c.style.opacity = diving || !h.visible ? "0" : String(Math.min(1, 0.4 + s.light));
+          // Under its own plinth: the front-bottom edge of the base, then 10 px lower.
+          proj.set(s.x, -0.42 * s.scale, s.z + 1.75 * s.scale).project(camera);
+          c.style.transform = `translate(${(proj.x * 0.5 + 0.5) * r.width}px, ${(-proj.y * 0.5 + 0.5) * r.height + 10}px) translateX(-50%)`;
+          c.style.opacity = diving || !h.visible || far > 1.25 ? "0" : String(Math.min(1, 0.5 + s.light));
         }
       });
 

@@ -1971,6 +1971,12 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
   padlock.visible = false;
   root.add(padlock);
 
+  // Geometry this diorama owns (the stand's future children, e.g. the character, are not ours to free).
+  const ownMeshes: THREE.Mesh[] = [];
+  root.traverse((o) => {
+    if (o instanceof THREE.Mesh && o !== shadow && o.parent !== padlock) ownMeshes.push(o);
+  });
+
   let locked = false;
   let focus = 1;
   const originals = new Map<THREE.Mesh, THREE.Material>();
@@ -2016,9 +2022,7 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
       }
     },
     dispose() {
-      root.traverse((o) => {
-        if (o instanceof THREE.Mesh && o !== shadow && o.parent !== padlock) o.geometry.dispose();
-      });
+      for (const mesh of ownMeshes) mesh.geometry.dispose();
       root.removeFromParent();
       c.dispose();
       ownKit?.dispose();
