@@ -11,8 +11,9 @@ const LIQUID_KINDS = new Set(["current", "business_current"]);
  * - monthlyIncome = declared net income, replaced by the observed income when an INCOME_DROP signal exists;
  * - savings = savings + term-deposit balances; monthlyDebt = active loan payments; debtRatio = debt ÷ income;
  * - heldSourceRows = active holdings + active loans + accounts (catalogue rows, for duplicate suppression);
- * - cashflowPressure: high if debtRatio > 0.45, an INCOME_DROP, or no buffer (current < ½ income and
- *   savings < 1 month of income); medium if debtRatio > 0.33 or a large unexpected expense; otherwise low.
+ * - cashflowPressure: high if debtRatio > 0.45 with less than 3 months of income saved, an INCOME_DROP, or no
+ *   buffer (current < ½ income and savings < 1 month of income); medium if debtRatio > 0.33 or a large
+ *   unexpected expense; otherwise low.
  */
 export function buildContext(facts: CustomerFacts, signals: Signal[]): PersistentContext {
   const { customer, employment, housing, asOf } = facts;
@@ -34,8 +35,9 @@ export function buildContext(facts: CustomerFacts, signals: Signal[]): Persisten
 
   const childAges = facts.children.map((c) => monthsBetween(c.birthDate, asOf));
   const noBuffer = liquid < 0.5 * monthlyIncome && savings < monthlyIncome;
+  const thinSavings = savings < 3 * monthlyIncome;   // a heavy loan load is only "high" without a 3-month cushion
   const cashflowPressure: PersistentContext["cashflowPressure"] =
-    debtRatio > 0.45 || incomeDrop || noBuffer ? "high"
+    (debtRatio > 0.45 && thinSavings) || incomeDrop || noBuffer ? "high"
       : debtRatio > 0.33 || has("LARGE_UNEXPECTED_EXPENSE") ? "medium" : "low";
 
   return {

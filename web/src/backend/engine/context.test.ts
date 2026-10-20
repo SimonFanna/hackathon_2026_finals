@@ -32,6 +32,13 @@ describe("buildContext", () => {
     expect(buildContext(heavy, []).cashflowPressure).toBe("medium");          // 1100 / 3000 = 0.37
     const broke = makeFacts({ accounts: [{ kind: "current", balance: 400, sourceRow: 142 }, { kind: "savings", balance: 900, sourceRow: 74 }] });
     expect(buildContext(broke, []).cashflowPressure).toBe("high");
+    const crushing = { kind: "home", monthlyPayment: 1500, outstanding: 250000, status: "active" as const, sourceRow: 2 };
+    const thin = makeFacts({ loans: [crushing], accounts: [{ kind: "current", balance: 2500, sourceRow: 142 },
+                                                           { kind: "savings", balance: 5000, sourceRow: 74 }] });
+    expect(buildContext(thin, []).cashflowPressure).toBe("high");                                       // 0.5, €5k saved
+    const cushioned = makeFacts({ loans: [crushing], accounts: [{ kind: "current", balance: 3000, sourceRow: 142 },
+                                                                { kind: "savings", balance: 36000, sourceRow: 74 }] });
+    expect(buildContext(cushioned, []).cashflowPressure).toBe("medium");                                 // 0.5, €36k saved
     const dropped = buildContext(facts, [drop]);
     expect(dropped).toMatchObject({ monthlyIncome: 1800, debtRatio: 0.25, cashflowPressure: "high" });
   });
