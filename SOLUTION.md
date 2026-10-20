@@ -1,7 +1,7 @@
 # SOLUTION — Intent → Journey
 
 > Living document, updated throughout the day. Each feature has its own file in `docs/features/<feature>.md`.
-> Last update: 10:20
+> Last update: 10:32
 
 ## One-liner
 
@@ -47,12 +47,19 @@ Start it → Business PRO → Billit invoicing → self-employed status, pension
 
 ## Differentiation
 
-KBC Mobile already has a **MyHome** dashboard (since March 2026, to verify) that groups Setle, Immoscoop, Impact Us Today, Immowinkel and Samen Overstappen. So our pitch is **not** "we bundle housing partners". What we add:
+What KBC already does (verified):
+- **MyHome** ([KBC press release, 29 Jan 2026](https://www.kbc.com/content/dam/kbccom/doc/newsroom/pressreleases/2026/20260129%20MyHome_EN.pdf)): a dashboard in KBC Mobile since March 2026. It groups loans, insurance, renovation advice and energy insights, with the partners Setle, Eliq, Immoscoop, Impact us today and Immowinkel. It is **only for customers who opted into "extra convenience"**; Kate is the first point of contact.
+- **Immoscoop inside KBC Mobile** ([kbc.be](https://www.kbc.be/retail/en/products/payments/self-banking/on-your-smartphone/mobile/immoscoop.html)): customers search homes, save searches, and Kate alerts them when a matching home goes online. KBC shares the customer's name and email with Immoscoop.
+- **Feasibility certificate (haalbaarheidsattest)** ([Immoscoop press release](https://www.immoscoop.be/content/blog/persbericht-bereal-kbc-en-immoscoop-lanceren-haalbaarheidsattest-voor-kandidaat-kopers), around Aug 2026): per property, it shows whether an offer looks affordable. Once the offer is accepted, the customer can go straight to a KBC loan application with the data reused. This is the closest existing piece to our journey.
+
+So our pitch is **not** "we bundle housing partners", and not "Immoscoop to mortgage". What we add:
 - **proactive detection** from signals;
 - a **sequenced plan** across ecosystems (housing → finance → energy → insurance), not a toolbox;
 - **per-step, per-partner consent**;
 - a **measured triple win**;
 - **one generic engine**, where a new intent is new data.
+
+**Our assumption (not documented publicly):** KBC uses in-app Immoscoop saved searches as an intent signal. It is plausible (the search runs inside KBC Mobile and Kate already sends the alerts), and we gate it on the same "extra convenience" opt-in KBC uses for MyHome. Pitch line: *proactive detection only runs for customers who opted in, exactly like MyHome today.*
 
 This also matches KBC's own line on Kate: *"Kate will never implement anything without explicit customer approval"* ([KBC newsroom, Nov 2025](https://newsroom.kbc.com/kate-five-years-and-five-milestones)).
 
@@ -81,7 +88,7 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 
 - Which ecosystem KPIs does KBC use? (ask staff on site)
 - Can we name partners in the demo / pitch?
-- **MyHome (KBC Mobile, March 2026):** confirm with KBC staff what it already does, and adjust the pitch so we position as the proactive, sequenced layer on top of it. Source seen only in a search snippet: [KBC press release (NL)](https://www.kbc.com/content/dam/kbccom/doc/newsroom/pressreleases/2026/20260129%20MyHome_NL.pdf).
+- **MyHome / Immoscoop signals:** ask KBC staff whether in-app Immoscoop saved searches may be used as a signal under "extra convenience". Position us as the proactive, sequenced layer on top of MyHome.
 - Verify the Flemish rule: buyers of an E/F-label home must renovate to at least label D within 5 years (used in the EPC step).
 
 ## Log
@@ -90,3 +97,4 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 - **09:50** — No Supabase access yet: V0 on static TS data. Engine `web/src/engine/` delivered (tests green); Next.js UI built.
 - **10:05** — Supabase access OK (empty DB). V0 UI judged too cluttered → UX redesign started (KBC brand + market benchmark). `CLAUDE.md` team rules added; docs switched to English.
 - **10:20** — UX redesign V1 shipped in `web/`: a KBC Design Language look (tokens read live from kbc.be), Kate's voice, one step at a time with a consent sentence per partner, a hidden presenter panel (key P) and a triple-win finale. Screenshots in `docs/screenshots/`. MyHome finding added (Differentiation, Open questions).
+- **10:32** — MyHome verified (KBC press release, 29 Jan 2026, opt-in "extra convenience"). Immoscoop × KBC integration and haalbaarheidsattest documented. Our Immoscoop-signal assumption is labelled and gated on the same opt-in.

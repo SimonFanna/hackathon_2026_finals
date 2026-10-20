@@ -19,7 +19,7 @@ export function WhySheet({ open, signals, onClose }: { open: boolean; signals: S
         ))}
       </ul>
       <p className="mt-4 text-[15px] leading-[21px] text-night-300">
-        Immoscoop activity is used because you connected Immoscoop in KBC Mobile. Nothing has been shared with anyone yet.
+        Kate only looks at this because you search on Immoscoop inside KBC Mobile and turned on extra convenience. Nothing has been shared with anyone yet.
       </p>
       <div className="mt-5"><PrimaryButton onClick={onClose}>Got it</PrimaryButton></div>
     </Sheet>

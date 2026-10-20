@@ -129,8 +129,11 @@ There is no public brandbook. The production design system above is a stronger s
 - 24% of 27.8k proactive notifications were accepted (May 2021); ~1.3M nudges/month today; ~12% of conversations hand off to KBC Live.
 - Sources: [Ergomania](https://ergomania.eu/fintech-belgium-kbc-kate-voice-user-interface/), [KBC newsroom](https://newsroom.kbc.com/kate-your-personal-digital-assistant). Kate's avatar is **not public**.
 
-**⚠️ Competitive context (verify before the pitch):**
-- Since March 2026, KBC Mobile has a **MyHome** dashboard that already brings together Setle, Immoscoop, Impact Us Today, Immowinkel and Samen Overstappen. Source: the [KBC MyHome press release (NL)](https://www.kbc.com/content/dam/kbccom/doc/newsroom/pressreleases/2026/20260129%20MyHome_NL.pdf), seen only in a search snippet.
+**⚠️ Competitive context (verified 10:32):**
+- **Verified:** since March 2026, KBC Mobile has a **MyHome** dashboard with Setle, Eliq, Immoscoop, Impact us today and Immowinkel. It is only for customers who opted into "extra convenience", with Kate as the first point of contact ([KBC press release, 29 Jan 2026](https://www.kbc.com/content/dam/kbccom/doc/newsroom/pressreleases/2026/20260129%20MyHome_EN.pdf)).
+- Immoscoop already runs inside KBC Mobile: saved searches, Kate alerts, name and email shared ([kbc.be](https://www.kbc.be/retail/en/products/payments/self-banking/on-your-smartphone/mobile/immoscoop.html)).
+- The KBC × Immoscoop **haalbaarheidsattest** links a property to a KBC loan application ([Immoscoop](https://www.immoscoop.be/content/blog/persbericht-bereal-kbc-en-immoscoop-lanceren-haalbaarheidsattest-voor-kandidaat-kopers)).
+- The "Why am I seeing this?" sheet says the Immoscoop signal is used only because the customer searches inside KBC Mobile and turned on extra convenience. That KBC uses saved searches as a signal is **our assumption**.
 - So our pitch must not be "we bundle housing partners"; KBC already does that. Our difference:
   - **(1) proactive detection** from signals;
   - **(2) a sequenced plan** across ecosystems (housing → finance → energy → insurance), not a toolbox;
