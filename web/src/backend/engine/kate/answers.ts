@@ -3,7 +3,7 @@ import type { Consent, Goal, PersistentContext, Plan, PlanStep, RuleSet, Scenari
 import type { KateDeps, WhatIf } from "./deps";
 import { kateWhy } from "./messages";
 import { capabilitiesOf, type Route } from "./router";
-import { ancestors, dependants, eur, GOAL_NOUN, joinAnd, planMonthlyPayment, stepLabel } from "./text";
+import { ancestors, dependants, eur, GOAL_NOUN, joinAnd, keyTradeoffs, planMonthlyPayment, stepLabel } from "./text";
 
 export interface QaInput {
   ctx: PersistentContext;
@@ -84,21 +84,25 @@ function whatIfText(change: WhatIf, scenarios: Scenario[] | null, now: number | 
   if (!scenarios?.length) {
     return "I can't run that simulation right now. Your KBC advisor can do it with you, or try again in a moment.";
   }
-  const [best, alt] = scenarios;
+  // T6 simulate(): [0] is the change as asked, the next ones are fixes when it breaks a constraint.
+  const [asked, ...fixes] = scenarios;
   const out: string[] = [];
-  const pay = best.monthlyPayment;
+  const pay = asked.monthlyPayment;
   const head = `If ${describeChange(change)}`;
-  if (pay !== null) {
-    out.push(`${head}, your monthly payment would be about ${eur(pay)}${now !== null ? ` (now ${eur(now)})` : ""}.`);
+  if (pay === null) out.push(`${head}: ${asked.label}.`);
+  else if (now !== null && Math.abs(pay - now) < 1) out.push(`${head}, your monthly payment stays about ${eur(pay)}.`);
+  else out.push(`${head}, your monthly payment would be about ${eur(pay)}${now !== null ? ` (now ${eur(now)})` : ""}.`);
+  const broken = asked.plan.checks.filter((c) => !c.ok);
+  if (broken.length) {
+    out.push(broken.map((c) => c.message).join(" "));
+    if (fixes.length) {
+      const opts = fixes.slice(0, 2).map((f) => `${f.label}${f.monthlyPayment !== null ? ` (about ${eur(f.monthlyPayment)}/month)` : ""}`);
+      out.push(`To make it fit: ${opts.join(", or ")}.`);
+    }
   } else {
-    out.push(`${head}: ${best.label}.`);
-  }
-  const broken = best.plan.checks.filter((c) => !c.ok);
-  if (broken.length) out.push(broken.map((c) => c.message).join(" "));
-  else if (pay !== null && maxPay !== undefined) out.push(`That still fits your ${eur(maxPay)} monthly limit.`);
-  if (best.tradeoffs.length) out.push(`Trade-off: ${best.tradeoffs.join("; ")}.`);
-  if (alt && broken.length) {
-    out.push(`Another option: ${alt.label}${alt.monthlyPayment !== null ? `, about ${eur(alt.monthlyPayment)}/month` : ""}.`);
+    if (pay !== null && maxPay !== undefined) out.push(`That still fits your ${eur(maxPay)} monthly limit.`);
+    const trade = keyTradeoffs(asked);
+    if (trade.length) out.push(`Trade-off: ${trade.join("; ")}.`);
   }
   out.push("Nothing has changed in your plan: this is only a simulation, with estimated figures.");
   return out.join(" ");
@@ -179,7 +183,8 @@ function laterText(input: QaInput, stepIds: string[], scenarios: Scenario[] | nu
   const best = scenarios?.[0];
   const now = planMonthlyPayment(plan);
   if (best?.monthlyPayment != null) {
-    out.push(`Without it now, your monthly payment would be about ${eur(best.monthlyPayment)}${now !== null ? ` instead of ${eur(now)}` : ""}.`);
+    if (now !== null && Math.abs(best.monthlyPayment - now) < 1) out.push("Your monthly payment doesn't change.");
+    else out.push(`Without it now, your monthly payment would be about ${eur(best.monthlyPayment)}${now !== null ? ` instead of ${eur(now)}` : ""}.`);
   }
   out.push("All figures are estimates.");
   return out.join(" ");

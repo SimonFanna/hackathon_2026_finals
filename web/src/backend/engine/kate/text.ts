@@ -1,4 +1,4 @@
-import type { CapabilityCode, GoalType, Plan, PlanStep, RuleSet } from "../../types";
+import type { CapabilityCode, GoalType, Plan, PlanStep, RuleSet, Scenario } from "../../types";
 
 /** "€250,000". Kate always rounds: every figure she quotes is an estimate. */
 export function eur(n: number): string {
@@ -107,4 +107,16 @@ export function planMonthlyPayment(plan: Plan): number | null {
   if (check && typeof check.actual === "number") return check.actual;
   const sum = plan.steps.reduce((acc, s) => acc + (s.estimates.monthlyPayment ?? 0), 0);
   return sum > 0 ? sum : null;
+}
+
+const noDot = (t: string) => t.trim().replace(/\.+$/, "");
+
+/** The trade-offs worth saying: not a repeat of a check, of the payment already quoted, or of the "on hold" line. */
+export function keyTradeoffs(s: Scenario, max = 2): string[] {
+  const checks = new Set(s.plan.checks.map((c) => noDot(c.message)));
+  const pay = s.monthlyPayment !== null ? eur(s.monthlyPayment) : null;
+  return s.tradeoffs
+    .map(noDot)
+    .filter((t) => t && !checks.has(t) && !(pay && t.includes(pay)) && !/on hold|paused/i.test(t))
+    .slice(0, max);
 }

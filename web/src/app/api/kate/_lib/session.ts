@@ -2,9 +2,11 @@
 // with in-memory feedback, until T7's data layer (loadFacts / runPipeline / Repo) lands. Then swap the bodies, not the callers.
 import { affordability } from "../../../../backend/engine/finance";
 import { sharedData } from "../../../../backend/engine/consent";
+import { simulate } from "../../../../backend/engine/scenarios";
 import type { KateDeps } from "../../../../backend/engine/kate/deps";
 import type { QaInput } from "../../../../backend/engine/kate/answers";
-import { ASOF, lucasCtx, lucasGoal, lucasPlan, sofieCtx, sofieGoal, sofiePlan, t5Rules } from "../../../../backend/fixtures/t5-sofie-plan";
+import { ASOF, lucasCtx, lucasGoal, lucasPlan, sofieCtx, sofieGoal, sofiePlan } from "../../../../backend/fixtures/t5-sofie-plan";
+import { t6Rules } from "../../../../backend/fixtures/t6-inputs";
 import { lucasSignals, sofieSignals } from "../../../../backend/fixtures/t3-inputs";
 import { t3Intents } from "../../../../backend/fixtures/t3-rules";
 import type { Feedback, Signal } from "../../../../backend/types";
@@ -13,15 +15,15 @@ import type { Feedback, Signal } from "../../../../backend/types";
 export const DEMO_SLUGS = ["sofie", "lucas", "nadia", "pieter", "els", "thomas"] as const;
 export type DemoSlug = (typeof DEMO_SLUGS)[number];
 
-const rules = { ...t5Rules, intents: t3Intents };
+const rules = { ...t6Rules, intents: t3Intents };
 
 const sessions: Partial<Record<DemoSlug, { input: QaInput; signals: Signal[] }>> = {
   sofie: { input: { ctx: sofieCtx, goal: sofieGoal, plan: sofiePlan, consents: [], rules, asOf: ASOF }, signals: sofieSignals },
   lucas: { input: { ctx: lucasCtx, goal: lucasGoal, plan: lucasPlan, consents: [], rules, asOf: ASOF }, signals: lucasSignals },
 };
 
-/** Real engine functions. T6 `simulate` is added here when it lands on main. */
-export const kateDeps: KateDeps = { sharedData, affordability };
+/** Real engine functions: T6 what-ifs, T5 data sharing and affordability. */
+export const kateDeps: KateDeps = { simulate, sharedData, affordability };
 
 export function loadSession(slug: DemoSlug, goalId?: string): { input: QaInput; signals: Signal[] } | null {
   const s = sessions[slug];

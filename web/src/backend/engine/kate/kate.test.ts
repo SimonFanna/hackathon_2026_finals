@@ -44,7 +44,7 @@ describe("goalSetup", () => {
     const { goalType, questions } = goalSetup(buyHomeIntent, sofieCtx, t8Rules, { signals: sofieSignals, affordability });
     expect(goalType).toBe("BUY_AND_PREPARE_HOME");
     const byId = Object.fromEntries(questions.map((q) => [q.id, q]));
-    expect(byId.budget.default).toBe(260_000); // min(476k simulated, 228k + 30k) rounded to €5k
+    expect(byId.budget.default).toBe(255_000); // min(476k simulated, 228k + 30k), rounded down to €5k
     expect(byId.maxMonthlyPayment.default).toBe(1100);
     expect(byId.priorities.default).toBe("energy_efficiency"); // EPC E home in mind
     expect(byId.property.default).toBe("E");
@@ -129,7 +129,7 @@ describe("fallback answers (the 4 demo questions)", () => {
     expect(a.scenarios?.map((s) => s.id)).toEqual(["sim-280k", "sim-280k-30y"]);
     expect(a.text).toContain("about €1,212 (now €1,066)");
     expect(a.text).toContain("above your €1,100 limit");
-    expect(a.text).toContain("Home at €280,000 over 30 years, about €1,081/month");
+    expect(a.text).toContain("To make it fit: Home at €280,000 over 30 years (about €1,081/month)");
     expect(a.text).toContain("only a simulation");
   });
 

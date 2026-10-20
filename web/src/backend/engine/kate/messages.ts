@@ -4,7 +4,7 @@ import type {
   PersistentContext, Plan, Priority, RuleSet, Scenario, Signal, SignalCode,
 } from "../../types";
 import type { KateDeps } from "./deps";
-import { dependants, eur, fill, GOAL_NOUN, joinAnd, stepLabel } from "./text";
+import { dependants, eur, fill, GOAL_NOUN, joinAnd, keyTradeoffs, stepLabel } from "./text";
 
 /** Friendly words for a signal, used when a moment has no ML contributions to quote. */
 const SIGNAL_WORDS: Partial<Record<SignalCode, string>> = {
@@ -94,14 +94,16 @@ export function goalSetup(
   if (goalType === "BUY_AND_PREPARE_HOME") {
     const simulated = Math.max(0, ...(opts.signals ?? []).filter((s) => s.code === "MORTGAGE_SIMULATION").map((s) => s.value ?? 0));
     const capacity = aff ? aff.maxPrincipal + aff.ownFunds : null;
-    const budget = capacity !== null && simulated > 0 ? Math.min(simulated, capacity) : simulated || capacity;
+    const raw = capacity !== null && simulated > 0 ? Math.min(simulated, capacity) : simulated || capacity;
+    // Round down to €5k so the suggestion never exceeds what she can afford.
+    const budget = raw ? Math.floor(raw / 5000) * 5000 : null;
     questions.push({
       id: "budget",
       text: budget
         ? `What's your total budget, renovation included? Based on ${simulated ? "your simulations" : "your income and savings"}, I'd suggest about ${eur(budget)}.`
         : "What's your total budget, renovation included?",
       kind: "number",
-      default: budget ? Math.round(budget / 5000) * 5000 : null,
+      default: budget,
     });
     questions.push({
       id: "maxMonthlyPayment",
@@ -175,7 +177,8 @@ export function kateForScenarios(
       s.monthlyPayment !== null ? `about ${eur(s.monthlyPayment)}/month` : null,
       s.deadline ? `ready by ${s.deadline}` : null,
     ].filter(Boolean);
-    const trade = s.tradeoffs.length ? ` Trade-off: ${s.tradeoffs.join("; ")}.` : "";
+    const key = keyTradeoffs(s);
+    const trade = key.length ? ` Trade-off: ${key.join("; ")}.` : "";
     return `${letters[i]}. ${s.label}${parts.length ? `: ${parts.join(", ")}` : ""}.${trade}`;
   });
   const outro = "While you decide, I've paused the non-essential offers in your plan. Figures are estimates, not a loan offer.";
