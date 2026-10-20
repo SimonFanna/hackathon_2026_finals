@@ -27,7 +27,7 @@ Simon gets the data side (facts → signals → ML → catalogue → storage/API
 
 | Time | Milestone |
 |---|---|
-| **11:15** | Mathias commits `web/src/backend/types.ts` = section 4 copied verbatim. Everyone pulls. |
+| **11:15** | ✅ Done (3fbcab5): `types.ts`, `vocabulary.ts`, `engine/condition.ts` on `main`. Everyone pulls. |
 | **11:30** | Each task: migration file created (empty tables OK), first module stub exporting its functions + 1 test. |
 | **13:00** | Each task: module green on **its own fixtures**, seed data in Supabase. |
 | **13:30** | T7 `npm run snapshot`: rules + demo facts exported to JSON. Fixtures can now be replaced by the real snapshot. |
@@ -82,6 +82,8 @@ supabase/migrations/            one file per task, timestamps below
 **Git:** work on your branch (`mathias`, `simon`) and merge into `main` at every green step. Before pushing: `npm run lint && npm test && npm run build` in `web/`.
 
 ## 4. Shared contract: `web/src/backend/types.ts`
+
+> **Committed on `main` (3fbcab5).** From now on `types.ts` + `vocabulary.ts` are the source of truth; this section is a copy for reading. `evalCondition` (T3) is in `engine/condition.ts`, with scope `{ ctx, goal?, ...extraRoots }`.
 
 ```ts
 // ===== Facts (T7 loads them; shape is fixed) =====
@@ -151,7 +153,7 @@ export interface Estimates { customerEurOneOff?: number; customerEurPerYear?: nu
   co2KgPerYear?: number; kbcRevenueEur?: number; partnerValueEur?: number; monthlyPayment?: number }
 // Condition: tiny JSON logic evaluated against { ctx, goal } — e.g. {"any":[{"field":"ctx.properties.0.epc","op":"in","value":["D","E","F"]}, …]}
 export type Condition = { all?: Condition[]; any?: Condition[]; not?: Condition;
-  field?: string; op?: "eq" | "neq" | "gt" | "gte" | "lt" | "lte" | "in" | "exists"; value?: unknown };
+  field?: string; op?: "eq" | "neq" | "gt" | "gte" | "lt" | "lte" | "in" | "contains" | "exists"; value?: unknown };
 
 // ===== ⑦–⑩ Plan, consent, outcome (T5) =====
 export type StepStatus = "todo" | "accepted" | "skipped" | "in_progress" | "done" | "blocked" | "paused";
