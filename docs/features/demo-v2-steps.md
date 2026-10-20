@@ -16,9 +16,10 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 - Keys `1`/`2` follow the new order. `?player=` deep links unchanged. Default when there's no param = business.
 - Reserve slot 3 for the "Your own" player (P5); don't show it until P5 exists.
 
-### P3 · After the plan: one phone page per unexpected event · by 14:45
+### P3 · After the plan: one page per chapter + one page per unexpected event · by 14:45
 - Today, after the plan the demo advances month by month (`live` ⇄ `event` ⇄ `options`), which is too long to click through.
-- Wanted: **one page per disruption** (4 per player, from `persona.outcome.disruptions`). Each page shows: what happened (icon, one line, "You told Kate" for income/health), what broke (the constraint(s), before → after), the scored options with "Kate recommends", and the customer picks one → next page. After the 4th → finale.
+- Wanted (user, 13:37: both): **one phone page per chapter** of the plan (`journey.chapters`, e.g. Find · Finance · Renovate · Protect): the chapter's accepted steps being done (status ticks, partner + data shared, the outcome line), with the goal health. **Interleaved** with **one page per disruption**: each event page comes right after the chapter page of the step it affects (if there is no link, by month order; fallback: after the last chapter). Sequence example: Find → [event 1] → Finance → [event 2] → Renovate → [events 3–4] → Protect → finale.
+- Each event page (4 per player, from `persona.outcome.disruptions`). Each page shows: what happened (icon, one line, "You told Kate" for income/health), what broke (the constraint(s), before → after), the scored options with "Kate recommends", and the customer picks one → next page. After the 4th → finale.
 - Keep the engine (`outcome.ts`: `hit`, `evaluateOptions`, `resolve`) as is; this is a UI/state-machine change. Reuse `EventScreen`/`OptionsScreen` pieces; merge them into one page per event. The HUD (right) keeps working.
 - Keys: `1–4` pick an option, `→` = take Kate's recommendation. Deep link `?demo=event&n=N` lands on page N.
 
@@ -39,6 +40,6 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 ## Status checklist
 - [ ] P1 notification dismiss + Kate pill
 - [ ] P2 business first, locked goals removed
-- [ ] P3 one page per event
+- [ ] P3 one page per chapter + one page per event (interleaved)
 - [ ] P4 3D build on the left
 - [ ] P5 "Your own" player (optional)
