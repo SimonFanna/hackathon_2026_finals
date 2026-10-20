@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState, type MutableRefObject } from "react";
 import { personas, type Persona } from "@/engine";
+import { YourOwnSlot } from "../custom/YourOwnSlot";
 import { CharacterSelect } from "../journey/CharacterSelect";
 import { eur } from "../journey/format";
 import { KbcLogo } from "../journey/KbcLogo";
@@ -23,7 +24,7 @@ const PickerCanvas = dynamic(() => import("./PickerCanvas"), { ssr: false, loadi
 type PersonaId = Persona["id"];
 
 export function CharacterSelect3D({
-  selected, onSelect, onPlay, compact, playRef,
+  selected, onSelect, onPlay, compact, playRef, onCustom,
 }: {
   selected: PersonaId;
   onSelect: (id: PersonaId) => void;
@@ -31,6 +32,8 @@ export function CharacterSelect3D({
   compact: boolean;
   /** Optional: Stage routes Enter through here so the keyboard also gets the dive. */
   playRef?: MutableRefObject<((id: PersonaId) => void) | null>;
+  /** Player 3, "Your own" (Demo V2 P5). */
+  onCustom?: () => void;
 }) {
   const reduce = !!useReducedMotion();
   const [mode, setMode] = useState<"pending" | "3d" | "2d" | "skip">("pending");
@@ -109,7 +112,7 @@ export function CharacterSelect3D({
     };
   }, [mode, play, playRef]);
 
-  if (mode === "2d") return <CharacterSelect selected={selected} onSelect={onSelect} onPlay={onPlay} compact={compact} />;
+  if (mode === "2d") return <CharacterSelect selected={selected} onSelect={onSelect} onPlay={onPlay} compact={compact} onCustom={onCustom} />;
   if (mode === "skip") return <main className="min-h-[100dvh] bg-[linear-gradient(180deg,#021e43_0%,#0d2a50_100%)]" />;
 
   const persona = personas.find((p) => p.id === selected) ?? personas[0];
@@ -161,9 +164,12 @@ export function CharacterSelect3D({
         </div>
 
         <div className="-mb-1 mt-auto flex flex-col items-center">
+          <div className="flex w-full max-w-[1100px] justify-center gap-4">
           <section ref={cardRef} data-player-card className="pointer-events-auto w-full max-w-[860px]">
             <PlayerCard persona={persona} onPlay={() => void play(persona.id)} disabled={playing} reduce={reduce} />
           </section>
+          {onCustom && <YourOwnSlot variant="3d" onOpen={onCustom} />}
+          </div>
           <p className="mt-4 text-[13px] text-white/50">← → or drag to choose · Enter to play</p>
         </div>
       </motion.div>

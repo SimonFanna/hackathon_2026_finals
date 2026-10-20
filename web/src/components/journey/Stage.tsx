@@ -2,6 +2,7 @@
 
 import { ArrowLeft } from "@phosphor-icons/react";
 import { AnimatePresence, LayoutGroup, motion, useAnimate, useReducedMotion } from "motion/react";
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   advance, buildJourney, decide, detectIntents, getPersona, hit, initState, isComplete, resolve, scoreboard, setConsent, startRun,
@@ -10,9 +11,10 @@ import {
 } from "@/engine";
 import {
   SLUG_FOR, chooseScenario, fetchIntent, injectDisruption, resetPersona, sendConsent, sendStep, startJourney,
-  type BackendIntent, type Preset,
+  type BackendIntent, type BackendJourney, type Preset,
 } from "@/lib/backend";
 import { affectedStep, BuildStage } from "../build/BuildStage";
+import type { PlanPersona } from "../custom/CustomPlayer";
 import { CharacterSelect3D } from "../picker/CharacterSelect3D";
 import { ChapterScreen } from "./ChapterScreen";
 import { providerName } from "./copy";
@@ -32,8 +34,11 @@ import { ConsentSheet, EstimateSheet, WhySheet } from "./Sheets";
 import { StepScreen, type ConsentMode } from "./StepScreen";
 import { useViewport } from "./useViewport";
 
+// "Your own" player (Demo V2 P5): code-split, it bundles the backend snapshot and the moment model.
+const CustomPlayer = dynamic(() => import("../custom/CustomPlayer").then((m) => m.CustomPlayer), { ssr: false });
+
 /** After the plan (Demo V2): "chapter" and "event" are the pages of `buildDemoSequence`, then "finale". */
-type Screen = "select" | "home" | "intent" | "declined" | "path" | "step" | "plan" | "chapter" | "event" | "finale";
+type Screen = "select" | "custom" | "home" | "intent" | "declined" | "path" | "step" | "plan" | "chapter" | "event" | "finale";
 type SheetName = null | "why" | "consent" | "estimate";
 type Move = "forward" | "accept" | "skip" | "back";
 /** "real" = the persona's signals; "weak" = only the weakest one, so the engine deliberately does nothing. */
@@ -136,10 +141,13 @@ export function Stage() {
   const [beBoard, setBeBoard] = useState<Scoreboard | null>(null);
   const [bePlan, setBePlan] = useState<OutcomePlan | null>(null);
   const [beScenarios, setBeScenarios] = useState<Record<string, string> | null>(null);
+  const keepGoal = useRef<string | null>(null); // the "Your own" player just created this slug's goal: don't wipe it
   useEffect(() => {
     let live = true;
     // A previous run leaves a goal in progress, and the engine then rightly stays quiet: each demo run starts fresh.
-    resetPersona(slug)
+    const fresh = keepGoal.current === slug ? Promise.resolve(true) : resetPersona(slug);
+    if (keepGoal.current !== slug) keepGoal.current = null;
+    fresh
       .then(() => fetchIntent(slug))
       .then((r) => {
         if (live) setBeIntent(r);
@@ -352,6 +360,23 @@ export function Stage() {
     go("path");
   };
 
+  /** "Your own" player (P5): its backend plan (or null → the local engine) goes straight into the phone flow. */
+  const handoff = (id: PlanPersona, live: BackendJourney | null, from: string) => {
+    clearJourney();
+    if (live && from === SLUG_FOR[id]) keepGoal.current = from;
+    setPersonaId(id);
+    setPicked(id);
+    setSignalSet("real");
+    if (live) {
+      const base = initState(live.journey);
+      setState({ ...base, decisions: { ...base.decisions, ...live.state.decisions } });
+      setBeGoal(live.goalId);
+      setBeBoard(live.board);
+      setBePlan(live.plan.limits.cost > 1 ? live.plan : null);
+    } else setState(initState(buildJourney(getPersona(id).journey.intentId, getPersona(id).customer)));
+    go("path");
+  };
+
   const next = (m: Move) => {
     if (index + 1 < steps.length) {
       setMove(m);
@@ -510,7 +535,9 @@ export function Stage() {
     const onControl = !!t && ["BUTTON", "INPUT", "A", "TEXTAREA"].includes(t.tagName);
     const k = e.key.toLowerCase();
 
+    if (screen === "custom") return; // the custom player has its own keys (Esc = back)
     if (screen === "select") {
+      if (k === "3") return setScreen("custom");
       if (k === "arrowleft") return setPicked("business"); // Lina is on the left, Thomas on the right
       if (k === "arrowright") return setPicked("house");
       if (k === "1") return setPicked("business");
@@ -559,8 +586,9 @@ export function Stage() {
   }, []);
 
   if (screen === "select") {
-    return <CharacterSelect3D selected={picked} onSelect={setPicked} onPlay={play} compact={!framed} playRef={pickerPlay} />;
+    return <CharacterSelect3D selected={picked} onSelect={setPicked} onPlay={play} compact={!framed} playRef={pickerPlay} onCustom={() => setScreen("custom")} />;
   }
+  if (screen === "custom") return <CustomPlayer onBack={() => setScreen("select")} onPlan={handoff} />;
 
   // Screen transitions: forward/accept enter from the right; skip leaves to the left; back reverses.
   const variants = {

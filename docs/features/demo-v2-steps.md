@@ -49,4 +49,4 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 - [x] P2 business first, locked goals removed (13:45, kepa)
 - [x] P3 one page per chapter + one page per event (interleaved) (14:05, peer agent; worktree branch, to merge into `kepa`)
 - [x] P4 3D build on the left (13:55, peer agent on kepa's worktree; see `build-stage-3d.md`)
-- [ ] P5 "Your own" player (optional)
+- [x] P5 "Your own" player (14:30, branch `custom-player`; see `custom-player.md`)
