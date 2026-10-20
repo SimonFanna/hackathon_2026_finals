@@ -18,6 +18,7 @@ import type { PlanPersona } from "../custom/CustomPlayer";
 import { CharacterSelect3D } from "../picker/CharacterSelect3D";
 import { ChapterScreen } from "./ChapterScreen";
 import { providerName } from "./copy";
+import { demoPersona } from "./demoDisruptions";
 import { buildStepAlias, withLocalAliases } from "./stepAlias";
 import { buildDemoSequence, type DemoPage } from "./demoSequence";
 import { EngineHud, type AdaptStep, type Phase } from "./EngineHud";
@@ -121,7 +122,7 @@ function asLocalHit(be: PendingHit, local: PendingHit, from: string | undefined,
 export function Stage() {
   const [personaId, setPersonaId] = useState<PersonaId>("business"); // the entrepreneur is player 1
   const [picked, setPicked] = useState<PersonaId>("business");
-  const persona = getPersona(personaId);
+  const persona = demoPersona(getPersona(personaId)); // two surprises per player (Demo V2, demoDisruptions.ts)
   const { customer, outcome: model } = persona;
 
   const [signalSet, setSignalSet] = useState<SignalSet>("real");
@@ -235,7 +236,7 @@ export function Stage() {
     if (!demo && !isPersonaId(player)) return;
     const t = setTimeout(() => {
       const id: PersonaId = isPersonaId(player) ? player : "business";
-      const ps = getPersona(id);
+      const ps = demoPersona(getPersona(id));
       setPersonaId(id);
       setPicked(id);
       setScreen("home");
@@ -442,7 +443,17 @@ export function Stage() {
    * On an event page the surprise is replayed in the backend (T6) when it can: its impact and scenarios A/B replace
    * the scripted ones; otherwise (no backend, other kind of surprise, API down) the local story plays.
    */
+  const navigating = useRef(false); // a page change may await the backend: a second → / Enter meanwhile is ignored
   const showPage = async (i: number, m: Move, from: Run) => {
+    if (navigating.current) return;
+    navigating.current = true;
+    try {
+      await turnPage(i, m, from);
+    } finally {
+      navigating.current = false;
+    }
+  };
+  const turnPage = async (i: number, m: Move, from: Run) => {
     if (i >= pages.length) {
       setRun(advance(from, finishLine));
       setPending(null);
@@ -494,11 +505,13 @@ export function Stage() {
 
   /** The customer picks an option on an event page: the plan moves on with it, then the next page. */
   const choose = async () => {
-    if (!run || !pending || !selected) return;
+    if (!run || !pending || !selected || navigating.current) return;
     const opt = pending.options.find((o) => o.id === selected);
     if (!opt?.available) return;
     const sid = beScenarios?.[selected];
-    const live = beGoal && sid ? await chooseScenario(beGoal, sid) : null;
+    navigating.current = true;
+    const live = beGoal && sid ? await chooseScenario(beGoal, sid).catch(() => null) : null;
+    navigating.current = false;
     const resolved = resolve(run, model, pending, selected);
     let next = resolved;
     if (live) {
@@ -815,8 +828,8 @@ export function Stage() {
       </AnimatePresence>
 
       {stageFinale && (
-        <div className="pointer-events-none absolute inset-0">
-          <div className="pointer-events-auto relative mx-auto h-full max-w-[560px]">
+        <div className={`absolute inset-0 ${sheet === "estimate" ? "" : "pointer-events-none"}`}>
+          <div className="relative mx-auto h-full max-w-[560px]">
             <EstimateSheet open={sheet === "estimate"} state={state} onClose={() => setSheet(null)} />
           </div>
         </div>
