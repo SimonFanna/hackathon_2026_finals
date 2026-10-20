@@ -12,11 +12,13 @@ export const demoCustomer: Customer = {
 };
 
 export const demoSignals: Signal[] = [
-  { id: "s1", customerId: "c-001", type: "property_search", label: "Saved 4 houses built before 1980 on Immoscoop", source: "Immoscoop", observedAt: "2026-10-12" },
+  { id: "s1", customerId: "c-001", type: "property_search", label: "Saved 4 searches for houses built before 1980 in Immoscoop (opted into extra convenience)", source: "KBC Mobile · Immoscoop", observedAt: "2026-10-12" },
   { id: "s2", customerId: "c-001", type: "mortgage_simulation", label: "Ran a €320k home loan simulation in KBC Mobile", source: "KBC Mobile", observedAt: "2026-10-15" },
   { id: "s3", customerId: "c-001", type: "epc_lookup", label: "Looked up the EPC label of a listed house (label E)", source: "KBC Mobile", observedAt: "2026-10-18" },
 ];
 
+// Below ASK: no action at all. Between ASK and SUGGEST: ask the customer. Above SUGGEST: proactively suggest the plan.
+export const BUY_HOUSE_ASK_THRESHOLD = 0.4;
 export const BUY_HOUSE_THRESHOLD = 0.75;
 
 export const buyHouseSignalWeights: Record<SignalType, number> = {
@@ -60,8 +62,8 @@ export const buyHouseSteps: JourneyStep[] = [
     outcome: { kbcRevenueEur: 9000 },
   },
   {
-    id: "epc", chapter: "renovate", order: 5, title: "Check the renovation obligation",
-    why: "The house has EPC label E: in Flanders, buyers must renovate to at least label D within 5 years.",
+    id: "epc", chapter: "renovate", order: 5, title: "Find out what the house needs",
+    why: "The house has EPC label E. An inspection shows which renovation works it needs before you commit.",
     ecosystem: "Housing", catalogueItem: "Certificates and inspections - De Immowinkel", provider: partner("De Immowinkel"),
     dataShared: ["property address"],
     outcome: { partnerValueEur: 120 },

@@ -24,7 +24,7 @@ export const intentCopy = {
 const purposeByStep: Record<string, string> = {
   search: "So Immoscoop can keep your saved houses and alerts in one place.",
   valuation: "So an Immoscoop estate agent can value the house before you make an offer.",
-  epc: "So De Immowinkel can check the certificate and what the obligation means for you.",
+  epc: "So De Immowinkel can check the certificate and which works the house needs.",
   grants: "So Setle can estimate the works and every grant you can claim.",
   insulation: "So Impact us today can prepare an insulation quote.",
   heating: "So Impact us today can prepare a heat pump quote.",

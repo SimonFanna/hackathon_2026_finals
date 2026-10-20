@@ -83,3 +83,21 @@ describe("chapters and euros", () => {
     expect(scoreboard(st).customer).toMatchObject({ eurOneOff: 8000, eurPerYear: 900 });
   });
 });
+
+describe("decision levels", () => {
+  const one = (type: (typeof demoSignals)[number]["type"]) => [{ ...demoSignals[0], type }];
+
+  it("does nothing on weak evidence", () => {
+    const [intent] = detectIntents(demoCustomer, one("savings_transfer"));
+    expect(intent.level).toBe("none");
+  });
+
+  it("asks on medium evidence (demo case)", () => {
+    expect(detectIntents(demoCustomer, demoSignals)[0].level).toBe("ask");
+  });
+
+  it("suggests proactively on strong evidence", () => {
+    const signals = [...demoSignals, { ...demoSignals[0], id: "s4", type: "notary_contact" as const }];
+    expect(detectIntents(demoCustomer, signals)[0].level).toBe("suggest");
+  });
+});

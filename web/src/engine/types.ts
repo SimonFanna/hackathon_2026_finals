@@ -15,6 +15,7 @@ export interface DetectedIntent {
   intentId: "buy_house";
   label: string;
   confidence: number;
+  level: "none" | "ask" | "suggest"; // "none" = the engine deliberately does nothing
   needsConfirmation: boolean;
   reasons: string[];
 }

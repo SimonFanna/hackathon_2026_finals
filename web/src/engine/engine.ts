@@ -1,4 +1,4 @@
-import { BUY_HOUSE_THRESHOLD, buyHouseSignalWeights, buyHouseSteps } from "./data";
+import { BUY_HOUSE_ASK_THRESHOLD, BUY_HOUSE_THRESHOLD, buyHouseSignalWeights, buyHouseSteps } from "./data";
 import type {
   Customer, DetectedIntent, Journey, JourneyState, Scoreboard, Signal, StepDecision,
 } from "./types";
@@ -17,6 +17,7 @@ export function detectIntents(customer: Customer, signals: Signal[]): DetectedIn
     intentId: "buy_house",
     label: "Buying a home",
     confidence,
+    level: confidence < BUY_HOUSE_ASK_THRESHOLD ? "none" : confidence < BUY_HOUSE_THRESHOLD ? "ask" : "suggest",
     needsConfirmation: confidence < BUY_HOUSE_THRESHOLD,
     reasons: own.map((s) => `${s.label} (${s.source})`),
   }];
