@@ -1,6 +1,6 @@
 # T1 — Signals & context
 
-> Owner: **Simon** · Status: **done** (on main, b22aee3) · Last update: 12:10 · Pipeline stages ① ② ③ (persistent context)
+> Owner: **Simon** · Status: **done** (on main, b22aee3) · Last update: 11:44 · Pipeline stages ① ② ③ (persistent context)
 > Read first: `backend/TASKS.md` (contract + vocabulary), `backend/backend.md` §3–4.
 
 ## Goal

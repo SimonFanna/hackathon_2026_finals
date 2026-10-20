@@ -1,6 +1,6 @@
 # Feature — Prediction model + synthetic data spec
 
-> Owner: Simon · Status: **built**: see `backend/T1-signals-context.md` and `backend/T2-ml-model.md` for what shipped (this file is the original design) · Last update: 12:10
+> Owner: Simon · Status: **built**: see `backend/T1-signals-context.md` and `backend/T2-ml-model.md` for what shipped (this file is the original design) · Last update: 11:44
 
 ## Goal
 

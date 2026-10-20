@@ -1,6 +1,6 @@
 # T2 — ML confidence model
 
-> Owner: **Simon** · Status: **done** (on main, 37473d5) · Last update: 12:10 · Pipeline stage ③ (moment confidence)
+> Owner: **Simon** · Status: **done** (on main, 37473d5) · Last update: 11:44 · Pipeline stage ③ (moment confidence)
 > Read first: `backend/TASKS.md`, `docs/features/prediction-model.md`, `docs/features/bank-data.md`.
 
 ## Goal
