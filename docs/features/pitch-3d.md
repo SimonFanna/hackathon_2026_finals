@@ -1,5 +1,5 @@
 # Feature — Pitch 3D "Lucas's World" (V1)
-> Owner: peer session "README hackathon 2026" (ultracode) · Coordinator: kepa · Status: in progress (plan ready) · Last update: 11:15
+> Owner: peer session "README hackathon 2026" (ultracode) · Coordinator: kepa · Status: **paused** (V1 working on `kepa`, set aside by the user as too big) · Last update: 11:48
 
 ## Goal
 A cinematic 3D miniature world, driven live during the 3-minute pitch, that shows the solution loop (signals → context → KBC + partners → customer in control → outcome, triple win) through the **entrepreneur** journey of Lucas. Creativity + Pitch = 50% of the score.
@@ -32,11 +32,27 @@ Controls: `→` / `PageDown` / `Space` = next · `←` / `PageUp` = back · `R` 
 - Respect `prefers-reduced-motion` (cuts instead of camera flights).
 
 ## Definition of done (V1)
-- [ ] `cd pitch3d && npm install && npm run dev` works; `npm run build` produces a static `dist/` that runs from `npx vite preview`.
-- [ ] All 7 beats reachable by keyboard and by `?beat=N`; back works.
-- [ ] Low-quality mode verified; fps measured in both modes (write the numbers here).
-- [ ] One screenshot per beat in `docs/screenshots/3d/`.
-- [ ] This doc updated (decisions, limits); `SOLUTION.md` feature table + log updated.
+- [x] `cd pitch3d && npm install && npm run dev` works; `npm run build` produces a static `dist/` (one 659 kB JS chunk incl. three.js, fonts bundled, relative base). `vite preview` not re-checked after the last commit.
+- [x] All 7 beats reachable by keyboard and by `?beat=N`; back works (idempotent director). Checked in headless Chrome.
+- [x] Low-quality mode works (`Q`, `?q=low`, auto when fps < 30); fps measured in both modes (below). **Below the 60 fps target in high**, see the next steps.
+- [x] One screenshot per beat in `docs/screenshots/3d/` (`beat-N-high.png`, 1600×900, captured on the Intel Iris Xe GPU).
+- [x] This doc updated; `SOLUTION.md` feature table + log updated.
+
+## Measured fps (11:45, Intel Iris Xe integrated GPU, Chrome + Vulkan, 1920×1080, DPR 1)
+| Mode | Beat 0 | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|---|
+| High (bloom, shadows) | 30 | 36 | 25 | 29 | 36 | 47 | 54 |
+| Low (no bloom, no shadows, 40% density) | 50 | 52 | 44 | 40 | 51 | 59 | 54 |
+| Auto (starts high, drops to low) | 36 | 42 | 31 | 26 | 38 | 56 | 58 |
+
+Steady-state fps per beat; the minimum during transitions was ~6–10 fps lower. Auto mode is slower than explicit low because the scene is built at high density before it drops.
+
+## Next steps when resumed (perf first)
+1. Shadows: render the shadow map once (`shadowMap.autoUpdate = false`), refresh only when the studio changes stage.
+2. Remove the Lucas `PointLight` (the glow pool already sells it); move city walls/roofs/ground to `MeshLambertMaterial`.
+3. Bloom at half resolution; in auto mode also trim the dense field (`setDrawRange`) and sparks when dropping to low.
+4. Art pass: beat 3 camera a bit wider; a loading state for the cold load (659 kB).
+5. Re-measure; target ≥ 55 fps high / 60 low on the Iris Xe.
 
 ## Data actually used (Supabase snapshot, 2026-10-20)
 - **Snapshot file:** `pitch3d/src/data/lucas.json`. It holds the customer row, the employment row, the children count (0), **all 137 `app_events`** with their `ecosystem_items` (name, ecosystem, partner), the 21 ecosystems, the 28 partners, and the customer count per city (2,000 synthetic customers in 23 cities).
@@ -105,5 +121,6 @@ Controls: `→` / `PageDown` / `Space` = next · `←` / `PageUp` = back · `R` 
 - **Bloom only in high quality** (`UnrealBloomPass` from three's examples, bundled). Low quality = pixelRatio 1, no bloom, no shadows, half the window instances.
 
 ## Known limits / improvement ideas
+- Headless Chrome on this machine defaults to SwiftShader (CPU, ~1 fps). Use `--use-angle=vulkan --enable-features=Vulkan --ignore-gpu-blocklist` to get the Iris Xe for captures and fps.
 - Lucas's job in the brainstorm was "graphic designer"; Supabase says IT employee. We follow Supabase.
 - Later: embed in the app, live Supabase read, sync beats with the phone demo.
