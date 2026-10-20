@@ -1,7 +1,9 @@
 // Kate on the real T6 output: what-ifs through simulate(), and the scenario choice after Sofie's income drop.
 import { describe, expect, it } from "vitest";
 import { ASOF, sofieCtx } from "../../fixtures/t5-sofie-plan";
-import { sofieCtxIncomeDrop, t6Rules } from "../../fixtures/t6-inputs";
+import { AT, costOverrunEvent, costOverrunSignals, partnerDelayEvent, partnerDelaySignals, sofieCtxIncomeDrop, t6Rules } from "../../fixtures/t6-inputs";
+import { assessImpact, detectDisruptions } from "../disruption";
+import { replan } from "../replan";
 import { incomeDropImpact, incomeDropScenarios, sofieGoal, sofiePlan, whatIf280k } from "../../fixtures/t6-sofie-scenarios";
 import { sharedData } from "../consent";
 import { simulate } from "../scenarios";
@@ -34,5 +36,18 @@ describe("Kate × T6", () => {
     expect(m.text).toContain(`A. ${incomeDropScenarios[0].label}`);
     expect(m.text).toContain(`B. ${incomeDropScenarios[1].label}`);
     expect(m.actions.map((x) => x.id)).toEqual([`choose:${incomeDropScenarios[0].id}`, `choose:${incomeDropScenarios[1].id}`, "advisor"]);
+  });
+
+  it.each([
+    ["PARTNER_DELAY", partnerDelaySignals, partnerDelayEvent, "running late (120 days)"],
+    ["COST_OVERRUN", costOverrunSignals, costOverrunEvent, "a quote came in €9,000 above"],
+  ] as const)("%s → {delta} comes from the disruption itself", (code, signals, event, expected) => {
+    const d = detectDisruptions([...signals], sofieCtx, sofieCtx, t6Rules, AT, [event]).find((x) => x.code === code)!;
+    const impact = assessImpact(d, sofieGoal, sofiePlan, sofieCtx);
+    const scenarios = replan(sofieGoal, sofiePlan, sofieCtx, impact, t6Rules, AT, d);
+    const dt = t6Rules.disruptionTypes.find((t) => t.code === code)!;
+    const m = kateForScenarios(impact, scenarios, sofieCtx, dt, sofieGoal, d);
+    expect(m.text).toContain(expected);
+    expect(m.text).not.toMatch(/\{\w+\}/);
   });
 });

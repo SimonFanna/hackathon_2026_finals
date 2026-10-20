@@ -1,6 +1,6 @@
 // Kate's templated messages. Pure and offline: the engine decides, these functions only phrase.
 import type {
-  ActiveMoment, Decision, DisruptionType, Goal, GoalConstraints, Impact, IntentDef, KateMessage,
+  ActiveMoment, Decision, Disruption, DisruptionType, Goal, GoalConstraints, Impact, IntentDef, KateMessage,
   PersistentContext, Plan, Priority, RuleSet, Scenario, Signal, SignalCode,
 } from "../../types";
 import type { KateDeps } from "./deps";
@@ -154,23 +154,34 @@ export function goalSetup(
   return { goalType, questions };
 }
 
-/** Difference between the first broken check's actual value and its limit, e.g. "€6,000". */
-function brokenDelta(impact: Impact): string | undefined {
+const DAY_MS = 86_400_000;
+const daysBetween = (from: string, to: string) => Math.round((Date.parse(to.slice(0, 10)) - Date.parse(from.slice(0, 10))) / DAY_MS);
+
+/** The `{delta}` of a disruption template: the disruption's own delta first, else the first broken check. */
+export function disruptionDelta(impact: Impact, disruption?: Disruption): string {
+  const d = disruption?.delta;
+  if (d?.delayDays) return `${d.delayDays} days`;
+  if (d?.costOverrunEur) return eur(d.costOverrunEur);
+  if (d?.rateDeltaPct) return `${d.rateDeltaPct > 0 ? "+" : "−"}${Math.abs(d.rateDeltaPct)} pt`;
   const c = impact.broken[0];
-  if (!c || typeof c.actual !== "number" || typeof c.limit !== "number") return undefined;
-  return eur(Math.abs(c.actual - c.limit));
+  if (c && typeof c.actual === "number" && typeof c.limit === "number") return eur(Math.abs(c.actual - c.limit));
+  if (c && typeof c.actual === "string" && typeof c.limit === "string") {
+    const days = daysBetween(c.limit, c.actual);
+    if (Number.isFinite(days) && days !== 0) return `${Math.abs(days)} days`;
+  }
+  return impact.disruption === "PARTNER_DELAY" ? "a few weeks" : impact.disruption === "RATE_CHANGE" ? "up" : "a significant amount";
 }
 
 /** ⑪ Scenario choice after a disruption: the T6 template + the 2 scenarios + choose / advisor actions. */
 export function kateForScenarios(
-  impact: Impact, scenarios: Scenario[], ctx: PersistentContext, dt: DisruptionType, goal?: Goal,
+  impact: Impact, scenarios: Scenario[], ctx: PersistentContext, dt: DisruptionType, goal?: Goal, disruption?: Disruption,
 ): KateMessage {
   const shown = scenarios.slice(0, 2);
   const letters = ["A", "B", "C"];
   const intro = fill(dt.kateTemplate, {
     firstName: ctx.firstName,
     goal: goal ? GOAL_NOUN[goal.type] : "current",
-    delta: brokenDelta(impact) ?? "more",
+    delta: disruptionDelta(impact, disruption),
   });
   const lines = shown.map((s, i) => {
     const parts = [

@@ -220,7 +220,7 @@ export function draftAnswer(route: Route, question: string, input: QaInput, deps
       const text = whatIfText(route.change, scenarios, base.monthlyPaymentNow, input.goal.constraints.maxMonthlyPayment);
       return {
         route: route.kind, text, scenarios: scenarios ?? undefined,
-        facts: { ...base, whatIf: route.change, simulated: scenarios?.slice(0, 2).map(scenarioFacts) ?? "unavailable" },
+        facts: { ...base, whatIf: route.change, simulated: scenarios?.slice(0, 3).map(scenarioFacts) ?? "unavailable" }, // [asked, fix1, fix2], as quoted
       };
     }
     case "later": {
