@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return Response.json({ error: "invalid_request" }, { status: 400 });
   const { slug, goalId, question } = parsed.data;
 
-  const session = loadSession(slug, goalId);
+  const session = await loadSession(slug, goalId);
   if (!session) return Response.json({ error: "no_plan" }, { status: 404 });
 
   const a = await answerPlanQuestion(question, session.input, kateDeps);

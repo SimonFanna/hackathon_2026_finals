@@ -19,12 +19,12 @@ export async function POST(req: Request) {
   if (!parsed.success) return Response.json({ error: "invalid_request" }, { status: 400 });
   const { slug, messageId, action, goalId } = parsed.data;
 
-  const session = loadSession(slug);
+  const session = await loadSession(slug, goalId, false);
   if (!session) return Response.json({ error: "unknown_customer" }, { status: 404 });
   const { ctx, rules, asOf } = session.input;
 
   const result = kateReply({ messageId, action: action as ReplyAction, ctx, rules, signals: session.signals, asOf, deps: kateDeps, goalId });
   if ("error" in result) return Response.json({ error: result.error }, { status: 400 });
-  if (result.feedback) saveFeedback(result.feedback);
+  if (result.feedback) await saveFeedback(result.feedback);
   return Response.json(result);
 }
