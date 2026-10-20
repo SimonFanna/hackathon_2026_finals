@@ -62,7 +62,7 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 | Engine signal → intent → journey | coordinator (kepa) | done (V0) | `journey-house-v0.md` |
 | Journey UI V0 | peer agent (kepa) | done, being redesigned | `journey-house-v0.md` |
 | UX redesign (KBC brand, market benchmark) | peer agent (kepa) | in progress | `ux-redesign.md` |
-| Supabase catalogue + data | — | todo | — |
+| Supabase catalogue + data | Simon | in progress | — (Simon to add `supabase.md`) |
 | Deck + demo (GIF/video) | — | todo | — |
 | Security (Aikido) + public repo | — | todo | — |
 
