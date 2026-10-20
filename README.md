@@ -71,7 +71,11 @@ Buying a house shows the gap well (sources in [`docs/assumptions.md`](docs/assum
 
 And even a perfect plan breaks: a quote comes in too high, a contractor is late, a job is lost. Today, the customer is alone at that moment too.
 
-**What KBC already has** (verified): the MyHome dashboard (March 2026), Immoscoop inside KBC Mobile, and the KBC × Immoscoop feasibility certificate. These are toolboxes. Nobody yet **detects** the moment, **sequences** the steps across ecosystems, and **keeps the plan alive** when things go wrong. That is our gap. Details in [`SOLUTION.md`](SOLUTION.md#differentiation).
+**What KBC already has** (verified): the MyHome dashboard (March 2026), Immoscoop inside KBC Mobile, and the KBC × Immoscoop feasibility certificate. These are toolboxes.
+
+> **But do customers even know about them, and do they really use them?**
+
+A toolbox only helps people who already know what to look for. Nobody yet **detects** the moment, **sequences** the steps across ecosystems, and **keeps the plan alive** when things go wrong. That is our gap. Details in [`SOLUTION.md`](SOLUTION.md#differentiation).
 
 ## 2. Our solution
 
