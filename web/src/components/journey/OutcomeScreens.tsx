@@ -4,9 +4,9 @@ import { CheckCircle, CircleDashed, LockSimple, Sparkle } from "@phosphor-icons/
 import { motion } from "motion/react";
 import {
   checkPlan, goalReached, isComplete, nextDisruption, planHealth, stepStatus,
-  type EvaluatedOption, type JourneyState, type PendingHit, type Persona, type Run, type StepStatus,
+  type EvaluatedOption, type JourneyState, type Persona, type Run, type StepStatus,
 } from "@/engine";
-import { formatValue, providerName, strategyLabel } from "./copy";
+import { providerName } from "./copy";
 import { ConstraintRow, HealthBar } from "./outcome-ui";
 import { KateLine } from "./Kate";
 import { PrimaryButton, ScreenLayout, TextButton } from "./ui";
@@ -36,7 +36,7 @@ export function LiveScreen({
 
   const kate = atFinish
     ? goalReached(run, model)
-      ? "You made it. Four surprises, and the plan held."
+      ? "You made it. Every surprise handled, and the plan held."
       : "You reached the finish line, but some limits are still broken. Let's look at them together."
     : run.history.length === 0
       ? "Your plan is live. I'll watch it and tell you the moment something changes."
@@ -124,18 +124,12 @@ function StatusIcon({ status }: { status: StepStatus }) {
   return <CircleDashed size={20} className="mt-0.5 shrink-0 text-night-100" />;
 }
 
-/** One scored option. Shown by the Demo V2 event page (EventPage.tsx). */
+/** One scored option, compact (Demo V2 event page): label, one-line trade-off, health; Kate's pick is badged. */
 export function OptionCard({
-  option: o, n, persona, pending, active, onSelect,
-}: { option: EvaluatedOption; n: number; persona: Persona; pending: PendingHit; active: boolean; onSelect: () => void }) {
-  const model = persona.outcome;
+  option: o, n, persona, active, onSelect,
+}: { option: EvaluatedOption; n: number; persona: Persona; active: boolean; onSelect: () => void }) {
   const missing = o.requiresStep ? persona.journey.steps.find((s) => s.id === o.requiresStep) : null;
-  // Show the constraints this option moves, plus any it leaves broken.
-  const moved = o.checks.filter((c) => {
-    const before = pending.hit.values[c.key];
-    return c.value !== before || c.limit !== pending.hit.limits[c.key] || !c.ok;
-  });
-  const provider = o.provider ? (o.provider.kind === "kbc" ? "KBC" : o.provider.name) : null;
+  const tone = o.feasible ? "bg-green/12 text-green-600" : "bg-danger/10 text-danger";
 
   return (
     <button
@@ -143,45 +137,33 @@ export function OptionCard({
       aria-checked={active}
       disabled={!o.available}
       onClick={onSelect}
-      className={`press relative block w-full rounded-[8px] bg-white p-3.5 text-left shadow-card transition-shadow ${
+      className={`press relative block w-full rounded-[8px] bg-white px-3.5 py-3 text-left shadow-card transition-shadow ${
         active ? "ring-2 ring-accent" : "ring-1 ring-transparent hover:ring-night-100"
       } ${!o.available ? "opacity-55" : ""}`}
     >
-      <span className="flex items-center gap-2 text-[12px] font-bold">
-        <span className="tabular grid size-5 place-items-center rounded-full bg-surface text-night-300">{n}</span>
-        <span className="rounded-[4px] bg-element px-1.5 py-0.5 text-night-300">{strategyLabel[o.strategy]}</span>
-        {provider && <span className="text-night-300">{provider}</span>}
-        {o.recommended && (
-          <span className="ml-auto flex items-center gap-1 rounded-full bg-kate/20 px-2 py-0.5 text-night">
-            <Sparkle size={12} weight="fill" className="text-accent-600" /> Kate recommends
-          </span>
-        )}
-      </span>
-      <span className="mt-2 block text-[17px] font-bold leading-[22px]">{o.label}</span>
-      <span className="mt-1 block text-[14px] leading-[19px] text-night-300">{o.tradeoff}</span>
-
-      {!o.available && missing ? (
-        <span className="mt-2 flex items-center gap-1.5 text-[13px] font-semibold text-night-300">
-          <LockSimple size={14} weight="bold" /> Not available: you skipped “{missing.title}”
-        </span>
-      ) : (
-        <span className="mt-2 flex flex-wrap gap-1.5">
-          {moved.map((c) => {
-            const def = model.constraints.find((x) => x.key === c.key)!;
-            return (
-              <span
-                key={c.key}
-                className={`tabular rounded-[4px] px-1.5 py-0.5 text-[12px] font-bold ${c.ok ? "bg-green/12 text-green-600" : "bg-danger/10 text-danger"}`}
-              >
-                {c.ok ? "✓" : "✕"} {def.label} {formatValue(def, c.value)}
+      <span className="flex items-start gap-2.5">
+        <span className="tabular mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-surface text-[12px] font-bold text-night-300">{n}</span>
+        <span className="min-w-0 flex-1">
+          <span className="flex items-start justify-between gap-2">
+            <span className="text-[16px] font-bold leading-[21px]">{o.label}</span>
+            {o.recommended && (
+              <span className="flex shrink-0 items-center gap-1 rounded-full bg-kate/20 px-2 py-0.5 text-[12px] font-bold text-night">
+                <Sparkle size={12} weight="fill" className="text-accent-600" /> Kate recommends
               </span>
-            );
-          })}
-          <span className="tabular rounded-[4px] bg-surface px-1.5 py-0.5 text-[12px] font-bold text-night-300">
-            Health {o.health}%{o.extraCostEur ? ` · €${(o.extraCostEur / 1000).toLocaleString("en-GB", { maximumFractionDigits: 1 })}k hidden cost` : ""}
+            )}
           </span>
+          <span className="mt-0.5 block text-[14px] leading-[19px] text-night-300">{o.tradeoff}</span>
+          {!o.available && missing ? (
+            <span className="mt-1.5 flex items-center gap-1.5 text-[13px] font-semibold text-night-300">
+              <LockSimple size={14} weight="bold" /> Not available: you skipped “{missing.title}”
+            </span>
+          ) : (
+            <span className={`tabular mt-1.5 inline-block rounded-[4px] px-1.5 py-0.5 text-[12px] font-bold ${tone}`}>
+              Health {o.health}%{o.extraCostEur ? ` · €${(o.extraCostEur / 1000).toLocaleString("en-GB", { maximumFractionDigits: 1 })}k hidden cost` : ""}
+            </span>
+          )}
         </span>
-      )}
+      </span>
     </button>
   );
 }
