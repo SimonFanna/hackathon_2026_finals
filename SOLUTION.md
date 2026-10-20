@@ -87,6 +87,7 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 | Supabase live data in the demo (Sofie + signals, offline snapshot) | kepa | done on `main`; **not wired into the UI on branch `victor`** (Victor's call: static players Thomas + Lina for now). `bank.ts`, `bankSnapshot.ts`, `bankClient.ts` and their tests are kept as is. | `supabase-live-data.md` |
 | Pitch 3D "Lucas's World" (`pitch3d/`, three.js, 7 beats, Supabase snapshot) | Kepa UI terminal | **paused** (V1 works on `kepa`, not merged) | `pitch-3d.md` |
 | 3D persona carousel at app start (`web/src/components/picker/`, three.js, CC0 people, procedural scenes, 2D fallback) | Kepa UI terminal | V1 on `main` (1556de3); art polish on `kepa`. High quality by default (bloom + MSAA); `?q=low` → 2D | `persona-picker-3d.md` |
+| 3D build stage: the player's diorama builds piece by piece as steps are accepted, cracks on a disruption, repairs on the choice, lights up at the finale (`web/src/components/build/`) | peer agent (kepa) | done (V1) | `build-stage-3d.md` |
 | Deck + demo (GIF/video) | — | todo | — |
 | Security (Aikido) + public repo | Kepa UI terminal (hardening) · user/Simon (Aikido) | in progress: headers + CSP done, Aikido not connected | `docs/features/security.md` |
 
@@ -128,3 +129,4 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
   - production default is high quality (bloom + MSAA, no automatic downgrade; `?q=low`, `?bloom=0`, `?q=auto` are manual switches).
   Prod full flow Thomas → C → Lina: 0 console/CSP errors.
 - **13:48** — UI wired to the backend (`Stage.tsx` + `lib/backend.ts`). The ML intent, real plan, consents, outcome and T6 scenarios are shown on screen, with an automatic fallback to the local engine. Verified in headless Chrome (house 44 / business 20 API calls, all 200; twice in a row; /api blocked → local fallback OK).
+- **13:55** — Demo V2 P4: 3D build stage left of the phone (`web/src/components/build/`). The picker's dioramas now carry build phases (opt-in); each accepted step drops its piece in (Exyro's springOut, credited), skipped steps stay a cyan outline, a disruption flashes red and sags the affected piece, the choice repairs it, the finale lights the windows and the person cheers. Presenter panel is an overlay. 60 fps in headless GPU Chrome at 1080p, 0 console errors (`docs/screenshots/demo-v2/p4-*`).
