@@ -7,6 +7,6 @@ import { createGoalFor } from "@/backend/service";
 export async function POST(req: Request) {
   return handle(async () => {
     const { slug, ...input } = await body(req, goalBody);
-    return createGoalFor(slug, input, serverDeps());
-  });
+    return createGoalFor(slug, input, await serverDeps());
+  }, { req, route: "goals" });
 }

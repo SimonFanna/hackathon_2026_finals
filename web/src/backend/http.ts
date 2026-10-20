@@ -1,18 +1,25 @@
 // T7 — API helpers: zod schemas for every body / param, and one error policy (400 / 404 / 500, no internals leaked).
+import { timingSafeEqual } from "node:crypto";
 import { z } from "zod";
+import { clientKey, rateLimit } from "../app/api/kate/_lib/rate-limit"; // reuse Kate's limiter
 import { DEMO_SLUGS } from "./data/personas";
-import { PRESETS, NotFound } from "./service";
+import { BadRequest, Forbidden, NotFound, TooManyRequests } from "./errors";
+import { PRESETS } from "./service";
 import { CAPABILITY_CODES, GOAL_TYPES } from "./vocabulary";
 
+export { BadRequest } from "./errors";
+
 const MAX_BODY_BYTES = 16_000;
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}(T[\d:.]+Z?)?$/, "ISO date");
+const WRITES_PER_MINUTE = 30;
+const isoDate = z.iso.date();
+const isoDateTime = z.union([z.iso.date(), z.iso.datetime({ offset: true })]);
 const code = z.string().regex(/^[A-Za-z0-9_:-]{1,80}$/);
 const label = z.string().min(1).max(80);
 
 export const slugParam = z.enum(DEMO_SLUGS);
 export const goalIdParam = z.string().regex(/^goal-\d{1,6}-[a-z_]{1,40}$/);
 export const stepIdParam = code;
-export const scenarioIdParam = z.string().regex(/^[A-Za-z0-9_:.-]{1,120}$/);
+export const scenarioIdParam = z.string().regex(/^[A-Za-z0-9_:.+-]{1,160}$/); // T6 ids, e.g. goal-1-…:v1:extend_term+add_protection
 
 export const feedbackBody = z.object({ target: code, kind: z.enum(["yes", "not_now", "no", "not_relevant"]) });
 
@@ -21,11 +28,14 @@ export const eventsBody = z.union([
   z.object({
     event: z.object({
       id: code,
-      at: isoDate,
+      at: isoDateTime,
       source: z.enum(["app", "transaction", "profile", "partner"]),
       kind: code,
       sourceRow: z.number().int().min(1).max(10_000).optional(),
-      detail: z.record(z.string().max(40), z.union([z.string().max(200), z.number(), z.boolean(), z.null()])).default({}),
+      detail: z
+        .record(z.string().max(40), z.union([z.string().max(200), z.number().min(-1_000_000).max(1_000_000), z.boolean(), z.null()]))
+        .refine((d) => Object.keys(d).length <= 20, "at most 20 detail fields")
+        .default({}),
     }),
   }),
 ]);
@@ -72,8 +82,6 @@ export const whatIfBody = z
   })
   .strict();
 
-export class BadRequest extends Error {}
-
 /** Parse a JSON body against a schema (size-capped). */
 export async function body<T extends z.ZodType>(req: Request, schema: T): Promise<z.infer<T>> {
   const text = await req.text();
@@ -93,13 +101,39 @@ export function parse<T extends z.ZodType>(schema: T, value: unknown): z.infer<T
   return r.data;
 }
 
-/** Run a handler with the API error policy. */
-export async function handle(fn: () => Promise<unknown>): Promise<Response> {
+const sameToken = (a: string, b: string) => a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
+
+/**
+ * Guard for state-changing requests:
+ * - browsers: same-origin only (blocks drive-by writes from other sites);
+ * - per-client rate limit (in-memory, per instance);
+ * - `control` routes (reset, event injection) need `x-demo-token` == the server-only DEMO_TOKEN when it is set.
+ */
+export function guardWrite(req: Request, route: string, opts: { control?: boolean } = {}): void {
+  const site = req.headers.get("sec-fetch-site");
+  const origin = req.headers.get("origin");
+  const host = req.headers.get("host");
+  if ((site && site !== "same-origin" && site !== "none") || (!site && origin && host && new URL(origin).host !== host)) {
+    throw new Forbidden("cross-site request");
+  }
+  const rl = rateLimit(clientKey(req, `write:${route}`), WRITES_PER_MINUTE);
+  if (!rl.ok) throw new TooManyRequests(rl.retryAfterS);
+  const token = process.env.DEMO_TOKEN;
+  if (opts.control && token && !sameToken(req.headers.get("x-demo-token") ?? "", token)) throw new Forbidden("demo token required");
+}
+
+/** Run a handler with the API error policy. Pass `req` + `route` to guard a state-changing route. */
+export async function handle(fn: () => Promise<unknown>, guard?: { req: Request; route: string; control?: boolean }): Promise<Response> {
   try {
+    if (guard) guardWrite(guard.req, guard.route, { control: guard.control });
     return Response.json(await fn(), { headers: { "Cache-Control": "no-store" } });
   } catch (err) {
     if (err instanceof BadRequest) return Response.json({ error: "bad_request", detail: err.message }, { status: 400 });
     if (err instanceof NotFound) return Response.json({ error: "not_found", detail: err.message }, { status: 404 });
+    if (err instanceof Forbidden) return Response.json({ error: "forbidden", detail: err.message }, { status: 403 });
+    if (err instanceof TooManyRequests) {
+      return Response.json({ error: "rate_limited" }, { status: 429, headers: { "Retry-After": String(err.retryAfterS) } });
+    }
     console.error("[api]", err);
     return Response.json({ error: "internal_error" }, { status: 500 });
   }

@@ -7,6 +7,6 @@ import { injectFor } from "@/backend/service";
 export async function POST(req: Request, ctx: RouteContext<"/api/customers/[slug]/events">) {
   return handle(async () => {
     const slug = parse(slugParam, (await ctx.params).slug);
-    return { injected: await injectFor(slug, await body(req, eventsBody), serverDeps()) };
-  });
+    return { injected: await injectFor(slug, await body(req, eventsBody), await serverDeps()) };
+  }, { req, route: "events", control: true });
 }

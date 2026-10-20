@@ -2,7 +2,9 @@
 import { describe, expect, it } from "vitest";
 import { memoryRepo } from "./data/repo";
 import { type Deps, runPipeline } from "./pipeline";
-import { chooseScenarioFor, consentFor, createGoalFor, injectFor, resetFor, stepActionFor } from "./service";
+import { BadRequest } from "./errors";
+import { scenarioIdParam } from "./http";
+import { chooseScenarioFor, consentFor, createGoalFor, feedbackFor, injectFor, resetFor, stepActionFor } from "./service";
 
 const deps = (): Deps => ({ db: null, repo: memoryRepo() });
 
@@ -90,5 +92,24 @@ describe("pipeline, offline", () => {
     const r = await runPipeline("sofie", d);
     expect(r.goals).toEqual([]);
     expect(r.disruptions).toEqual([]);
+  });
+
+  it("review fixes: double preset click, real scenario ids, re-created goal, goal types without a template, feedback", async () => {
+    const d = deps();
+    const { goal } = await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, d);
+    await injectFor("sofie", { preset: "income_drop" }, d);
+    await injectFor("sofie", { preset: "income_drop" }, d); // #3: second click must not cancel the disruption
+    const r = await runPipeline("sofie", d);
+    expect(r.disruptions.map((x) => x.code)).toContain("INCOME_DROP");
+    for (const sc of r.scenarios) expect(scenarioIdParam.safeParse(sc.id).success).toBe(true); // #2
+    await chooseScenarioFor(goal.id, r.scenarios[0].id, d);
+    const again = await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, d); // P1: fresh v1
+    expect((await d.repo.getPlan(goal.id))?.version).toBe(again.plan.version);
+    expect(await d.repo.getConsents(goal.id)).toEqual([]);
+    await expect(createGoalFor("nadia", { type: "WELCOME_BABY", constraints: {}, priorities: [] }, d)).rejects.toBeInstanceOf(BadRequest); // #5
+    await resetFor("sofie", d);
+    await feedbackFor("sofie", { target: "BUY_HOME", kind: "no" }, d); // #8: "No" silences the proposal
+    const after = await runPipeline("sofie", d);
+    expect(after.decisions.find((x) => x.intent === "BUY_HOME")?.level).not.toMatch(/ASK|SUGGEST/);
   });
 });

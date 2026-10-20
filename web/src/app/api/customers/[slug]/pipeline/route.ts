@@ -4,5 +4,5 @@ import { handle, parse, slugParam } from "@/backend/http";
 import { runPipeline } from "@/backend/pipeline";
 
 export async function GET(_req: Request, ctx: RouteContext<"/api/customers/[slug]/pipeline">) {
-  return handle(async () => runPipeline(parse(slugParam, (await ctx.params).slug), serverDeps()));
+  return handle(async () => runPipeline(parse(slugParam, (await ctx.params).slug), await serverDeps()));
 }

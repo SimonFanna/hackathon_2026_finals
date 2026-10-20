@@ -1,5 +1,5 @@
 # Feature — T7 Data layer, pipeline & API
-> Owner: Simon (Claude session `simon-data`) · Status: in progress (T1 / T2 / T8 stand-ins) · Last update: 12:05
+> Owner: Simon (Claude session `simon-data`) · Status: done, review fixes applied · Last update: 12:50
 
 ## Goal
 Make the pure engine run for real: load facts and rules from Supabase (server-side), chain every stage in `runPipeline`, persist the runtime state, expose the API, and keep the demo working offline. Spec: `backend/T7-data-pipeline-api.md`.
@@ -27,6 +27,12 @@ Make the pure engine run for real: load facts and rules from Supabase (server-si
 - `pipeline.test.ts`: the demo checks pass offline (Sofie → BUY_HOME + Kate, plan ≥ 10 steps / ≥ 3 partners / dependency order / covered products / consent; income drop → INCOME_DROP, at risk, 2 scenarios, WAIT, choose → new version; Lucas → START_BUSINESS; Els / Thomas → no message; reset). T1 is simulated from T3's persona fixtures until it lands.
 - `next start` smoke test: every route answers, bad input → 400, unknown step → 404; 2nd pipeline call 3 ms (cache).
 - No secret in the client bundle (`grep SUPABASE_SECRET_KEY .next/static` → nothing).
+
+## Review fixes (backend/REVIEW.md, 12:50)
+- #2 scenario ids with `+` accepted (`scenarioIdParam`); #3 the memory repo replaces injected events by id; #5 goal types without a template → 400; #8 ledger dates mapped to `YYYY-MM-DD`; #9 `z.iso.date()` for dates, bounded event numbers (±1,000,000, ≤ 20 fields).
+- #7 write guard on every POST (`guardWrite` in `http.ts`): same-origin only for browsers, 30 writes / min / client, and `x-demo-token` == `DEMO_TOKEN` on `reset` and `events` **when `DEMO_TOKEN` is set** (not set yet: the UI's demo buttons would need to send it).
+- #10 Supabase unreachable: cached probe (1.5 s timeout, 60 s / 20 s TTL) → snapshot + memory; every Supabase call has a 4 s timeout; `BACKEND_OFFLINE=1` forces offline. Verified: first call 1.5 s, then 8 ms.
+- P1: re-creating a goal deletes the old one (plans, consents, scenarios) first; ledger reads keep the newest 500 rows; `partner_delay` = 120 days (beyond the default slack).
 
 ## Known limits / improvement ideas
 - Real signals need T1; real ML needs T2 `momentModel`; real Kate needs T8.

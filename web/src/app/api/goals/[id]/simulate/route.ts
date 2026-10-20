@@ -5,5 +5,5 @@ import { simulateFor } from "@/backend/service";
 
 /** What-if: scenarios for a changed budget, income, term, rate or deadline. Nothing is saved. */
 export async function POST(req: Request, ctx: RouteContext<"/api/goals/[id]/simulate">) {
-  return handle(async () => ({ scenarios: await simulateFor(parse(goalIdParam, (await ctx.params).id), await body(req, whatIfBody), serverDeps()) }));
+  return handle(async () => ({ scenarios: await simulateFor(parse(goalIdParam, (await ctx.params).id), await body(req, whatIfBody), await serverDeps()) }), { req, route: "simulate" });
 }

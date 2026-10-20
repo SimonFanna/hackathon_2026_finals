@@ -4,9 +4,9 @@ import { handle, parse, slugParam } from "@/backend/http";
 import { resetFor } from "@/backend/service";
 
 /** Demo: wipe this persona's goals, plans, consents, feedback and injected events. */
-export async function POST(_req: Request, ctx: RouteContext<"/api/customers/[slug]/reset">) {
+export async function POST(req: Request, ctx: RouteContext<"/api/customers/[slug]/reset">) {
   return handle(async () => {
-    await resetFor(parse(slugParam, (await ctx.params).slug), serverDeps());
+    await resetFor(parse(slugParam, (await ctx.params).slug), await serverDeps());
     return { ok: true };
-  });
+  }, { req, route: "reset", control: true });
 }

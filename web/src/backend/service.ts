@@ -1,6 +1,7 @@
 // T7 — the operations behind the API routes. Route handlers only validate input and call these,
 // so every demo flow can also run offline in tests (snapshot + memory repo).
 import { DEMO_AS_OF, EXCLUDE_TX_KIND } from "./data/facts";
+import { BadRequest, NotFound } from "./errors";
 import { customerIdOf } from "./data/load";
 import { DEMO_SLUGS, type DemoSlug } from "./data/personas";
 import { applyStepAction, currentConsents, setConsent, sharedData, type StepAction } from "./engine/consent";
@@ -12,7 +13,6 @@ import { trackOutcome } from "./engine/tracker";
 import { type Deps, loadSituation } from "./pipeline";
 import type { Consent, Event, Feedback, Goal, GoalConstraints, GoalType, Outcome, Plan, Priority, Scenario } from "./types";
 
-export class NotFound extends Error {}
 
 const slugOf = (customerId: number): DemoSlug => {
   const slug = DEMO_SLUGS.find((s) => customerIdOf(s) === customerId);
@@ -38,8 +38,11 @@ export async function createGoalFor(
   deps: Deps,
 ): Promise<{ goal: Goal; plan: Plan; outcome: Outcome }> {
   const s = await loadSituation(slug, deps);
+  if (!s.rules.templates.some((t) => t.goalType === input.type)) throw new BadRequest(`no plan template for ${input.type} yet`);
   const goal = createGoal({ customerId: s.ctx.customerId, ...input }, s.ctx, s.rules, s.asOf);
   const plan = applyDecisionRules(buildPlan(goal, s.ctx, s.rules, s.asOf), s.ctx, s.feedback, s.rules);
+  // Same goal again (no reset): start over, so old plan versions, consents and scenarios never resurface.
+  if (await deps.repo.getGoal(goal.id)) await deps.repo.deleteGoal(goal.id);
   await deps.repo.saveGoal(goal);
   await deps.repo.savePlan(plan);
   return { goal, plan, outcome: await saveOutcome(goal, plan, deps) };
@@ -98,6 +101,7 @@ export async function resetFor(slug: DemoSlug, deps: Deps): Promise<void> {
 // ---------- demo presets (shapes agreed with T1: backend/T7 "Injected presets") ----------
 
 export const PRESETS = ["income_drop", "cost_overrun", "partner_delay"] as const;
+export const PARTNER_DELAY_DAYS = 120;
 export type Preset = (typeof PRESETS)[number];
 
 const lastFullMonth = (asOf: string): string => {
@@ -151,7 +155,8 @@ export async function presetEvents(slug: DemoSlug, preset: Preset, deps: Deps): 
       source: "partner",
       kind: "partner:delayed",
       sourceRow: 131,
-      detail: { delayDays: 60, capability: "quote_insulation", sourceRow: 131, partner: insulation?.provider ?? "Impact us today" },
+      // 120 days: beyond the default goal's slack (~85 days), so the delay visibly threatens the deadline.
+      detail: { delayDays: PARTNER_DELAY_DAYS, capability: "quote_insulation", sourceRow: 131, partner: insulation?.provider ?? "Impact us today" },
     },
   ];
 }

@@ -7,6 +7,6 @@ export async function POST(req: Request, ctx: RouteContext<"/api/goals/[id]/step
   return handle(async () => {
     const p = await ctx.params;
     const { action } = await body(req, stepBody);
-    return stepActionFor(parse(goalIdParam, p.id), parse(stepIdParam, p.stepId), action, serverDeps());
-  });
+    return stepActionFor(parse(goalIdParam, p.id), parse(stepIdParam, p.stepId), action, await serverDeps());
+  }, { req, route: "steps" });
 }

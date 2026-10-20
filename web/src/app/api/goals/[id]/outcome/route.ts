@@ -4,5 +4,5 @@ import { goalIdParam, handle, parse } from "@/backend/http";
 import { getOutcome } from "@/backend/service";
 
 export async function GET(_req: Request, ctx: RouteContext<"/api/goals/[id]/outcome">) {
-  return handle(async () => getOutcome(parse(goalIdParam, (await ctx.params).id), serverDeps()));
+  return handle(async () => getOutcome(parse(goalIdParam, (await ctx.params).id), await serverDeps()));
 }
