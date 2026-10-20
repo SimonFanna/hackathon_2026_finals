@@ -1,6 +1,6 @@
 # T1 — Signals & context
 
-> Owner: **Simon** · Status: todo · Last update: 11:00 · Pipeline stages ① ② ③ (persistent context)
+> Owner: **Simon** · Status: **done** (on main, b22aee3) · Last update: 11:44 · Pipeline stages ① ② ③ (persistent context)
 > Read first: `backend/TASKS.md` (contract + vocabulary), `backend/backend.md` §3–4.
 
 ## Goal
@@ -101,13 +101,15 @@ Check against the real data: Sofie must get `MORTGAGE_SIMULATION` (4 simulations
 
 ## Steps
 
-- [ ] Migration + seed `signal_rules`; apply; advisors clean
-- [ ] `toEvents` + tests (one app event, one tx, one injected)
-- [ ] `extractSignals` (event rules) + saturation/decay + tests
-- [ ] Pattern matchers (saving growth, salary missing, freelance, car loan ending, child born, large expense) + tests
-- [ ] `buildContext` + tests (age, savings, debt ratio, cashflow pressure)
-- [ ] Sofie fixture committed early (11:45), real persona outputs after the snapshot
-- [ ] Doc: update this file's status + the `SOLUTION.md` log
+- [x] Migration + seed `signal_rules` (39 rules, one per SignalCode; source `fixtures/t1-signal-rules.json` → `scripts/ml/signal_rules_sql.py`); applied; advisors clean
+- [x] `toEvents` + tests (app, tx, injected, profile `loan` / `child` / `employment` events; ids prefixed `app:` / `tx:` / `profile:`)
+- [x] `extractSignals` (kind alternatives `a|b`, catalogue rows, detail condition, Kate keywords) + saturation/decay + tests
+- [x] Patterns `saving_growth`, `salary_missing`, `income_drop`, `freelance` + tests; car loan ending, child born and large expense are plain rules on profile / tx events
+- [x] `buildContext` + tests (observed income after an INCOME_DROP; high debt ratio is `high` only without a 3-month savings cushion)
+- [x] `fixtures/t1-sofie.ts` (11:24); real facts of the 6 personas in `fixtures/t1-demo-facts.json` + acceptance tests `engine/t1-personas.test.ts`
+- [x] Doc: status + `SOLUTION.md` log
+
+New SignalCodes (T1 owns them): `HOME_LOAN_VIEW`, `BUSINESS_TOOLS_VIEW`, `BUSINESS_PROTECTION_VIEW`, `FAMILY_PROTECTION_VIEW`, `FAMILY_KATE_QUESTION`, `EV_KATE_QUESTION`, `ESTATE_PLANNING_VIEW`, `RETIREMENT_KATE_QUESTION`. Injected demo events must be dated ≤ `asOf`; `income_drop` = remove last month's `tx:salary` + `tx:benefits` from a non-child-benefit payer.
 
 ## Acceptance
 

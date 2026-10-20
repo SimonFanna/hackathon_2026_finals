@@ -1,6 +1,6 @@
 # T2 — ML confidence model
 
-> Owner: **Simon** · Status: todo · Last update: 11:00 · Pipeline stage ③ (moment confidence)
+> Owner: **Simon** · Status: **done** (on main, 37473d5) · Last update: 11:44 · Pipeline stage ③ (moment confidence)
 > Read first: `backend/TASKS.md`, `docs/features/prediction-model.md`, `docs/features/bank-data.md`.
 
 ## Goal
@@ -59,14 +59,24 @@ Also create `model_metrics(model_version, moment, auc, ap, n_pos, n_neg)` for th
 
 ## Steps
 
-- [ ] Migration `model_weights` + `model_metrics`
-- [ ] `features.ts` + tests (stable keys, no NaN, same output for the same input)
-- [ ] `model.ts` `predict()` + tests (sigmoid, contributions sorted, null when no weights)
-- [ ] Temporary SQL feature export → first training run → first `weights.json`
-- [ ] Switch the export to the TS feature path (after T1) → retrain → weights in DB + JSON
-- [ ] Metrics per moment in `model_metrics` + in this doc
-- [ ] 2.5M benchmark script + number in `SOLUTION.md`
-- [ ] Doc: update status + `prediction-model.md`
+- [x] Migration `model_weights` + `model_metrics` (applied; **rows not loaded yet**: run `supabase/seed/model_weights.sql`. Until then T7 falls back to `weights.json`, same model)
+- [x] `features.ts` + tests (105 features: `sig_`/`cnt_` per SignalCode + context; `segment_*` replaced by `emp_*` since the context has no segment)
+- [x] `model.ts` `predict()` + `score()` (batch) + `momentModel` + tests; confidence capped at 0.95
+- [x] Skipped: T1 was ready first, so the export uses the TS path directly
+- [x] `scripts/ml/export_facts.py` (CSV → CustomerFacts) → `export_features.ts` (real T1+T2 code) → `train.py` → `weights.json` (`lr-2026-10-20`, 475 weights)
+- [x] Metrics per moment (5-fold CV, out-of-fold) in `engine/model-metrics.json` and below
+- [x] `scripts/ml/benchmark.ts`: 2.5M customers × 5 moments in **1.15 s** on one core (dense vectors, 92 ns/score); 2.9 µs with `score()`, ~5 µs explained
+- [x] Doc: status + `prediction-model.md`
+
+| Moment | AUC | AP | positives |
+|---|---|---|---|
+| HOME_BUYING | 0.995 | 0.976 | 141 |
+| STARTING_BUSINESS | 0.996 | 0.983 | 102 |
+| NEW_PARENT | 0.996 | 0.951 | 67 |
+| EV_PURCHASE | 0.990 | 0.933 | 122 |
+| RETIREMENT_PREP | 0.991 | 0.933 | 71 |
+
+Demo personas (via `scripts/ml/demo_scores.ts`): Sofie, Lucas, Nadia and Pieter reach 0.95 (the cap) on their own moment; Thomas reaches 0.10 on HOME_BUYING; Els stays ≤ 0.01 everywhere. Caveat: on synthetic data the model mostly re-learns the generator; post-conversion facts (e.g. `holds_ev_insurance`) leak into the labels. Retrain on real Kate yes/no feedback.
 
 ## Acceptance
 
