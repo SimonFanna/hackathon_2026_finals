@@ -1,5 +1,5 @@
 # Feature — 3D persona carousel at app start
-> Owner: peer session "README hackathon 2026" (ultracode) · Coordinator: kepa · App owner: Victor · Status: in progress (plan ready) · Last update: 12:10
+> Owner: peer session "README hackathon 2026" (ultracode) · Coordinator: kepa · App owner: Victor · Status: in progress (V1 integrated, polishing) · Last update: 12:45
 
 ## Goal
 Replace the 2D "Choose your player" cards (`CharacterSelect.tsx`, Victor, see `outcome-engine.md`) with a **3D carousel of miniature life scenes**, then an **entry animation into the phone**, then the existing live demo, unchanged. It makes the app feel premium from the first second (Creativity + Pitch = 50%).
@@ -56,9 +56,74 @@ Replaces the paused "Lucas's World" (`pitch-3d.md`). Reuse its learnings: the Ir
 
 **Milestones:** plan ready → first render → integrated + verified (prod build, GPU Playwright, full flow Thomas → C → Lina, no console/CSP errors) → merged into `main` from a separate worktree.
 
+## How it works (built)
+
+**Flow:** `Stage` (screen `select`) → `CharacterSelect3D` → (3D) `PickerCanvas` + DOM layer, or (fallback) Victor's `CharacterSelect`.
+
+**Play, step by step:**
+1. **Trigger.** Enter (Stage calls `pickerPlay.current`), a click on the centred diorama, or the "Play as …" button.
+2. **Overlay.** `createHandoff()` puts a fixed overlay on `document.body`.
+3. **Dive.** `PickerCanvas` settles the turntable to face the camera, then flies the camera into the lit window (ease-in, FOV 30 → 26, about 0.9 s). At 68% of the flight it calls `cover()`: the warm light fades in over the 3D scene.
+4. **Mount.** `onPlay(id)` lets Stage switch to `home`; the picker unmounts and disposes its WebGL context.
+5. **Land.** `land()` waits for `[data-phone-anchor]`, measures it, then:
+   - morphs the light (WAAPI) into the phone screen: inset by the 10 px bezel × scale, 50 px radius × scale, warm → `#F2F2F2`;
+   - fades the night backdrop so the phone frame and the HUD appear around it;
+   - fades the light out to reveal the home screen. Kate's notification follows as before.
+6. **Reduced motion.** A 200 ms crossfade instead of the dive.
+
+**Carousel:**
+- Cover-flow order: retire · **Thomas** · **Lina** · baby · car.
+- Critically damped spring on a continuous `focus` index. A drag maps pixels to focus; release snaps to the nearest playable item. A tap is a raycast: a side item selects, the centred item plays, a locked item wiggles.
+- Each diorama sways gently on its turntable; off under reduced motion.
+- DOM over the canvas:
+  - one focusable `role=radio` button per diorama, with `aria-label` (pointer-events off, so drags reach the canvas);
+  - lock captions under the locked goals;
+  - the player card (name, goal, stats, the 4 event badges from `EventBadge`, Play).
+
+**People:**
+- Two CC0 rigged and animated models by Quaternius ("Casual Character" → Thomas, "Animated Woman" → Lina; also the locked silhouettes). They were downloaded with the user's approval in the UI session, then inspected: pure glTF 2.0, no external URIs, no required extensions, no textures.
+- Stored in `web/public/picker/` (1.43 + 1.49 MB); credits and SHA-256 in `web/public/picker/CREDITS.md`.
+- `characterGltf.ts`:
+  - loads each file once (same origin, works offline, no decoder, CSP unchanged) and clones per character with `SkeletonUtils`;
+  - recolours with the tokens (Thomas top `#0097DB`, Lina dress `#00903D`, skin/hair as in Victor's avatars) and normalises to 1.1 units on the diorama's `stand`;
+  - poses: `AnimationMixer` Idle; Wave when centred (every ~7.5 s); Wave × 1.5 + a hop on Play, before the dive. Locked goals are night-blue silhouettes.
+
+**Scenes (`dioramas.ts`, procedural):**
+- Thomas: a stepped-gable Flemish brick house, slate roof, white frames, a lit window with a lamp (the dive target), FOR SALE sign, 4 moving boxes, hedges, a path.
+- Lina: "LINA'S COFFEE" in navy with a striped awning, an espresso machine glowing behind the window, a COMING SOON A-frame, bistro tables with a steaming cup.
+- Locked: a cottage + bench (retire), a house + stroller + balloons (baby), an electric car + wall box (car), each with a padlock.
+- Canvas textures only.
+
+**Render:**
+- `WebGLRenderer` (DPR ≤ 1.5), ACES, hemisphere + key + rim lights. No point lights, no shadow maps.
+- **Default: native MSAA, no post-processing, plus additive window halos** (one sprite per lit window). Bloom (half resolution, MSAA half-float target) is opt-in with `?bloom=1` for strong GPUs.
+- Governor: only sustained drops count; it ignores start-up, asset uploads and resizes. Under 45 fps for 2 s it drops bloom (if it was on). Under 30 fps for 2.5 s it switches to the 2D picker. A lost WebGL context also falls back.
+- Debug: `window.__picker = { fps, calls, triangles, bloom }`.
+
+## Measured performance (12:40, Intel Iris Xe, Chrome + Vulkan)
+| Setting | fps (steady) | Draw calls | Triangles |
+|---|---|---|---|
+| 1920×1080, default (MSAA + halos) | **60** | 133 | 51k |
+| 1920×1080, `?bloom=1` (bloom + MSAA) | 31–41, so the governor drops bloom → 56–58 | 145 | 51k |
+| 1600×900, bloom (earlier build) | 53 | 145 | 51k |
+| Fallback (Victor's 2D picker) | n/a (DOM only) | 0 | 0 |
+
 ## Decisions (and why)
 - **Victor's players, not the 6 Supabase personas** (user, 12:00): they already have full journeys and disruptions; the least risk before 16:00.
-- **Same props as `CharacterSelect`:** a drop-in, so Victor's state machine and keys keep working and the 2D picker stays as the fallback.
+- **Same props as `CharacterSelect`:** a drop-in, so Victor's state machine and keys keep working and the 2D picker stays as the fallback. One optional extra prop, `playRef`, lets Stage's Enter run the dive (otherwise the keyboard would skip it).
+- **DOM-first wrapper, dynamic canvas:**
+  - The wrapper has no three.js import. It renders the page's text at once (sharp on a projector, accessible, SSR-safe).
+  - The canvas chunk (three.js) is loaded with `next/dynamic({ ssr: false })`: three never runs on the server and is code-split from the demo.
+  - The decision 3D vs 2D is made after hydration, so the server and client markup match.
+- **Measured handoff instead of a hard-coded phone position:**
+  - Stage lays the phone out differently with or without the HUD (≥ 1100 px).
+  - The overlay measures the real phone (`data-phone-anchor`), so the light lands exactly on it.
+  - It lives outside React so it survives the picker unmounting.
+- **Halos instead of bloom:** bloom + MSAA at 1080p costs ~20–30 fps on an integrated GPU, and the automatic drop caused a visible switch. Sprites give the soft window glow for almost nothing.
+- **CC0 people, procedural scenes:**
+  - The user asked for real 3D people, and rigged CC0 models with animation clips beat anything procedural in the time we had.
+  - For the scenes it was the reverse. The procedural Flemish house and coffee bar read more premium and on-brand than the CC0 Kenney buildings we evaluated. Those were downloaded with the user's approval and inspected clean, but they are not used and not committed.
+- **Cover-flow, not a full ring:** Stage's arrows only switch between the two players, so a short list with the locked goals on the sides reads better than a wrapping ring that would show their backs.
 
 ## Known limits / improvement ideas
 - **Not Supabase-backed:** Thomas and Lina are static (Thomas reuses the old €320k / "4 searches" signals; Lina isn't in Supabase), against the "Supabase is the only source of truth" rule. To align later: map Thomas → Supabase Sofie (house), Lina → Lucas (business), or add them to Simon's seed.
