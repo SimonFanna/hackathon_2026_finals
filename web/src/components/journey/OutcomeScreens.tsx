@@ -1,15 +1,15 @@
 "use client";
 
-import { CheckCircle, CircleDashed, LockSimple, Sparkle, WarningCircle } from "@phosphor-icons/react";
-import { motion, useReducedMotion } from "motion/react";
+import { CheckCircle, CircleDashed, LockSimple, Sparkle } from "@phosphor-icons/react";
+import { motion } from "motion/react";
 import {
   checkPlan, goalReached, isComplete, nextDisruption, planHealth, stepStatus,
   type EvaluatedOption, type JourneyState, type PendingHit, type Persona, type Run, type StepStatus,
 } from "@/engine";
-import { brokenLine, formatValue, kindLabel, providerName, strategyLabel } from "./copy";
-import { ConstraintRow, EventBadge, HealthBar } from "./outcome-ui";
+import { formatValue, providerName, strategyLabel } from "./copy";
+import { ConstraintRow, HealthBar } from "./outcome-ui";
 import { KateLine } from "./Kate";
-import { BackButton, PrimaryButton, ScreenLayout, TextButton } from "./ui";
+import { PrimaryButton, ScreenLayout, TextButton } from "./ui";
 
 /** S7: the plan, live. Time moves forward; Kate watches; changed steps are flagged. */
 export function LiveScreen({
@@ -124,100 +124,8 @@ function StatusIcon({ status }: { status: StepStatus }) {
   return <CircleDashed size={20} className="mt-0.5 shrink-0 text-night-100" />;
 }
 
-/** S8: something unexpected happened. What broke, in one screen. */
-export function EventScreen({
-  persona, pending, index, onOptions,
-}: { persona: Persona; pending: PendingHit; index: number; onOptions: () => void }) {
-  const reduce = useReducedMotion();
-  const d = pending.disruption;
-  const model = persona.outcome;
-  const affected = persona.journey.steps.filter((s) => d.affects.includes(s.id));
-  const usable = pending.options.filter((o) => o.available && o.strategy !== "keep").length;
-  return (
-    <ScreenLayout actions={<PrimaryButton onClick={onOptions}>See my options</PrimaryButton>}>
-      <div className="pt-3">
-        <motion.div
-          initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
-          className="flex items-center gap-2"
-        >
-          <span className="flex items-center gap-1.5 rounded-full bg-danger px-3 py-1.5 text-[13px] font-bold text-white">
-            <WarningCircle size={16} weight="bold" />
-            Unexpected · {index + 1} of {model.disruptions.length}
-          </span>
-          <span className="text-[13px] font-semibold text-night-300">Month {d.month} · {kindLabel[d.kind]}</span>
-        </motion.div>
-
-        <div className="mt-5 flex items-start gap-3.5">
-          <EventBadge kind={d.kind} size={48} />
-          <h1 className="text-[26px] font-extrabold leading-[30px] tracking-[-0.02em]">{d.title}</h1>
-        </div>
-        <p className="mt-3 text-[16px] leading-[23px]">{d.detail}</p>
-        <p className="mt-1.5 text-[13px] text-night-300">Source: {d.source}</p>
-
-        <div className="mt-5 rounded-[8px] border border-danger/25 bg-white p-4 shadow-card">
-          <HealthBar value={pending.healthHit} from={pending.healthBefore} />
-          <h2 className="mt-4 text-[13px] font-bold text-night-300">What this breaks</h2>
-          <ul className="mt-1.5 space-y-1">
-            {pending.broken.map((c) => {
-              const def = model.constraints.find((x) => x.key === c.key)!;
-              return (
-                <li key={c.key} className="tabular text-[15px] font-semibold leading-[21px] text-danger">{brokenLine(def, c)}</li>
-              );
-            })}
-          </ul>
-          {affected.length > 0 && (
-            <p className="mt-3 text-[13px] leading-[18px] text-night-300">
-              Steps involved: {affected.map((s) => s.title).join(" · ")}
-            </p>
-          )}
-        </div>
-
-        <div className="mt-5">
-          <KateLine delay={0.3}>I&apos;ve already recalculated your plan. There {usable === 1 ? "is 1 way" : `are ${usable} ways`} to keep your goal. You decide.</KateLine>
-        </div>
-      </div>
-    </ScreenLayout>
-  );
-}
-
-/** S9: every option, scored by the engine. Kate recommends one; the customer chooses. */
-export function OptionsScreen({
-  persona, pending, selected, onSelect, onChoose, onBack,
-}: {
-  persona: Persona;
-  pending: PendingHit;
-  selected: string | null;
-  onSelect: (id: string) => void;
-  onChoose: () => void;
-  onBack: () => void;
-}) {
-  const options = rankOptions(pending.options);
-  const chosen = pending.options.find((o) => o.id === selected);
-  const label = !chosen ? "Choose an option" : chosen.recommended ? "Go with Kate's pick" : chosen.feasible ? "Choose this option" : "Choose it anyway";
-
-  return (
-    <ScreenLayout
-      top={<BackButton onClick={onBack} />}
-      actions={<PrimaryButton onClick={onChoose}>{label}</PrimaryButton>}
-    >
-      <div className="pt-1">
-        <h1 className="text-[26px] font-extrabold leading-[30px] tracking-[-0.02em]">How to keep your goal</h1>
-        <p className="mt-1.5 text-[15px] leading-[21px] text-night-300">
-          Every option is checked against your limits. Kate recommends one. You decide.
-        </p>
-        <div role="radiogroup" aria-label="Options" className="mt-4 space-y-2.5">
-          {options.map((o, i) => (
-            <OptionCard key={o.id} option={o} n={i + 1} persona={persona} pending={pending} active={o.id === selected} onSelect={() => onSelect(o.id)} />
-          ))}
-        </div>
-      </div>
-    </ScreenLayout>
-  );
-}
-
-function OptionCard({
+/** One scored option. Shown by the Demo V2 event page (EventPage.tsx). */
+export function OptionCard({
   option: o, n, persona, pending, active, onSelect,
 }: { option: EvaluatedOption; n: number; persona: Persona; pending: PendingHit; active: boolean; onSelect: () => void }) {
   const model = persona.outcome;

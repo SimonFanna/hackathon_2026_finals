@@ -206,14 +206,34 @@ function sanitize(geo: THREE.BufferGeometry): void {
   }
 }
 
-/** Collects geometry per material, then emits one merged mesh per material (one draw call each). */
+/**
+ * Collects geometry per material, then emits one merged mesh per material (one draw call each).
+ * With `phased` (the build stage), the merge is per material *and* per build phase, and each phase
+ * lands in its own `THREE.Group` (name "phase:N", userData.phase = N) so pieces can drop in one by one.
+ * The picker never sets `phased`, so its draw calls are unchanged.
+ */
 class Builder {
   private buckets = new Map<THREE.Material, THREE.BufferGeometry[]>();
+  private phases = new Map<number, Map<THREE.Material, THREE.BufferGeometry[]>>();
   private stack: THREE.Matrix4[] = [new THREE.Matrix4()];
   private tmp = new THREE.Matrix4();
+  /** Current build phase (1-based; 0 = always there, e.g. the plinth). Ignored unless `phased`. */
+  phase = 0;
+
+  constructor(private readonly phased = false) {}
 
   private top(): THREE.Matrix4 {
     return this.stack[this.stack.length - 1];
+  }
+
+  private bucket(): Map<THREE.Material, THREE.BufferGeometry[]> {
+    if (!this.phased) return this.buckets;
+    let b = this.phases.get(this.phase);
+    if (!b) {
+      b = new Map();
+      this.phases.set(this.phase, b);
+    }
+    return b;
   }
 
   at(m: THREE.Matrix4, fn: () => void): void {
@@ -226,9 +246,10 @@ class Builder {
     geo.applyMatrix4(m ? this.tmp.multiplyMatrices(this.top(), m) : this.top());
     const s = mat.userData.uvScale as number | undefined;
     if (s) projectUV(geo, s);
-    const list = this.buckets.get(mat);
+    const bucket = this.bucket();
+    const list = bucket.get(mat);
     if (list) list.push(geo);
-    else this.buckets.set(mat, [geo]);
+    else bucket.set(mat, [geo]);
   }
 
   /** Axis-aligned box from two corners (in the current frame), optionally rounded. */
@@ -241,15 +262,34 @@ class Builder {
 
   build(parent: THREE.Object3D): THREE.Mesh[] {
     const out: THREE.Mesh[] = [];
-    for (const [mat, list] of this.buckets) {
-      const mesh = new THREE.Mesh(mergeAll(list), mat);
-      mesh.matrixAutoUpdate = false;
-      parent.add(mesh);
-      out.push(mesh);
+    const emit = (into: THREE.Object3D, buckets: Map<THREE.Material, THREE.BufferGeometry[]>) => {
+      for (const [mat, list] of buckets) {
+        const mesh = new THREE.Mesh(mergeAll(list), mat);
+        mesh.matrixAutoUpdate = false;
+        into.add(mesh);
+        out.push(mesh);
+      }
+    };
+    if (!this.phased) emit(parent, this.buckets);
+    else {
+      for (const n of [...this.phases.keys()].sort((a, b) => a - b)) emit(phaseGroup(parent, n), this.phases.get(n)!);
     }
     this.buckets.clear();
+    this.phases.clear();
     return out;
   }
+}
+
+/** The group holding build phase n under `parent` (created on first use; phase 0 = always visible). */
+function phaseGroup(parent: THREE.Object3D, n: number): THREE.Group {
+  const name = `phase:${n}`;
+  const found = parent.children.find((o) => o.name === name);
+  if (found) return found as THREE.Group;
+  const g = new THREE.Group();
+  g.name = name;
+  g.userData.phase = n;
+  parent.add(g);
+  return g;
 }
 
 /** Vertical prism from a top-view footprint [x, z][], spanning y0..y1. */
@@ -722,7 +762,7 @@ class Ctx {
   readonly created = { mats: [] as THREE.Material[], texs: [] as THREE.Texture[] };
   disposed = false;
 
-  constructor(readonly kit: Kit) {}
+  constructor(readonly kit: Kit, readonly phased = false) {}
 
   own<T extends THREE.Material>(m: T): T {
     m.userData.owned = true;
@@ -959,13 +999,15 @@ function bistroChair(b: Builder, k: Kit, x: number, z: number, face: number): vo
 function sceneHouse(c: Ctx): SceneOut {
   const k = c.kit;
   const m = k.mat;
-  const b = new Builder();
+  const b = new Builder(c.phased);
   const zF = 0.05; // facade front plane
   const TH = 0.1;
   const HW = 0.72;
   const EAVE = 1.37;
   const RIDGE = 2.18;
 
+  // Build phases (the build stage drops them in one per accepted step, in this order): see BUILD_PHASES.
+  b.phase = 1; // walls: facade, body, back gable
   // Facade: crow-stepped gable (Ghent), openings cut so the reveals have depth.
   const xs = [0.72, 0.58, 0.44, 0.3, 0.16];
   const ys = [1.56, 1.78, 2.0, 2.22, 2.44];
@@ -995,6 +1037,7 @@ function sceneHouse(c: Ctx): SceneOut {
   const tri = new THREE.Shape([new THREE.Vector2(-HW, EAVE - 0.01), new THREE.Vector2(HW, EAVE - 0.01), new THREE.Vector2(0, RIDGE - 0.02)]);
   b.add(slab(tri, 0.08), m.brick, M(0, 0, -1.07));
 
+  b.phase = 2; // trim: socle, bands, lintels, coping
   // Bluestone socle, sills, step; white speklagen bands, lintels, coping.
   b.box(m.bluestone, -HW - 0.012, 0, zF - 0.02, HW + 0.012, 0.1, zF + 0.016);
   b.box(m.bluestone, -HW - 0.012, 0, -1.16, -HW + 0.02, 0.1, zF - 0.02);
@@ -1018,6 +1061,7 @@ function sceneHouse(c: Ctx): SceneOut {
   b.add(G.sphere(0.045, 12, 8), m.trim, M(0, 2.52, zF - TH / 2));
   b.add(G.cyl(0.03, 0.04, 0.03, 10), m.trim, M(0, 2.49, zF - TH / 2));
 
+  b.phase = 4; // the hero window
   // Hero window: frame + transom; the main pane is the window mesh (no bars across it).
   frameOpening(b, m.trim, WIN.x0, WIN.y0, WIN.x1, WIN.y1, zF, 0.03, 0.04, 0.025);
   b.box(m.trim, WIN.x0 + 0.03, 1.1, zF - 0.065, WIN.x1 - 0.03, 1.13, zF - 0.025);
@@ -1026,11 +1070,13 @@ function sceneHouse(c: Ctx): SceneOut {
   const window = new THREE.Mesh(G.plane(0.36, 0.51), winMat);
   window.position.set(-0.31, 0.845, zF - 0.06);
   window.name = "window";
+  window.userData.phase = 4;
   c.root.add(window);
   const warm = c.glow(WARM, 1.05);
   b.add(G.plane(0.17, 0.12), warm, M(-0.405, 1.19, zF - 0.062));
   b.add(G.plane(0.17, 0.12), warm, M(-0.215, 1.19, zF - 0.062));
 
+  b.phase = 3; // the door
   // Door: night-blue panelled leaf, fanlight, brass knob, number plate in the KBC accent.
   frameOpening(b, m.trim, DOOR.x0, DOOR.y0, DOOR.x1, DOOR.y1, zF, 0.028, 0.04, 0.02);
   b.box(m.trim, DOOR.x0 + 0.028, 0.9, zF - 0.06, DOOR.x1 - 0.028, 0.925, zF - 0.02);
@@ -1047,6 +1093,7 @@ function sceneHouse(c: Ctx): SceneOut {
   b.add(G.box(0.05, 0.075, 0.05), warm, M(0.03, 0.92, zF + 0.055));
   b.add(G.cyl(0.0, 0.05, 0.035, 4), m.iron, M(0.03, 0.975, zF + 0.055, 0, Math.PI / 4, 0));
 
+  b.phase = 5; // attic window and oculus
   // Attic window and oculus (dark glass).
   frameOpening(b, m.trim, ATTIC.x0, ATTIC.y0, ATTIC.x1, ATTIC.y1, zF, 0.028, 0.04, 0.025);
   b.box(m.trim, -0.011, ATTIC.y0, zF - 0.06, 0.011, ATTIC.y1, zF - 0.035);
@@ -1055,12 +1102,14 @@ function sceneHouse(c: Ctx): SceneOut {
   b.add(G.circle(0.07, 24), m.glass, M(0, 2.17, zF - 0.06));
   b.add(G.torus(0.064, 0.011, 6, 24), m.trim, M(0, 2.17, zF - 0.035));
 
+  b.phase = 6; // side and back windows
   // Side and back windows (seen while the turntable sways).
   b.at(M(HW, 0.85, -0.62, 0, Math.PI / 2, 0), () => appliedWindow(b, k, 0.26, 0.4));
   b.at(M(-HW, 0.85, -0.62, 0, -Math.PI / 2, 0), () => appliedWindow(b, k, 0.26, 0.4));
   b.at(M(-0.3, 0.75, -1.15, 0, Math.PI, 0), () => appliedWindow(b, k, 0.3, 0.42));
   b.at(M(0.3, 0.75, -1.15, 0, Math.PI, 0), () => appliedWindow(b, k, 0.3, 0.42));
 
+  b.phase = 7; // roof: slates, gutters, downpipes
   // Roof: slate slabs with tile courses, zinc ridge, gutters and downpipes, chimney.
   const run = 0.78;
   const rise = RIDGE - (EAVE - 0.02);
@@ -1084,12 +1133,14 @@ function sceneHouse(c: Ctx): SceneOut {
     b.add(G.cyl(0.026, 0.026, depth + 0.02, 10), m.zinc, M(sgn * (run + 0.03), EAVE - 0.035, zc, Math.PI / 2, 0, 0));
     b.add(G.cyl(0.016, 0.016, EAVE, 8), m.zinc, M(sgn * (run + 0.01), EAVE / 2, -1.17));
   }
+  b.phase = 8; // ridge and chimney
   b.add(G.box(0.075, 0.075, depth + 0.02), m.zinc, M(0, RIDGE + 0.055, zc, 0, 0, Math.PI / 4));
   b.box(m.brick, -0.47, 1.62, -1.02, -0.27, 2.28, -0.84);
   b.box(m.trim, -0.49, 2.28, -1.04, -0.25, 2.32, -0.82);
   b.add(G.cyl(0.028, 0.034, 0.08, 10), m.bluestone, M(-0.415, 2.36, -0.93));
   b.add(G.cyl(0.028, 0.034, 0.08, 10), m.bluestone, M(-0.325, 2.36, -0.93));
 
+  b.phase = 9; // garden path and hedge
   // Garden: stepping-stone path, low curved hedge, moving boxes, FOR SALE sign.
   const r = rand(3);
   for (let i = 0; i < 6; i++) {
@@ -1097,6 +1148,7 @@ function sceneHouse(c: Ctx): SceneOut {
     b.add(G.rbox(0.3 - r() * 0.04, 0.03, 0.15, 0.014, 1), m.paving, M(0.32 + (r() - 0.5) * 0.05, 0.012, z, 0, (r() - 0.5) * 0.16, 0));
   }
   hedgeArc(b, m.foliage, 1.43, (83 * Math.PI) / 180, (146 * Math.PI) / 180, 0.2, 0.14);
+  b.phase = 10; // moving boxes and the bay tree
   movingBox(b, k, 0.36, 0.26, 0.3, M(1.1, 0, -0.12, 0, 0.32, 0));
   movingBox(b, k, 0.3, 0.21, 0.26, M(1.08, 0.26, -0.13, 0, 0.08, 0));
   movingBox(b, k, 0.25, 0.19, 0.22, M(1.3, 0, 0.26, 0, -0.42, 0));
@@ -1106,6 +1158,7 @@ function sceneHouse(c: Ctx): SceneOut {
   b.add(G.cyl(0.006, 0.006, 0.22, 5), m.bark, M(-0.62, 0.22, 0.24));
   b.add(G.ico(0.11, 2), m.foliage, M(-0.62, 0.38, 0.24, 0, 0, 0, 1, 0.95, 1));
 
+  b.phase = 11; // FOR SALE sign and the light on the ground
   // FOR SALE sign: post with an arm, the board hangs and swings slightly.
   const post = { x: -1.2, z: 0.5 };
   b.box(m.trim, post.x - 0.028, 0, post.z - 0.028, post.x + 0.028, 1.28, post.z + 0.028, 0.006);
@@ -1143,6 +1196,7 @@ function sceneHouse(c: Ctx): SceneOut {
   sb.add(G.box(0.006, 0.03, 0.006), m.iron, M(-0.17, -0.06, 0));
   sb.add(G.box(0.006, 0.03, 0.006), m.iron, M(0.17, -0.06, 0));
   sb.build(swing);
+  swing.userData.phase = 11;
   c.root.add(swing);
   c.anim.push((t) => {
     swing.rotation.x = sway(t, 0.07);
@@ -1173,6 +1227,7 @@ function sceneHouse(c: Ctx): SceneOut {
     });
   }, 21);
   c.pool(b, 0.32, [[-0.31, zF + 0.34, 1.0, 0.62], [0.05, zF + 0.2, 0.46, 0.32]]);
+  b.phase = 0; // the plinth is always there
   addPlinth(b, k, ground);
   b.build(c.root);
   return { window, stand: [0.68, 0, 1.08], standRotY: -0.3, padlock: [0, 2.44, 0.42] };
@@ -1183,7 +1238,7 @@ function sceneHouse(c: Ctx): SceneOut {
 function sceneBusiness(c: Ctx): SceneOut {
   const k = c.kit;
   const m = k.mat;
-  const b = new Builder();
+  const b = new Builder(c.phased);
   const GF = 1.64; // ground-floor height
   const R2 = Math.SQRT2 - 1;
   const foot = (d: number): [number, number][] => [
@@ -1195,6 +1250,8 @@ function sceneBusiness(c: Ctx): SceneOut {
   ];
   const zF = 0.08;
 
+  // Build phases (one per accepted step on the build stage): see BUILD_PHASES.
+  b.phase = 1; // upper floor, cornice, mansard, chimney
   // Upper floor in cream render, cornice, mansard in slate, chimney.
   b.add(prism(foot(0), GF, 2.34), m.render);
   b.add(prism(foot(0.012), GF - 0.03, GF + 0.02), m.trim);
@@ -1206,6 +1263,7 @@ function sceneBusiness(c: Ctx): SceneOut {
   b.add(G.cyl(0.035, 0.04, 0.06, 10), m.slate, M(-0.44, 2.8, -0.73));
   b.add(G.cyl(0.035, 0.04, 0.06, 10), m.slate, M(-0.34, 2.8, -0.73));
 
+  b.phase = 2; // the shopfront
   // Ground floor: night-blue shopfront on the front, the chamfered corner and the right side.
   const PANE = { y0: 0.56, y1: 1.22 };
   const panes: [number, number][] = [[-0.62, -0.27], [-0.22, 0.22], [0.27, 0.53]];
@@ -1247,6 +1305,7 @@ function sceneBusiness(c: Ctx): SceneOut {
   b.box(m.trim, -0.74, 1.22, zF - 0.01, 0.6, 1.27, zF + 0.025);
   for (const [x0, x1] of panes) frameOpening(b, m.trim, x0, PANE.y0, x1, PANE.y1, zF, 0.018, 0.03, 0.025);
 
+  b.phase = 4; // side window frame (with the glass, below)
   // Side window on the right (shows the painted interior).
   b.at(M(0.86, 0.89, -0.66, 0, Math.PI / 2, 0), () => {
     b.box(m.trim, -0.27, -0.36, 0, -0.24, 0.36, 0.03);
@@ -1256,6 +1315,7 @@ function sceneBusiness(c: Ctx): SceneOut {
     b.box(m.trim, -0.012, -0.33, 0.002, 0.012, 0.33, 0.022);
   });
 
+  b.phase = 3; // the interior: counter, espresso machine, pendants
   // Interior seen through the glass: lit back wall, counter, espresso machine, grinder, pendants.
   const interiorTex = c.tex(canvasTexture(paintInterior()));
   const interior = c.glow("#ffd9ae", 1.0, { map: interiorTex, lockAs: "dim" });
@@ -1298,16 +1358,19 @@ function sceneBusiness(c: Ctx): SceneOut {
     b.add(G.sphere(0.022, 10, 8), amber, M(px, 1.11, -0.17));
   }
 
+  b.phase = 4; // the glass
   // Glass: the centre pane is the window mesh (additive warm sheen over the interior).
   const glassTex = c.tex(canvasTexture(paintGlass()));
   const glass = c.glow(WARM, 0.55, { map: glassTex, additive: true });
   const window = new THREE.Mesh(G.plane(0.44, PANE.y1 - PANE.y0), glass);
   window.position.set(0, (PANE.y0 + PANE.y1) / 2, zF - 0.04);
   window.name = "window";
+  window.userData.phase = 4;
   c.root.add(window);
   b.add(G.plane(0.35, PANE.y1 - PANE.y0), glass, M(-0.445, (PANE.y0 + PANE.y1) / 2, zF - 0.04));
   b.add(G.plane(0.26, PANE.y1 - PANE.y0), glass, M(0.4, (PANE.y0 + PANE.y1) / 2, zF - 0.04));
 
+  b.phase = 5; // the fascia
   // Fascia with the name, striped awning, cup sign.
   const fasciaTex = c.text(1024, 144, (g, font) => {
     g.fillStyle = NAVY;
@@ -1325,6 +1388,7 @@ function sceneBusiness(c: Ctx): SceneOut {
   const fascia = c.own(new THREE.MeshStandardMaterial({ map: fasciaTex, roughness: 0.42 }));
   b.add(G.box(1.26, 0.17, 0.026), fascia, M(-0.06, 1.54, zF + 0.013));
   b.box(m.trim, -0.74, 1.445, zF - 0.01, 0.6, 1.455, zF + 0.035);
+  b.phase = 6; // the awning
   // awning: sloped canvas, scalloped valance, folding arms
   const AW = { x0: -0.66, x1: 0.56, y0: 1.43, y1: 1.31, z1: zF + 0.32 };
   const awLen = Math.hypot(AW.z1 - zF, AW.y0 - AW.y1);
@@ -1347,6 +1411,7 @@ function sceneBusiness(c: Ctx): SceneOut {
   b.add(G.cyl(0.011, 0.011, awW + 0.02, 8), m.iron, M(awX, AW.y1, AW.z1, 0, 0, Math.PI / 2));
   b.box(m.iron, AW.x0 - 0.01, AW.y0 - 0.015, zF, AW.x1 + 0.01, AW.y0 + 0.02, zF + 0.03);
 
+  b.phase = 7; // the cup sign
   // Cup sign on a bracket at the corner, swinging gently.
   const cn = new THREE.Vector3(Math.SQRT1_2, 0, Math.SQRT1_2);
   const bStart = new THREE.Vector3(0.73, 1.4, -0.05);
@@ -1367,11 +1432,13 @@ function sceneBusiness(c: Ctx): SceneOut {
   cb.add(G.torus(0.045, 0.014, 6, 14), m.trim, M(0.115, 0.1, 0));
   cb.add(G.cyl(0.02, 0.03, 0.012, 10), m.trim, M(0, 0.006, 0));
   cb.build(cupSwing);
+  cupSwing.userData.phase = 7;
   c.root.add(cupSwing);
   c.anim.push((t) => {
     cupSwing.rotation.z = sway(t + 2, 0.035, 0.9);
   });
 
+  b.phase = 8; // upper-floor windows and dormers
   // Upper-floor windows with iron balconettes.
   for (const x of [-0.36, 0.24]) {
     b.at(M(x, 2.0, zF), () => {
@@ -1393,6 +1460,7 @@ function sceneBusiness(c: Ctx): SceneOut {
     b.add(G.cyl(0.0, 0.16, 0.08, 4, false), m.slate, M(x, 2.6, -0.005, 0, Math.PI / 4, 0, 1, 1, 0.75));
   }
 
+  b.phase = 9; // the terrace
   // Terrace: two bistro tables with chairs, a cup with steam, the A-frame, a topiary.
   bistroTable(b, k, -0.48, 0.86);
   bistroChair(b, k, -0.72, 0.86, Math.PI / 2);
@@ -1416,6 +1484,7 @@ function sceneBusiness(c: Ctx): SceneOut {
   steam.position.set(-0.45, 0.66, 0.86);
   steam.userData.noLock = true;
   steam.userData.hideWhenLocked = true;
+  steam.userData.phase = 9;
   c.root.add(steam);
   c.anim.push((t) => {
     steamTex.offset.y = -t * 0.22;
@@ -1476,6 +1545,7 @@ function sceneBusiness(c: Ctx): SceneOut {
     }
   });
   const chalk = c.own(new THREE.MeshStandardMaterial({ map: chalkTex, roughness: 0.9 }));
+  b.phase = 10; // the A-frame and the light on the ground
   b.at(M(0.2, 0, 0.92, 0, -0.18, 0), () => {
     for (const sgn of [1, -1]) {
       b.at(M(0, 0.29, sgn * 0.06, sgn * -0.2, 0, 0), () => {
@@ -1517,6 +1587,7 @@ function sceneBusiness(c: Ctx): SceneOut {
     aoRect(g, X, Z, 0.02, 0.82, 0.38, 1.02, 8, 0.5);
   }, 17);
   c.pool(b, 0.3, [[-0.04, zF + 0.36, 1.5, 0.66], [1.16, -0.66, 0.7, 0.5, Math.PI / 2]]);
+  b.phase = 0; // the plinth is always there
   addPlinth(b, k, ground);
   b.build(c.root);
   return { window, stand: [0.66, 0, 1.02], standRotY: -0.3, padlock: [0, 2.44, 0.45] };
@@ -1950,10 +2021,26 @@ const SCENES: Record<DioramaId, (c: Ctx) => SceneOut> = {
 
 // ───────────────────────────── public entry ─────────────────────────────
 
-export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
+/** Number of build phases per diorama (phase n ↔ `parts[n - 1]`), in build order. See the `b.phase` lines. */
+export const BUILD_PHASES: Partial<Record<DioramaId, number>> = { house: 11, business: 10 };
+
+/**
+ * Spread N journey steps over P build phases, in order: step i owns phases [from, to). Every step gets at
+ * least one phase when P >= N; when P < N the first steps share. Pure, unit-tested.
+ */
+export function phasesForStep(stepIndex: number, stepCount: number, phaseCount: number): number[] {
+  if (stepCount <= 0 || phaseCount <= 0 || stepIndex < 0 || stepIndex >= stepCount) return [];
+  const from = Math.floor((stepIndex * phaseCount) / stepCount);
+  const to = Math.floor(((stepIndex + 1) * phaseCount) / stepCount);
+  const out: number[] = [];
+  for (let p = from; p < to; p++) out.push(p + 1);
+  return out;
+}
+
+export function buildDiorama(id: DioramaId, kitIn: PickerKit, opts: { phased?: boolean } = {}): Diorama {
   const ownKit = isKit(kitIn) ? null : (pickerKit({ fontFamily: kitIn.fontFamily }) as Kit);
   const kit = ownKit ?? (kitIn as Kit);
-  const c = new Ctx(kit);
+  const c = new Ctx(kit, !!opts.phased);
   const root = c.root;
   root.name = `diorama-${id}`;
   const out = SCENES[id](c);
@@ -1987,6 +2074,18 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
   padlock.visible = false;
   root.add(padlock);
 
+  // Build stage: every tagged loose object (window, swinging signs, steam) joins its phase group, so one
+  // group per phase holds everything that drops in together. parts[n - 1] = phase n.
+  const parts: THREE.Group[] = [];
+  if (opts.phased) {
+    for (const o of [...root.children]) {
+      const n = o.userData.phase as number | undefined;
+      if (n && o.name !== `phase:${n}`) phaseGroup(root, n).add(o);
+    }
+    const count = BUILD_PHASES[id] ?? 0;
+    for (let n = 1; n <= count; n++) parts.push(phaseGroup(root, n));
+  }
+
   // Geometry this diorama owns (the stand's future children, e.g. the character, are not ours to free).
   const ownMeshes: THREE.Mesh[] = [];
   root.traverse((o) => {
@@ -2010,6 +2109,7 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
     root,
     window: out.window,
     stand,
+    parts: opts.phased ? parts : undefined,
     setLocked(l: boolean) {
       locked = l;
       root.traverse((o) => {

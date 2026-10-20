@@ -1,5 +1,5 @@
 # Feature — Demo V2: rework the steps of the in-app demo
-> Owner: peer session "README hackathon 2026" (Fable 5.1) · Coordinator: kepa · App owner: Victor (tell him before touching his files) · Status: todo · Last update: 13:35
+> Owner: peer session "README hackathon 2026" (Fable 5.1) · Coordinator: kepa · App owner: Victor (tell him before touching his files) · Status: in progress (P1–P4 done, P5 optional) · Last update: 14:05
 
 ## Goal
 Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a shorter post-plan phase, and a visible "it's being built" 3D moment. User decisions, 13:30. Backend = Simon's area.
@@ -22,6 +22,12 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 - Each event page (4 per player, from `persona.outcome.disruptions`). Each page shows: what happened (icon, one line, "You told Kate" for income/health), what broke (the constraint(s), before → after), the scored options with "Kate recommends", and the customer picks one → next page. After the last chapter page → finale.
 - Keep the engine (`outcome.ts`: `hit`, `evaluateOptions`, `resolve`) as is; this is a UI/state-machine change. Reuse `EventScreen`/`OptionsScreen` pieces; merge them into one page per event. The HUD (right) keeps working.
 - Keys: `1–4` pick an option, `→` = take Kate's recommendation. Deep link `?demo=event&n=N` lands on page N.
+- **Done (14:05, peer agent, worktree branch for kepa to merge).** How it works:
+  - `web/src/components/journey/demoSequence.ts` — pure `buildDemoSequence(persona, accepted?, journey?)` → `[{kind:"chapter"} | {kind:"event"}]`. An event goes after the chapter of the first step it `affects`; surprises keep their engine order (an earlier-chapter event slides forward); no step link (backend-built journey with its own step ids) → by month over the chapters' schedule span, or an even split of the horizon; a chapter nobody accepted is dropped and its events hang on the chapter before. Tests: `demoSequence.test.ts` (18, both personas + a backend-shaped journey).
+  - `ChapterScreen.tsx` — chapter pill + months, Kate line, goal health + constraints, the accepted steps ticking in one by one (provider, "n details shared", outcome line, re-plan note). `EventPage.tsx` — merged event + options page: what happened ("You told Kate" for income/health), what broke before → after · limit, Kate's line, scored options (`OptionCard` now exported from `OutcomeScreens.tsx`; `EventScreen`/`OptionsScreen` removed, `LiveScreen` kept for the stage finale).
+  - `Stage.tsx` — screens `chapter` | `event` replace `live`/`event`/`options`; `showPage(i)` keeps Simon's backend flow (`injectDisruption` → scenarios A/B → `chooseScenario` → new plan version, local fallback). `←` replays the engine up to the page (`runForPage`), so back and `?demo=event&n=N` agree. HUD: chapter = Execute, event = Adapt ("Options scored" → "Customer decides" after 1.1 s). BuildStage cues unchanged (`pending` → hit, `run.history.length` → repaired).
+  - Sequences on a prod build (local engine): house = Find · Finance · [rate-rise] · Renovate · [quote-overrun] · [installer-delay] · [job-loss] · Protect · finale; business = Launch · Finance · [fit-out-delay] · [equipment-overrun] · Run · [late-payer] · Protect · [injury] · finale. With the backend live (5 chapters for Lina: Start · Set up · Get paid · Protect · Future) the events fall by month between them. Screenshots `p3-chapter.png`, `p3-event.png`; 0 console errors.
+  - Open: with a backend journey the step ids differ from the local ones, so options with `requiresStep` are unavailable and the diorama's hit cue can't find the affected piece (pre-existing, same in Simon's live phase).
 
 ### P4 · 3D build on the left of the phone · by 15:20
 - On stage ≥1100 px: **left of the phone**, the player's own diorama from the picker (`web/src/components/picker/dioramas.ts`): Lina's coffee bar, Thomas's house. It **builds piece by piece** as steps are accepted (scaffold → piece appears with a small dust/spark; skipped step → that piece stays as a ghost outline). A disruption hits → a short red flash/crack on the affected part; the customer's choice → it repairs. The finale → fully lit.
@@ -39,8 +45,8 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 - Each item: verify in a browser on a prod build (GPU flags: `--use-angle=vulkan --enable-features=Vulkan --ignore-gpu-blocklist`); `npm run lint`, `npm test`, `npm run build` green; screenshot in `docs/screenshots/demo-v2/`; tick below.
 
 ## Status checklist
-- [x] P1 notification dismiss + Kate pill (14:15, kepa)
-- [x] P2 business first, locked goals removed (14:25, kepa)
-- [ ] P3 one page per chapter + one page per event (interleaved)
-- [ ] P4 3D build on the left
-- [x] P5 "Your own" player (14:25, custom-player branch: docs/features/custom-player.md)
+- [x] P1 notification dismiss + Kate pill (13:35, kepa)
+- [x] P2 business first, locked goals removed (13:45, kepa)
+- [x] P3 one page per chapter + one page per event (interleaved) (14:05, peer agent; worktree branch, to merge into `kepa`)
+- [x] P4 3D build on the left (13:55, peer agent on kepa's worktree; see `build-stage-3d.md`)
+- [x] P5 "Your own" player (14:30, branch `custom-player`; see `custom-player.md`)
