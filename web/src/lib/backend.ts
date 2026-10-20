@@ -235,7 +235,7 @@ type PipelineLike = {
   context: { customerId: number; firstName: string; age: number; household: string; children: number };
   decisions: ApiDecision[];
   moments: { type: string; confidence: number }[];
-  kate: { kind: string; text: string } | null;
+  kate: { kind: string; text: string; refs?: { scenarioIds?: string[] } } | null;
   plans: ApiPlan[];
   goals: ApiGoal[];
   impacts: ApiImpact[];
@@ -325,7 +325,7 @@ function toHit(preset: Preset, r: PipelineLike): BackendHit | null {
   const d = r.disruptions.find((x) => x.code === impact.disruption);
   // Only the scenarios of the latest plan version (Kate's current choice, else the ids carrying ":v<version>:"):
   // a replayed surprise can leave older versions' scenarios in the pipeline, and choosing one of those is a 404.
-  const current = new Set(r.kate?.kind === "scenario_choice" ? r.kate.refs.scenarioIds ?? [] : []);
+  const current = new Set(r.kate?.kind === "scenario_choice" ? (r.kate.refs?.scenarioIds ?? []) : []);
   const scenarios = r.scenarios.filter(
     (s) => s.goalId === impact.goalId && (current.size > 0 ? current.has(s.id) : s.id.includes(`:v${plan.version}:`)),
   );
