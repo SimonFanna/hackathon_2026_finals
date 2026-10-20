@@ -142,5 +142,18 @@ describe("pipeline, offline", () => {
     expect(await repo.getGoal(goal.id)).not.toBeNull();
     expect((await repo.getPlan(goal.id))?.id).toBe(plan.id);
   });
+
+  it("three active surprises never yield duplicate scenario ids, and Kate's pick stays choosable (live 404)", async () => {
+    const d = deps();
+    const { goal } = await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, d);
+    for (const preset of ["cost_overrun", "partner_delay", "income_drop"] as const) {
+      await injectFor("sofie", { preset }, d);
+      const r = await runPipeline("sofie", d);
+      const ids = r.scenarios.map((x) => x.id);
+      expect(new Set(ids).size, preset).toBe(ids.length);
+      const pick = r.kate?.refs?.scenarioIds?.[0] ?? ids[0];
+      await chooseScenarioFor(goal.id, pick, d);
+    }
+  });
 });
 
