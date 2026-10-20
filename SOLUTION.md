@@ -1,7 +1,7 @@
 # SOLUTION — Intent → Journey
 
 > Living document, updated throughout the day. Each feature has its own file in `docs/features/<feature>.md`.
-> Last update: 12:25
+> Last update: 10:32
 
 ## One-liner
 
@@ -77,7 +77,6 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 
 | Feature | Owner | Status | Doc |
 |---|---|---|---|
-| Game-style pain tunnel (Thomas's year, unchanged-plan simulation, direct replay with Kate, slide exports) | Victor / Codex | done on `victor-pain-tunnel`; lint/build, 261 tests and 46 Chrome checks passed | `pain-tunnel.md` |
 | Journey engine (steps, consent, scoreboard) | coordinator (kepa) | done (V0) | `journey-house-v0.md` |
 | Intent detection & confidence scoring (signals → intent, levels none/ask/suggest) | DB + ML team | todo — engine has a placeholder (`detectIntents`, thresholds 0.4/0.75) to replace; keep the `DetectedIntent` contract | `backend/backend.md` |
 | **Outcome Engine backend** (events → signals → context → intents → decision → Kate goal confirmation → capability orchestrator → rules → consent → outcome tracker → disruption replanning + scenarios) | Mathias (T3 T5 T6 T8) + Simon (T1 T2 T4 T7) | build split, in progress | `backend/backend.md`, `backend/TASKS.md` |
@@ -98,7 +97,7 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 
 ## Log
 
-- **12:25** — Added the game-style pain tunnel on `victor-pain-tunnel`: seven chapters / ten frames with original vector house and pixel character art. The existing engine computes all four unchanged-plan hits (100 → 79 → 69 → 46 → 22). Replay enters Thomas's guided demo directly; existing demo/player links bypass the intro. No new runtime dependency. See `docs/features/pain-tunnel.md` for framing, controls, source and screenshot export.
+- **Presentation-only pain story:** removed from `main` at Victor's request. The live site opens directly on the original player selector and guided demo. The full game-style story, original vector artwork, thirteen slide captures and export script remain on the [`victor-pain-tunnel` branch](https://github.com/SimonFanna/hackathon_2026_finals/tree/victor-pain-tunnel), for the PowerPoint presentation.
 
 - **09:20** — Direction A validated. Document created.
 - **09:50** — No Supabase access yet: V0 on static TS data. Engine `web/src/engine/` delivered (tests green); Next.js UI built.

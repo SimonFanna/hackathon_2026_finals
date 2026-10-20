@@ -50,10 +50,6 @@ The hero demo is *"I'm buying a 1975 house"*. It runs in 11 steps over 4 chapter
 
 ## Run it locally
 
-The site now opens with **Thomas's year**, a game-style introduction that makes the problem tangible before the guided demo. Navigate with the buttons, arrow keys or a presenter clicker. **Replay with Kate** starts Thomas's guided journey directly; **Skip intro** opens the existing player selector.
-
-Presentation links: `/?pain=1` through `/?pain=7`, `/?pain=5&hit=2` for a particular setback, and `&still=1` for static slides. `/?intro=0` and all existing `?demo=...` links bypass the introduction. See [`pain-tunnel.md`](docs/features/pain-tunnel.md) for screenshot export and scenario assumptions.
-
 ```bash
 git clone https://github.com/SimonFanna/hackathon_2026_finals.git
 cd hackathon_2026_finals/web
