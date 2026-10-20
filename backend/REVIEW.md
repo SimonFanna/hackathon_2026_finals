@@ -1,4 +1,4 @@
-# Backend review — 2026-10-20, 12:40 (main @ bd53f6f)
+# Backend review — 2026-10-20, 12:24 (main @ bd53f6f)
 
 > **How it was done:** 7 reviewers ran in parallel, one each for T1+T2, T3, T4+T5, T6, T7, T8 and security. On top of that, the demo flow was replayed end to end over HTTP against `next start` in offline mode.
 > **Reproducibility:** every item below was reproduced, unless it is marked *plausible*. The repro scripts live in the reviewers' scratch dirs; nothing was added to the repo.
