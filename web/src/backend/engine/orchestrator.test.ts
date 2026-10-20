@@ -173,3 +173,30 @@ describe("why texts (Kate quotes them verbatim)", () => {
     expect(buildPlan(f.sofieGoal, f.sofieCtx, rules, f.ASOF).steps.every((s) => !s.why.includes("{"))).toBe(true);
   });
 });
+
+// T6 builds on these behaviours: change them only after pinging T6.
+describe("contract with T6 (replanning)", () => {
+  const goal = sofieGoal();
+  const base = buildPlan(goal, sofieCtx, t5Rules, ASOF);
+  it("step ids are `${goalId}:${capability}` and summary.purchasePrice exists", () => {
+    for (const s of base.steps) expect(s.id).toBe(`${goal.id}:${s.capability}`);
+    expect(typeof base.summary!.purchasePrice).toBe("number");
+  });
+  it("check keys, and ownFunds.actual is the savings", () => {
+    expect(base.checks.map((c) => c.constraint).sort()).toEqual(["budget", "deadline", "maxMonthlyPayment", "ownFunds"]);
+    expect(base.checks.find((c) => c.constraint === "ownFunds")!.actual).toBe(sofieCtx.savings);
+  });
+  it("costOverrides are absolute, extraLeadDays are a delta", () => {
+    const o = buildPlan(goal, sofieCtx, t5Rules, ASOF, { costOverrides: { quote_heating: 20_000 } });
+    expect(step(o, "quote_heating").provider.costEur).toBe(20_000);
+    const l = buildPlan(goal, sofieCtx, t5Rules, ASOF, { extraLeadDays: { quote_heating: 10 } });
+    expect(step(l, "quote_heating").provider.leadTimeDays).toBe(step(base, "quote_heating").provider.leadTimeDays + 10);
+  });
+  it("is pure and cheap (100 builds well under a second, inputs untouched)", () => {
+    const before = JSON.stringify([goal, sofieCtx, t5Rules]);
+    const t0 = performance.now();
+    for (let i = 0; i < 100; i++) buildPlan(goal, sofieCtx, t5Rules, ASOF, { costOverrides: { quote_heating: i * 100 } });
+    expect(performance.now() - t0).toBeLessThan(1000);
+    expect(JSON.stringify([goal, sofieCtx, t5Rules])).toBe(before);
+  });
+});
