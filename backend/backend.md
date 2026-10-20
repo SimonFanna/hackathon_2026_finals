@@ -1,7 +1,8 @@
 # Backend — KBC Outcome Engine
 
-> Owner: Mathias · Status: design agreed, build starting · Last update: 11:20
+> Owner: Mathias · Status: design agreed, build split in `backend/TASKS.md` · Last update: 11:05
 >
+> **Work split: `backend/TASKS.md` (8 tasks, T1–T8).**
 > Read with `SOLUTION.md`, `docs/features/bank-data.md` (the facts in Supabase) and `docs/features/prediction-model.md` (the ML confidence model).
 > The V0 engine in `web/src/engine/` was a brainstorming prototype. **This backend does not reuse its structure.**
 
