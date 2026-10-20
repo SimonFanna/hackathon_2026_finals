@@ -344,11 +344,18 @@ export function Stage() {
     go("select", "back");
   };
 
+  const confirming = useRef(false); // startJourney may take seconds: a second → / Enter meanwhile must not start a second goal
   const confirm = async () => {
-    if (!intent) return;
+    if (!intent || confirming.current) return;
+    confirming.current = true;
     const reset = pendingReset.current ?? undefined; // one reset per run: the one the stage already started, if any
     pendingReset.current = null;
-    const live = intent !== localIntent && beIntent?.goalType ? await startJourney(slug, beIntent.goalType, reset) : null;
+    let live: Awaited<ReturnType<typeof startJourney>> = null;
+    try {
+      live = intent !== localIntent && beIntent?.goalType ? await startJourney(slug, beIntent.goalType, reset) : null;
+    } finally {
+      confirming.current = false;
+    }
     if (live) {
       // Start from the local shape (every step and consent field present), then apply the backend's decisions.
       const base = initState(live.journey);
