@@ -81,7 +81,8 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 | Intent detection & confidence scoring (signals → intent, levels none/ask/suggest) | DB + ML team | todo — engine has a placeholder (`detectIntents`, thresholds 0.4/0.75) to replace; keep the `DetectedIntent` contract | `backend/backend.md` |
 | Journey UI V0 | peer agent (kepa) | replaced by UX redesign V1 | `journey-house-v0.md` |
 | UX redesign V1 (KBC brand, Kate voice, phone stage, triple-win finale) | peer agent (kepa) | done (V1) | `ux-redesign.md` |
-| Supabase catalogue + data | Simon | in progress | — (Simon to add `supabase.md`) |
+| Supabase catalogue + data | Simon | done (applied + loaded) | `bank-data.md` |
+| Supabase live data in the demo (Sofie + signals, offline snapshot) | kepa | done | `supabase-live-data.md` |
 | Deck + demo (GIF/video) | — | todo | — |
 | Security (Aikido) + public repo | Kepa UI terminal (hardening) · user/Simon (Aikido) | in progress: headers + CSP done, Aikido not connected | `docs/features/security.md` |
 
@@ -100,3 +101,4 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 - **10:20** — UX redesign V1 shipped in `web/`: a KBC Design Language look (tokens read live from kbc.be), Kate's voice, one step at a time with a consent sentence per partner, a hidden presenter panel (key P) and a triple-win finale. Screenshots in `docs/screenshots/`. MyHome finding added (Differentiation, Open questions).
 - **10:32** — MyHome verified (KBC press release, 29 Jan 2026, opt-in "extra convenience"). Immoscoop × KBC integration and haalbaarheidsattest documented. Our Immoscoop-signal assumption is labelled and gated on the same opt-in.
 - **10:50** — Quick wins from `docs/review-1100.md`: root README rewritten (run, architecture, status, team, Vercel steps); CSP + security headers; stale `pitch/idea-a.html` removed; `docs/features/security.md` (Aikido steps) and `docs/assumptions.md` (every figure sourced or flagged) added.
+- **11:10** — Demo wired to Supabase: Sofie and her signals are read live from the synthetic bank (`app_events`), with a bundled snapshot of the same rows as offline fallback. Kate's line and the budget step are built from data (latest simulation €251k, was a hardcoded €320k).

@@ -75,10 +75,10 @@ Use these in the pitch and in "How we estimate this". They are stronger than our
 |---|---|---|---|
 | Signal weights (`buyHouseSignalWeights`) | 0.35 / 0.40 / 0.15 / 0.20 / 0.50 | **Placeholder** | Owned by the DB + ML team (`SOLUTION.md`). Not to be defended as a model. |
 | Thresholds | 0.40 ask / 0.75 suggest | **Placeholder** | Same owner |
-| Loan simulation | €320k | Synthetic | Plausible for Gent; no real customer |
+| Loan simulation | €251k (latest of 4 simulations) | Synthetic | Read from Supabase `app_events` for Sofie; replaces the earlier €320k |
 | Customer Sofie, 32, Gent, couple + 1 child | — | Synthetic | Labelled "synthetic demo customer" on stage |
 | Home screen balances (€4,218.40 / €38,900.00) and transactions | — | Synthetic decor | Hardcoded in `HomeScreen.tsx`; should come from `CustomerContext` (review §B3) |
-| ⚠️ Copy mismatch | `copy.ts`: "You saved **4 houses** on Immoscoop" vs signal s1: "Saved **4 searches** for houses…" | **Bug** | Build Kate's line from signal data (`facts`), see review §B1. UI copy is frozen for now. |
+| ~~Copy mismatch~~ "4 houses" vs "4 searches" | — | **Fixed 11:10** | Kate's line is now built from the Supabase signals (`kateLineFor`). |
 
 ---
 

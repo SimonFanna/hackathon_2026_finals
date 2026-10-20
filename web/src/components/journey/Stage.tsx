@@ -6,6 +6,7 @@ import {
   buildJourney, buyHouseSignalWeights, decide, demoCustomer, demoSignals, detectIntents, initState, scoreboard, setConsent,
   type Journey, type JourneyState, type Scoreboard,
 } from "@/engine";
+import { fetchDemoProfile } from "@/lib/bankClient";
 import { providerName } from "./copy";
 import { Finale } from "./Finale";
 import { HomeScreen } from "./HomeScreen";
@@ -41,12 +42,21 @@ const EMPTY: Scoreboard = {
 };
 
 export function Stage() {
-  const customer = demoCustomer;
+  // Sofie's profile is read from Supabase; the bundled snapshot of the same rows covers offline demos.
+  const [profile, setProfile] = useState({ customer: demoCustomer, signals: demoSignals, source: "snapshot" as "supabase" | "snapshot" });
+  useEffect(() => {
+    let live = true;
+    fetchDemoProfile("sofie", new Date().toISOString().slice(0, 10)).then((p) => {
+      if (live && p) setProfile({ ...p, source: "supabase" });
+    });
+    return () => { live = false; };
+  }, []);
+  const customer = profile.customer;
   const [scenario, setScenario] = useState<Scenario>("sofie");
   const signals = useMemo(() => {
-    const own = demoSignals.filter((s) => s.customerId === customer.id);
-    return scenario === "weak" ? own.filter((s) => s.type === "epc_lookup") : own;
-  }, [customer.id, scenario]);
+    const own = profile.signals.filter((s) => s.customerId === customer.id);
+    return scenario === "weak" ? own.filter((s) => s.type === "renovation_research") : own;
+  }, [profile.signals, customer.id, scenario]);
   const intent = useMemo(() => detectIntents(customer, signals)[0], [customer, signals]);
   const speaks = !!intent && intent.level !== "none";
 
@@ -88,7 +98,7 @@ export function Stage() {
     const t = setTimeout(() => {
       if (demo === "weak") return setScenario("weak");
       if (!intent) return;
-      const journey = buildJourney(intent.intentId, customer);
+      const journey = buildJourney(intent.intentId, customer, signals);
       if (demo === "intent") return setScreen("intent");
       if (demo === "finale") {
         setState(acceptAll(journey));
@@ -131,7 +141,7 @@ export function Stage() {
 
   const confirm = () => {
     if (!intent) return;
-    setState(initState(buildJourney(intent.intentId, customer)));
+    setState(initState(buildJourney(intent.intentId, customer, signals)));
     setIndex(0);
     setModes({});
     go("path");
@@ -256,7 +266,7 @@ export function Stage() {
         >
           {screen === "home" && <HomeScreen customer={customer} showNotification={notif} onOpen={() => go("intent")} />}
           {screen === "intent" && intent && (
-            <IntentScreen intent={intent} onConfirm={confirm} onDecline={() => go("declined")} onBack={back} onWhy={() => setSheet("why")} />
+            <IntentScreen intent={intent} signals={signals} onConfirm={confirm} onDecline={() => go("declined")} onBack={back} onWhy={() => setSheet("why")} />
           )}
           {screen === "declined" && <DeclinedScreen onHome={() => reset()} />}
           {screen === "path" && state && <PathScreen journey={state.journey} city={customer.city} onStart={() => go("step")} onBack={back} />}
@@ -331,6 +341,7 @@ export function Stage() {
               <PresenterPanel
                 key="presenter"
                 signals={signals}
+                source={profile.source}
                 weights={buyHouseSignalWeights}
                 intent={intent}
                 step={step}

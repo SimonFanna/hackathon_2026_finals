@@ -65,7 +65,7 @@ npm run dev          # http://localhost:3000
 | `npm test` | Engine unit tests (Vitest) |
 | `npm run lint` | ESLint |
 
-No environment variables are needed: the demo runs on static, synthetic engine data and works offline.
+The demo reads its customer and signals from Supabase (`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in `web/.env.local`, see `web/.env.example`). Without them, or offline, it runs on a bundled snapshot of the same rows.
 
 ### Demo controls (presenter)
 
@@ -110,7 +110,7 @@ SOLUTION.md               the idea, differentiation, open questions, log
 
 1. On vercel.com, choose **Add New → Project** and import `SimonFanna/hackathon_2026_finals`.
 2. Set the **Root Directory** to `web`. The framework preset is detected as Next.js; keep the default build (`npm run build`) and output settings.
-3. No environment variables are required for the demo. When the app starts reading Supabase, add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and **never** the secret key in a `NEXT_PUBLIC_` variable.
+3. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (Supabase dashboard → API keys) so the demo reads live data; without them it falls back to the snapshot. **Never** put the secret key in a `NEXT_PUBLIC_` variable.
 4. Deploy, then put the URL at the top of this README and in the Builderbase submission.
 
 ## Status: what is done, what is not
@@ -120,6 +120,7 @@ SOLUTION.md               the idea, differentiation, open questions, log
 | Engine: steps, consent per field, scoreboard, decision levels, tests | Done (placeholder scoring) |
 | UI: KBC Mobile stage, Kate voice, S1–S6, presenter panel, deep links | Done (V1) |
 | Catalogue import into Supabase (schema, seed, RLS) | Done; **not yet wired to journey steps** |
+| Demo customer + signals read live from Supabase (offline snapshot fallback) | Done |
 | Intent detection / confidence model | In progress (DB + ML team) |
 | Second journey proving generalisation ("starting a business") | Not built; being redesigned as the possible new hero |
 | Suppression rules, outcome tracker (from `backend/backend.md`) | Not built |
