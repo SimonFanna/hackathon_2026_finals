@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { glowScale, groundPx, lockedRGB, sway } from "./dioramas";
+import { glowScale, groundPx, lockedRGB, ringOpacity, sway } from "./dioramas";
 
 describe("diorama helpers", () => {
   it("glowScale dims side items, is 1 when centred and keeps growing during the dive", () => {
@@ -22,6 +22,20 @@ describe("diorama helpers", () => {
       expect(v).toBeGreaterThanOrEqual(0);
       expect(v).toBeLessThanOrEqual(1);
     }
+  });
+
+  it("lockedRGB keeps locked goals dark (night silhouettes, not grey clay)", () => {
+    const white = lockedRGB(1, 1, 1);
+    expect(Math.max(...white)).toBeLessThan(0.7);
+    expect(Math.max(...lockedRGB(0, 0, 0))).toBeLessThan(0.1);
+  });
+
+  it("ringOpacity fades the selection ring in near the centre only", () => {
+    expect(ringOpacity(0)).toBe(0);
+    expect(ringOpacity(0.6)).toBe(0);
+    expect(ringOpacity(0.8)).toBeCloseTo(0.5);
+    expect(ringOpacity(1)).toBe(1);
+    expect(ringOpacity(2.5)).toBe(1);
   });
 
   it("groundPx maps the plinth square onto the ground canvas", () => {

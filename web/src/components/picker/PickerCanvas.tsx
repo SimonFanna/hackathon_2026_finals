@@ -12,13 +12,16 @@ import { buildDiorama, pickerKit } from "./dioramaSource";
 import { loadCharacters } from "./characterGltf";
 import type { Character, CharacterId } from "./characterTypes";
 import type { Diorama, DioramaId } from "./dioramaTypes";
+import type { ScreenRect } from "./handoff";
 
 // The 3D carousel. Vanilla three.js inside one effect (like pitch3d): no lights that cost per pixel,
 // no shadow maps, shared materials, half-resolution bloom that switches off if the GPU struggles.
 // Text stays in the DOM (sharp on a projector, accessible); the canvas only draws the dioramas.
 
 export interface PickerItem { id: DioramaId; label: string; locked: boolean; title?: string }
-export type DiveFn = (id: PlayableId, onCover: (remainingMs: number) => void) => Promise<void>;
+export type DiveFn = (id: PlayableId, onCover: (ms: number, window: ScreenRect) => void) => Promise<void>;
+/** The free space between the headline and the player card, in px from the top of the canvas. */
+export interface Band { top: number; bottom: number }
 
 export interface PickerCanvasProps {
   items: PickerItem[];
@@ -29,14 +32,24 @@ export interface PickerCanvasProps {
   onFail: (reason: "fps" | "context" | "init") => void;
   diveRef: MutableRefObject<DiveFn | null>;
   reduce: boolean;
+  band: Band | null;
 }
 
 const NIGHT = "#021e43";
 const PERSON: Record<DioramaId, CharacterId> = { house: "thomas", business: "lina", retire: "retiree", baby: "parent", car: "driver" };
 const CAM_POS = new THREE.Vector3(0, 2.9, 11.9);
 const CAM_LOOK = new THREE.Vector3(0, 0.5, -1.4);
+// Framing: the stage (roof tops to the plinth's front edge) is fitted into the free band.
+const STAGE_TOP = 2.65;
+const STAGE_BOTTOM = -0.34;
+const BAND_MARGIN = 6;
+const CARD_GAP = 16; // Band.bottom sits this far above the card
+// Dive: fly onto the window's axis and stop where it fills most of the screen height.
+const FLY_MS = 950;
+const SETTLE_MS = 350;
+const END_FOV = 26;
+const WINDOW_FILL = 0.86;
 const ease = {
-  inCubic: (x: number) => x * x * x,
   inOutCubic: (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
 };
 
@@ -73,7 +86,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(NIGHT);
-    scene.fog = new THREE.Fog(NIGHT, 13, 30);
+    scene.fog = new THREE.Fog(NIGHT, 12.5, 19.5); // the neighbours recede into the night
     const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 80);
     camera.position.copy(CAM_POS);
     camera.lookAt(CAM_LOOK);
@@ -85,11 +98,11 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     rim.position.set(-6, 4, -5);
     scene.add(key, rim);
 
-    // Stage floor: a soft pool of light under the carousel (one canvas gradient, no lights).
-    const floorTex = radialTexture("#123c6e", NIGHT);
-    const floor = new THREE.Mesh(new THREE.CircleGeometry(26, 64), new THREE.MeshBasicMaterial({ map: floorTex }));
+    // Stage floor: a soft pool of light under the centred scene (one unlit canvas gradient, exact colours).
+    const floorTex = radialTexture([[0, "#143a6b"], [0.1, "#0d2a50"], [0.32, "#04214a"], [1, NIGHT]]);
+    const floor = new THREE.Mesh(new THREE.CircleGeometry(18, 64), new THREE.MeshBasicMaterial({ map: floorTex, toneMapped: false, fog: false }));
     floor.rotation.x = -Math.PI / 2;
-    floor.position.set(0, -0.34, -2);
+    floor.position.set(0, -0.34, 0);
     scene.add(floor);
 
     const kit = pickerKit({ fontFamily: getComputedStyle(document.body).fontFamily });
@@ -153,6 +166,38 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     }
 
     let calmFrom = performance.now() + 3500; // fps governor ignores start-up, asset uploads and resizes
+    let diving = false;
+    let diveIndex = -1;
+    let diveFade = 0; // 0 → 1 over the dive: the window halo gives way to the window itself
+    const view = { w: 1, h: 1, y: 0, key: "" };
+    const tmp = [0, 1, 2, 3, 4, 5].map(() => new THREE.Vector3());
+    const setViewY = (y: number) => {
+      camera.setViewOffset(view.w, view.h, 0, y, view.w, view.h);
+      camera.updateProjectionMatrix();
+    };
+    // Fit the stage into the free band (shrink only, never enlarge) and centre it there with a view
+    // offset: projection, picking and the DOM overlay all follow the camera, so nothing else changes.
+    const fit = () => {
+      const { w, h } = view;
+      const band = live.current.band;
+      const top = band?.top ?? 0;
+      const bot = band?.bottom ?? h;
+      view.key = `${w}x${h}:${top}:${bot}`;
+      const base = w / h < 1.5 ? 36 : 30; // keep the side items in frame on narrower screens
+      camera.clearViewOffset();
+      camera.aspect = w / h;
+      camera.fov = base;
+      camera.position.copy(CAM_POS);
+      camera.lookAt(CAM_LOOK);
+      camera.updateProjectionMatrix();
+      camera.updateMatrixWorld();
+      const yT = tmp[0].set(0, STAGE_TOP, 0).project(camera).y;
+      const yB = tmp[0].set(0, STAGE_BOTTOM, 1.75).project(camera).y;
+      const k = Math.min(1, Math.max(0.4, (bot - top - 2 * BAND_MARGIN) / ((h / 2) * (yT - yB))));
+      camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(base / 2)) / k));
+      view.y = h / 2 - (h / 2) * k * ((yT + yB) / 2) - (top + bot) / 2;
+      setViewY(view.y);
+    };
     const resize = () => {
       const w = el.clientWidth || window.innerWidth;
       const h = el.clientHeight || window.innerHeight;
@@ -163,10 +208,9 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       composer?.setSize(w, h);
       calmFrom = Math.max(calmFrom, performance.now() + 1500);
       bloom.resolution.set((w * dpr) / 2, (h * dpr) / 2);
-      camera.aspect = w / h;
-      // Keep the side items in frame on narrower screens.
-      camera.fov = w / h < 1.5 ? 36 : 30;
-      camera.updateProjectionMatrix();
+      view.w = w;
+      view.h = h;
+      if (!diving) fit();
     };
     resize();
     const ro = new ResizeObserver(resize);
@@ -177,7 +221,6 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     let vel = 0;
     let drag: { id: number; x: number; start: number; moved: boolean; samples: { x: number; t: number }[] } | null = null;
     let dragFocusValue = focus;
-    let diving = false;
     const wiggle = new Array(items.length).fill(0);
     const raycaster = new THREE.Raycaster();
     const ndc = new THREE.Vector2();
@@ -260,7 +303,27 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     // Keyboard / screen-reader buttons (DOM, focusable) route here.
     activateRef.current = activate;
 
-    // ── Dive into the window, then let the handoff overlay take over.
+    // The window's rectangle on screen (viewport px), for the handoff overlay to light up exactly.
+    const screenRect = (m: THREE.Mesh, box: THREE.Box3): ScreenRect => {
+      camera.updateMatrixWorld();
+      m.updateWorldMatrix(true, false);
+      const r = canvas.getBoundingClientRect();
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (const [x, y] of [[box.min.x, box.min.y], [box.max.x, box.min.y], [box.min.x, box.max.y], [box.max.x, box.max.y]]) {
+        const p = tmp[5].set(x, y, (box.min.z + box.max.z) / 2).applyMatrix4(m.matrixWorld).project(camera);
+        const sx = r.left + (p.x * 0.5 + 0.5) * r.width;
+        const sy = r.top + (-p.y * 0.5 + 0.5) * r.height;
+        x0 = Math.min(x0, sx);
+        x1 = Math.max(x1, sx);
+        y0 = Math.min(y0, sy);
+        y1 = Math.max(y1, sy);
+      }
+      return { left: x0, top: y0, width: x1 - x0, height: y1 - y0 };
+    };
+
+    // ── Dive: the scene turns to face the camera (the person hops) while the camera flies onto the lit
+    // window's axis and eases to a stop where the window fills most of the screen. The handoff overlay
+    // then lights that exact rectangle and morphs it into the phone screen.
     live.current.diveRef.current = (id, onCover) =>
       new Promise<void>((resolve) => {
         const i = indexOfId(id);
@@ -270,39 +333,41 @@ export default function PickerCanvas(props: PickerCanvasProps) {
           return;
         }
         diving = true;
+        diveIndex = i;
         focus = i;
         vel = 0;
         holders.forEach((h) => (h.userData.settle = 0));
         people[i]?.setPose("cheer");
-        // Settle the turntable to face the camera (the person hops), then fly into the lit window.
         const start = performance.now();
-        const settleMs = 420;
-        const flyMs = 900;
         const fromPos = camera.position.clone();
         const fromLook = CAM_LOOK.clone();
         const fromFov = camera.fov;
+        const fromViewY = view.y;
+        const geo = d.window.geometry;
+        if (!geo.boundingBox) geo.computeBoundingBox();
+        const box = geo.boundingBox!;
         let covered = false;
         const step = () => {
           if (disposed) return resolve();
           const t = performance.now() - start;
-          holders[i].userData.settle = Math.min(1, t / settleMs);
-          const k = Math.min(1, Math.max(0, (t - settleMs * 0.6) / flyMs));
-          // Target: just in front of the window, looking straight through it.
+          holders[i].userData.settle = Math.min(1, t / SETTLE_MS);
+          const k = Math.min(1, t / FLY_MS);
+          const e = ease.inOutCubic(k);
+          const eLook = ease.inOutCubic(Math.min(1, k * 1.3));
           d.window.updateWorldMatrix(true, false);
-          const wp = new THREE.Vector3().setFromMatrixPosition(d.window.matrixWorld);
-          const n = new THREE.Vector3(0, 0, 1).transformDirection(d.window.matrixWorld);
-          const toPos = wp.clone().addScaledVector(n, 0.22);
-          const toLook = wp.clone().addScaledVector(n, -1.5);
-          const e1 = ease.inCubic(k);
-          camera.position.lerpVectors(fromPos, toPos, e1);
-          const look = new THREE.Vector3().lerpVectors(fromLook, toLook, ease.inOutCubic(Math.min(1, k * 1.25)));
-          camera.lookAt(look);
-          camera.fov = fromFov + (26 - fromFov) * e1;
-          camera.updateProjectionMatrix();
-          d.setFocus(1 + 1.5 * e1);
-          if (!covered && k >= 0.68) {
+          const wp = tmp[1].setFromMatrixPosition(d.window.matrixWorld);
+          const n = tmp[2].set(0, 0, 1).transformDirection(d.window.matrixWorld);
+          const winH = (box.max.y - box.min.y) * tmp[3].setFromMatrixScale(d.window.matrixWorld).y;
+          const dist = winH / (WINDOW_FILL * 2 * Math.tan(THREE.MathUtils.degToRad(END_FOV / 2)));
+          camera.position.lerpVectors(fromPos, tmp[4].copy(wp).addScaledVector(n, dist), e);
+          camera.lookAt(tmp[4].lerpVectors(fromLook, wp, eLook));
+          camera.fov = fromFov + (END_FOV - fromFov) * e;
+          setViewY(fromViewY * (1 - eLook)); // end centred on screen
+          d.setFocus(1 + 0.3 * e); // a little brighter, never clipped: the curtains and lamp stay readable
+          diveFade = e;
+          if (!covered && k >= 0.92) {
             covered = true;
-            onCover(Math.max(120, flyMs * (1 - k)));
+            onCover(120, screenRect(d.window, box));
           }
           if (k < 1) requestAnimationFrame(step);
           else resolve();
@@ -360,7 +425,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         h.rotation.y = s.rotY + spin * (1 - settle) + shake;
         const d = dioramas[i];
         if (!diving || d !== dioramas[indexOfId(live.current.selected)]) d.setFocus(s.light);
-        halos[i].material.opacity = items[i].locked ? 0 : 0.25 + 0.75 * s.light;
+        halos[i].material.opacity = items[i].locked ? 0 : (0.25 + 0.75 * s.light) * (i === diveIndex ? 1 - diveFade : 1);
         d.update(t, dt);
         const person = people[i];
         if (person) {
@@ -394,14 +459,20 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         }
         const c = captions.current[i];
         if (c) {
-          // Under its own plinth: the front-bottom edge of the base, then 10 px lower.
-          proj.set(s.x, -0.42 * s.scale, s.z + 1.75 * s.scale).project(camera);
-          c.style.transform = `translate(${(proj.x * 0.5 + 0.5) * r.width}px, ${(-proj.y * 0.5 + 0.5) * r.height + 10}px) translateX(-50%)`;
-          c.style.opacity = diving || !h.visible || far > 1.25 ? "0" : String(Math.min(1, 0.5 + s.light));
+          // Centred under its own plinth (x from the plinth centre, y from its front-bottom edge + 10 px),
+          // hidden rather than tucked under the player card on short screens.
+          const lx = (proj.set(s.x, -0.42 * s.scale, s.z).project(camera).x * 0.5 + 0.5) * r.width;
+          const ly = (-proj.set(s.x, -0.42 * s.scale, s.z + 1.75 * s.scale).project(camera).y * 0.5 + 0.5) * r.height + 10;
+          c.style.transform = `translate(${lx}px, ${ly}px) translateX(-50%)`;
+          const band = live.current.band;
+          const clash = !!band && ly + 32 > band.bottom + CARD_GAP;
+          c.style.opacity = diving || !h.visible || far > 1.25 || clash ? "0" : String(Math.min(1, 0.5 + s.light));
         }
       });
 
       if (!diving) {
+        const b = live.current.band;
+        if (view.key !== `${view.w}x${view.h}:${b?.top ?? 0}:${b?.bottom ?? view.h}`) fit();
         camera.position.copy(CAM_POS);
         camera.lookAt(CAM_LOOK);
       }
@@ -527,14 +598,13 @@ function haloTexture(): THREE.CanvasTexture {
   return t;
 }
 
-function radialTexture(inner: string, outer: string): THREE.CanvasTexture {
+function radialTexture(stops: [number, string][]): THREE.CanvasTexture {
   const size = 256;
   const c = document.createElement("canvas");
   c.width = c.height = size;
   const g = c.getContext("2d")!;
   const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  grad.addColorStop(0, inner);
-  grad.addColorStop(1, outer);
+  for (const [at, colour] of stops) grad.addColorStop(at, colour);
   g.fillStyle = grad;
   g.fillRect(0, 0, size, size);
   const t = new THREE.CanvasTexture(c);

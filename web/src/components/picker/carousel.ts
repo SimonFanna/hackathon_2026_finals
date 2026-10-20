@@ -7,7 +7,7 @@ export const ORDER: DioramaId[] = ["retire", "house", "business", "baby", "car"]
 export const PLAYABLE = ["house", "business"] as const;
 export type PlayableId = (typeof PLAYABLE)[number];
 
-const SPACING = 3.75; // x distance of the first neighbour (no overlap with the centre plinth)
+const SPACING = 4.0; // x distance of the first neighbour (no overlap with the centre plinth)
 const DEPTH = 2.2; // how far each step recedes
 const TURN = 0.42; // radians a side item turns towards the centre
 
@@ -24,7 +24,7 @@ export function layout(i: number, focus: number): Slot {
     x: s * reach * SPACING,
     z: -Math.min(a, 2.5) * DEPTH,
     rotY: -s * Math.min(a, 1) * TURN,
-    scale: 1 - 0.22 * Math.min(a, 1.6),
+    scale: 1 - 0.3 * Math.min(a, 1.6), // neighbours clearly smaller: the centre is the hero
     light: Math.max(0.18, 1 - 0.75 * Math.min(a, 1.2)),
   };
 }
