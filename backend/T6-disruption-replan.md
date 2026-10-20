@@ -1,6 +1,6 @@
 # T6 — Disruption, replanning & scenarios
 
-> Owner: **Mathias** · Status: todo · Last update: 11:00 · Pipeline stage ⑪ + multi-goal arbitration + what-if
+> Owner: **Mathias** · Status: done on fixtures (see `docs/features/backend-t6-replanning.md`) · Last update: 11:30 · Pipeline stage ⑪ + multi-goal arbitration + what-if
 > Read first: `backend/TASKS.md`, `backend/backend.md` §4 ⑪.
 
 ## Goal
@@ -83,15 +83,15 @@ Config-table RLS pattern.
 
 ## Steps
 
-- [ ] Migration + seed (disruption_types, replan_strategies)
-- [ ] `detectDisruptions` (signals + context diff) + tests
-- [ ] `assessImpact` + tests
-- [ ] Strategies → candidates → `buildPlan` → score → top 2 distinct + tests (income drop, cost overrun, partner delay)
-- [ ] `chooseScenario` (version++, goal `replanned`, history kept) + tests
-- [ ] `simulate` (what-if, nothing mutated) + tests
-- [ ] `arbitrate` + tests (2 goals that don't fit together)
-- [ ] Fixture for T8
-- [ ] Doc: status + `SOLUTION.md` log
+- [x] Migration + seed (disruption_types, replan_strategies)
+- [x] `detectDisruptions` (signals + context diff) + tests
+- [x] `assessImpact` + tests
+- [x] Strategies → candidates → `buildPlan` → score → top 2 distinct + tests (income drop, cost overrun, partner delay)
+- [x] `chooseScenario` (version++, goal `replanned`, history kept) + tests
+- [x] `simulate` (what-if, nothing mutated) + tests
+- [x] `arbitrate` + tests (2 goals that don't fit together)
+- [x] Fixture for T8
+- [x] Doc: status + `SOLUTION.md` log
 
 ## Acceptance
 
