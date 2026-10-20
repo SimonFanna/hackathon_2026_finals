@@ -149,3 +149,27 @@ describe("fixture t5-sofie-plan", () => {
     expect(f.lucasPlan.steps.length).toBe(9);
   });
 });
+
+describe("Setle before the loan", () => {
+  it("sizes the home loan after the renovation and grants estimate, when there is one", async () => {
+    const f = await import("../fixtures/t5-sofie-plan");
+    const pos = (c: string) => f.sofiePlan.steps.findIndex((s) => s.capability === c);
+    expect(pos("estimate_renovation")).toBeLessThan(pos("finance_property"));
+    expect(pos("identify_grants")).toBeLessThan(pos("finance_property"));
+    const g = { ...f.sofieGoal, constraints: { ...f.sofieGoal.constraints, targetProperty: { buildYear: 2015, epc: "A" } } };
+    const p = buildPlan(g, f.sofieCtx, f.t5Rules, f.ASOF);
+    expect(p.steps.find((s) => s.capability === "finance_property")!.dependsOn.sort()).toEqual([`${g.id}:estimate_budget`, `${g.id}:value_property`]);
+  });
+});
+
+describe("why texts (Kate quotes them verbatim)", () => {
+  it("never contain a raw placeholder, and partner steps list the data requested", async () => {
+    const f = await import("../fixtures/t5-sofie-plan");
+    for (const s of [...f.sofiePlan.steps, ...f.lucasPlan.steps]) {
+      expect(s.why).not.toMatch(/[{}]/);
+      if (s.provider.isPartner) expect(s.dataRequested.length).toBeGreaterThan(0);
+    }
+    const rules = { ...f.t5Rules, templates: f.t5Rules.templates.map((t) => ({ ...t, steps: t.steps.map((s) => ({ ...s, why: `${s.why} {unknownKey}` })) })) };
+    expect(buildPlan(f.sofieGoal, f.sofieCtx, rules, f.ASOF).steps.every((s) => !s.why.includes("{"))).toBe(true);
+  });
+});

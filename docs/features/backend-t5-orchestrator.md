@@ -1,6 +1,6 @@
 # Feature — Backend T5: orchestrator, decision rules, consent & outcome tracker
 
-> Owner: Mathias (T5 agent) · Status: done (v1, on its own fixtures) · Last update: 11:25
+> Owner: Mathias (T5 agent) · Status: done (v1, on its own fixtures) · Last update: 11:35
 > Spec: `backend/T5-orchestrator-plan.md` · Contract: `web/src/backend/types.ts` (T3 commits it)
 
 ## Goal
@@ -63,6 +63,8 @@ A confirmed goal becomes an ordered, explained action plan across KBC and partne
 - Grants are counted from `identify_grants` estimates only.
 - With no target price, the purchase price is derived from the budget, so the budget check always passes. Once a house is chosen (or on a cost overrun), set `targetProperty.price`.
 - `T4` should put the **works price** in `costEur` for the quote / solar providers (≈ €48k in total, which matches the sourced Setle average).
+- **Request to T4 (Simon):** in `BUY_AND_PREPARE_HOME`, make `finance_property` depend on `identify_grants` too. The home loan is sized once the works and grants are known, which is the answer to Kate's "Why Setle before the loan?". Dependencies outside the plan are ignored, so a home with no renovation still works.
+- `why` never shows a raw `{placeholder}` (unknown keys are removed), because Kate quotes it verbatim. A partner step with no `requiredData` falls back to `first_name, email`, so consent and leads stay possible.
 - The local `getTemplate` / provider lookup duplicates T4 `registry.ts`; switch to it once it lands.
 
 ## Status checklist

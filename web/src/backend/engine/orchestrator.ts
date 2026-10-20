@@ -26,6 +26,7 @@ const DEFAULT_DEADLINE_MONTHS = 6;
 /** Capabilities whose provider cost is the price of the works (renovation budget). */
 const WORKS: CapabilityCode[] = ["quote_insulation", "quote_heating", "quote_windows", "evaluate_solar"];
 const HOME_GOALS: GoalType[] = ["BUY_AND_PREPARE_HOME"];
+const PARTNER_DEFAULT_DATA = ["first_name", "email"];
 
 export interface BuildPlanOptions {
   excludeProviders?: number[];
@@ -210,7 +211,10 @@ export function buildPlan(goal: Goal, ctx: PersistentContext, rules: RuleSet, as
     region: ctx.region,
   };
   const fill = (text: string, provider: Provider) =>
-    text.replace(/\{(\w+)\}/g, (m, k: string) => (k === "provider" ? provider.provider : (values[k] ?? m)));
+    text
+      .replace(/\{(\w+)\}/g, (_, k: string) => (k === "provider" ? provider.provider : (values[k] ?? ""))) // never leak a raw placeholder: Kate quotes `why` verbatim
+      .replace(/\s{2,}/g, " ")
+      .trim();
 
   const stepId = (code: CapabilityCode) => `${goal.id}:${code}`;
   const steps: PlanStep[] = ordered.map((s, i) => {
@@ -231,7 +235,8 @@ export function buildPlan(goal: Goal, ctx: PersistentContext, rules: RuleSet, as
       status: "todo",
       display: "SHOW_STEP",
       why: fill(s.why, provider),
-      dataRequested: provider.isPartner ? [...(capDef?.requiredData ?? [])] : [],
+      // a partner always needs at least contact details, otherwise consent (and the lead) is impossible
+      dataRequested: provider.isPartner ? (capDef?.requiredData.length ? [...capDef.requiredData] : [...PARTNER_DEFAULT_DATA]) : [],
       estimates,
       eta: finish.get(s.capability) ?? null,
       optional: s.optional,
