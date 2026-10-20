@@ -1,6 +1,6 @@
 # T3 — Moments, intents & decision gate
 
-> Owner: **Mathias** · Status: todo · Last update: 11:00 · Pipeline stages ③ (active moments) ④ ⑤
+> Owner: **Mathias** · Status: done on own fixtures (see `docs/features/backend-t3-decision.md`) · Last update: 11:35 · Pipeline stages ③ (active moments) ④ ⑤
 > Read first: `backend/TASKS.md`, `backend/backend.md` §4 ③–⑤.
 
 ## Goal
@@ -69,14 +69,14 @@ Config-table RLS pattern.
 
 ## Steps
 
-- [ ] `condition.ts` `evalCondition` + tests (`all` / `any` / `not`, ops, dotted paths). Commit early: T4, T5 and T6 use it.
-- [ ] Migration + seed (moment_rules, intents, intent_rules)
-- [ ] `detectMoments` (ml path via `predict()`, rules fallback) + tests
-- [ ] `deriveIntents` + tests
-- [ ] `decide` with all the gates + one-at-a-time + tests
-- [ ] `explain.ts` + tests
-- [ ] Fixture for T8
-- [ ] Doc: status + `SOLUTION.md` log
+- [x] `condition.ts` `evalCondition` + tests (`all` / `any` / `not`, ops, dotted paths). Commit early: T4, T5 and T6 use it.
+- [x] Migration + seed (moment_rules, intents, intent_rules)
+- [x] `detectMoments` (ml path via `predict()`, rules fallback) + tests
+- [x] `deriveIntents` + tests
+- [x] `decide` with all the gates + one-at-a-time + tests
+- [x] `explain.ts` + tests
+- [x] Fixture for T8
+- [x] Doc: status + `SOLUTION.md` log
 
 ## Acceptance
 

@@ -115,7 +115,7 @@ export const capabilities: Capability[] = [
   cap("get_tax_legal_advice", "Tax and legal advice", "Business"),
   cap("open_business_account", "Business account", "Business"),
   cap("set_up_invoicing", "Invoicing", "Business", ["company_name", "vat_number", "email"]),
-  cap("accept_payments", "Accept payments", "Business"),
+  cap("accept_payments", "Accept payments", "Business", ["company_name", "vat_number", "iban"]),
   cap("connect_accountant", "Connect your accountant", "Business"),
   cap("insure_liability", "Professional liability insurance", "Business"),
   cap("insure_income", "Guaranteed income insurance", "Business"),
@@ -175,7 +175,7 @@ export const templates: GoalTemplate[] = [
       step(H, 2, "Find", "find_property", ["estimate_budget"], "Search homes up to {purchasePrice} so the renovation still fits your budget."),
       step(H, 3, "Find", "value_property", ["find_property"], "Check the asking price before you bid."),
       step(H, 4, "Find", "inspect_property", ["find_property"], "Know the EPC before you buy: an EPC {epc} home needs work."),
-      step(H, 5, "Finance", "finance_property", ["value_property", "estimate_budget"], "A {homeLoan} home loan over {termYears} years: about {monthlyPayment}/month."),
+      step(H, 5, "Finance", "finance_property", ["value_property", "estimate_budget", "identify_grants"], "A {homeLoan} home loan over {termYears} years: about {monthlyPayment}/month, sized once the works and grants are known."),
       step(H, 6, "Finance", "bridge_finance", ["finance_property"], "Bridge the sale of your current home.", {
         condition: { field: "ctx.housing", op: "eq", value: "owner" },
         optional: true,
