@@ -42,6 +42,8 @@ describe("kateReply", () => {
   it("validates actions and ids", () => {
     expect(REPLY_ACTION.test("choose:sc-a")).toBe(true);
     expect(REPLY_ACTION.test("choose:../../x")).toBe(false);
+    // REVIEW P0 #2: real T6 scenario ids contain ":" and "+"
+    expect(REPLY_ACTION.test("choose:goal-1-buy_and_prepare_home:v1:extend_term+add_protection")).toBe(true);
     expect(REPLY_ACTION.test("delete")).toBe(false);
     expect(parseMessageId(proactive.id)).toMatchObject({ customerId: 1, code: "BUY_HOME" });
   });

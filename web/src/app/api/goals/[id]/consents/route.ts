@@ -5,5 +5,5 @@ import { consentFor } from "@/backend/service";
 
 /** Grant or revoke one field for one partner on one step. */
 export async function POST(req: Request, ctx: RouteContext<"/api/goals/[id]/consents">) {
-  return handle(async () => consentFor(parse(goalIdParam, (await ctx.params).id), await body(req, consentBody), serverDeps()));
+  return handle(async () => consentFor(parse(goalIdParam, (await ctx.params).id), await body(req, consentBody), await serverDeps()), { req, route: "consents" });
 }

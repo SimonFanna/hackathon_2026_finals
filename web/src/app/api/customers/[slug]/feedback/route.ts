@@ -7,6 +7,6 @@ import { feedbackFor } from "@/backend/service";
 export async function POST(req: Request, ctx: RouteContext<"/api/customers/[slug]/feedback">) {
   return handle(async () => {
     const slug = parse(slugParam, (await ctx.params).slug);
-    return { feedback: await feedbackFor(slug, await body(req, feedbackBody), serverDeps()) };
-  });
+    return { feedback: await feedbackFor(slug, await body(req, feedbackBody), await serverDeps()) };
+  }, { req, route: "feedback" });
 }

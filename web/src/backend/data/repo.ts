@@ -7,6 +7,8 @@ export interface Repo {
   getGoals(customerId: number): Promise<Goal[]>;
   getGoal(goalId: string): Promise<Goal | null>;
   saveGoal(g: Goal): Promise<void>;
+  /** Delete a goal with its plans, consents, scenarios and outcome. */
+  deleteGoal(goalId: string): Promise<void>;
   /** Latest plan version of a goal. */
   getPlan(goalId: string): Promise<Plan | null>;
   savePlan(p: Plan): Promise<void>;
@@ -60,6 +62,13 @@ export function memoryRepo(store: Store = emptyStore()): Repo {
     getGoals: async (customerId) => [...store.goals.values()].filter((g) => g.customerId === customerId).map(clone),
     getGoal: async (id) => clone(store.goals.get(id) ?? null),
     saveGoal: async (g) => void store.goals.set(g.id, clone(g)),
+    deleteGoal: async (id) => {
+      store.goals.delete(id);
+      store.plans.delete(id);
+      store.consents.delete(id);
+      store.outcomes.delete(id);
+      for (const [sid, sc] of store.scenarios) if (sc.goalId === id) store.scenarios.delete(sid);
+    },
     getPlan: async (goalId) => clone((store.plans.get(goalId) ?? []).at(-1) ?? null),
     savePlan: async (p) => {
       const versions = (store.plans.get(p.goalId) ?? []).filter((v) => v.version !== p.version);
@@ -71,7 +80,9 @@ export function memoryRepo(store: Store = emptyStore()): Repo {
     saveFeedback: async (f) => push(store.feedback, f.customerId, f),
     saveScenarios: async (s) => s.forEach((x) => store.scenarios.set(x.id, clone(x))),
     getScenario: async (id) => clone(store.scenarios.get(id) ?? null),
-    injectEvent: async (customerId, e) => push(store.injected, customerId, e),
+    // Replace by id: clicking a preset twice must not double the event.
+    injectEvent: async (customerId, e) =>
+      void store.injected.set(customerId, [...(store.injected.get(customerId) ?? []).filter((x) => x.id !== e.id), clone(e)]),
     getInjected: async (customerId) => (store.injected.get(customerId) ?? []).map(clone),
     saveKateMessage: async (m) => void store.kate.set(m.customerId, [...(store.kate.get(m.customerId) ?? []).filter((x) => x.id !== m.id), clone(m)]),
     listKateMessages: async (customerId) => (store.kate.get(customerId) ?? []).map(clone),
@@ -96,6 +107,12 @@ export function memoryRepo(store: Store = emptyStore()): Repo {
 // ---------- Supabase ----------
 
 type Payload<T> = { payload: T };
+
+/** Ledger reads keep the newest rows (so junk can never hide new ones) and return them oldest first. */
+const READ_LIMIT = 500;
+const newestFirst = (rows: Row[] | null): Row[] => [...(rows ?? [])].reverse();
+/** timestamptz comes back as "2026-10-01T00:00:00+00:00"; the engine compares plain ISO dates. */
+const day = (v: unknown): string => String(v).slice(0, 10);
 const payloads = <T>(rows: Row[] | null): T[] => (rows ?? []).map((r) => (r as Payload<T>).payload);
 
 export function supabaseRepo(db: Db): Repo {
@@ -110,20 +127,21 @@ export function supabaseRepo(db: Db): Repo {
     getGoal: async (id) => (await must<Row | null>(db.from("goals").select("payload").eq("id", id).maybeSingle()))?.payload ?? null,
     saveGoal: (g) =>
       ok(db.from("goals").upsert({ id: g.id, customer_id: g.customerId, payload: g, updated_at: new Date().toISOString() })),
+    deleteGoal: (id) => ok(db.from("goals").delete().eq("id", id)), // cascades to plans, consents, scenarios, outcomes
     getPlan: async (goalId) =>
       (await must<Row | null>(db.from("plans").select("payload").eq("goal_id", goalId).order("version", { ascending: false }).limit(1).maybeSingle()))
         ?.payload ?? null,
     savePlan: (p) =>
       ok(db.from("plans").upsert({ id: p.id, goal_id: p.goalId, version: p.version, reason: p.reason, payload: p }, { onConflict: "id" })),
     getConsents: async (goalId) =>
-      (await must(db.from("consents").select("goal_id, step_id, partner, field, granted, at").eq("goal_id", goalId).order("id"))).map(
-        (r): Consent => ({ goalId: r.goal_id, stepId: r.step_id, partner: r.partner, field: r.field, granted: r.granted, at: r.at }),
+      newestFirst(await must(db.from("consents").select("goal_id, step_id, partner, field, granted, at").eq("goal_id", goalId).order("id", { ascending: false }).limit(READ_LIMIT))).map(
+        (r): Consent => ({ goalId: r.goal_id, stepId: r.step_id, partner: r.partner, field: r.field, granted: r.granted, at: day(r.at) }),
       ),
     saveConsent: (c) =>
       ok(db.from("consents").insert({ goal_id: c.goalId, step_id: c.stepId, partner: c.partner, field: c.field, granted: c.granted, at: c.at })),
     getFeedback: async (customerId) =>
-      (await must(db.from("feedback").select("customer_id, target, kind, at").eq("customer_id", customerId).order("id"))).map(
-        (r): Feedback => ({ customerId: r.customer_id, target: r.target, kind: r.kind, at: r.at }),
+      newestFirst(await must(db.from("feedback").select("customer_id, target, kind, at").eq("customer_id", customerId).order("id", { ascending: false }).limit(READ_LIMIT))).map(
+        (r): Feedback => ({ customerId: r.customer_id, target: r.target, kind: r.kind, at: day(r.at) }),
       ),
     saveFeedback: (f) => ok(db.from("feedback").insert({ customer_id: f.customerId, target: f.target, kind: f.kind, at: f.at })),
     saveScenarios: async (s) => {
@@ -132,7 +150,7 @@ export function supabaseRepo(db: Db): Repo {
     getScenario: async (id) => (await must<Row | null>(db.from("scenarios").select("payload").eq("id", id).maybeSingle()))?.payload ?? null,
     injectEvent: (customerId, e) => ok(db.from("injected_events").upsert({ id: e.id, customer_id: customerId, payload: e })),
     getInjected: async (customerId) =>
-      payloads(await must(db.from("injected_events").select("payload").eq("customer_id", customerId).order("created_at"))),
+      payloads(newestFirst(await must(db.from("injected_events").select("payload").eq("customer_id", customerId).order("created_at", { ascending: false }).limit(READ_LIMIT)))),
     saveKateMessage: (m) => ok(db.from("kate_messages").upsert({ id: m.id, customer_id: m.customerId, payload: m })),
     listKateMessages: async (customerId) =>
       payloads(await must(db.from("kate_messages").select("payload").eq("customer_id", customerId).order("created_at"))),

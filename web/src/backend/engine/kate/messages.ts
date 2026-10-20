@@ -35,8 +35,9 @@ export function evidenceWords(moment: ActiveMoment): string {
   const fromContributions = [...moment.contributions]
     .filter((c) => c.value * c.weight > 0)
     .sort((a, b) => b.value * b.weight - a.value * a.weight)
-    .slice(0, 2)
-    .map((c) => lowerFirst(c.label));
+    .map((c) => lowerFirst(c.label))
+    .filter((label, i, all) => all.indexOf(label) === i)       // sig_X and cnt_X share a label (REVIEW P0 #4)
+    .slice(0, 2);
   if (fromContributions.length) return joinAnd(fromContributions);
   const fromSignals = moment.evidence.map((code) => SIGNAL_WORDS[code as SignalCode]).filter((w): w is string => !!w);
   return joinAnd(fromSignals.slice(0, 2)) || "your recent activity";

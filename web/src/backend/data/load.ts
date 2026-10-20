@@ -58,7 +58,8 @@ export async function loadRules(db: Db | null): Promise<{ rules: RuleSet; source
   if (!db) return { rules: snapshotRules, source: "snapshot" };
   if (rulesCache && Date.now() - rulesCache.at < RULES_TTL_MS) return { rules: rulesCache.rules, source: "supabase" };
   try {
-    const { rules } = await fetchRules(db, snapshotRules);
+    const { rules, fromFallback } = await fetchRules(db, snapshotRules);
+    if (fromFallback.length === Object.keys(rules).length) throw new Error("no config table readable");
     rulesCache = { at: Date.now(), rules };
     return { rules, source: "supabase" };
   } catch (err) {
