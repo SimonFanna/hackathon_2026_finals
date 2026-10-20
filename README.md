@@ -140,7 +140,14 @@ SOLUTION.md                  the idea, decisions and timestamped log
 - **Supabase:** RLS on every table. Public roles can read only the 6 demo customers and the read-only config. Runtime tables have no public access, and the model's ground truth lives in a private `ml` schema. Keys live in environment variables, never in git.
 - **API:** zod validation on every body and parameter, demo customers only, generic errors, same-origin check and rate limit on writes, bounded what-if values.
 - **HTTP hardening:** strict CSP, `frame-ancestors 'none'`, `nosniff`, Referrer and Permissions policies, HSTS in production.
-- **Review and scan:** a multi-agent review of the backend is in [`backend/REVIEW.md`](backend/REVIEW.md); Aikido notes are in [`docs/features/security.md`](docs/features/security.md). The only `npm audit` finding is a dev-only ESLint dependency (`braces`) with no patched version; production dependencies report 0.
+- **Aikido scan, issue resolved:**
+  - Aikido's SAST flagged *"Potential file inclusion attack via reading file"* at **High risk (70)**: string handling in `web/src/components/journey/Stage.tsx` and a `readFileSync` in the dev script `scripts/ml/demo_scores.ts`.
+  - We checked every flagged line. No user-controlled input reaches a file read: `Stage.tsx` only replaces a name inside text, and the only file read is in an offline dev script, with fixed relative paths, and it is never shipped. Aikido's AI analysis also rated the finding a false positive.
+  - We marked the finding with that reason. The issue is now **Solved**, and its risk went from 70 (High) to 1 (Low).
+  - Details are in [`docs/features/security.md`](docs/features/security.md).
+- **Other checks:**
+  - A multi-agent review of the backend is in [`backend/REVIEW.md`](backend/REVIEW.md).
+  - The only `npm audit` finding is a dev-only ESLint dependency (`braces`) with no patched version. Production dependencies report 0.
 
 ## Status: what is done, what is not
 
