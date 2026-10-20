@@ -77,7 +77,8 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 
 | Feature | Owner | Status | Doc |
 |---|---|---|---|
-| Engine signal → intent → journey | coordinator (kepa) | done (V0) | `journey-house-v0.md` |
+| Journey engine (steps, consent, scoreboard) | coordinator (kepa) | done (V0) | `journey-house-v0.md` |
+| Intent detection & confidence scoring (signals → intent, levels none/ask/suggest) | DB + ML team | todo — engine has a placeholder (`detectIntents`, thresholds 0.4/0.75) to replace; keep the `DetectedIntent` contract | `backend/backend.md` |
 | Journey UI V0 | peer agent (kepa) | replaced by UX redesign V1 | `journey-house-v0.md` |
 | UX redesign V1 (KBC brand, Kate voice, phone stage, triple-win finale) | peer agent (kepa) | done (V1) | `ux-redesign.md` |
 | Supabase catalogue + data | Simon | in progress | — (Simon to add `supabase.md`) |
