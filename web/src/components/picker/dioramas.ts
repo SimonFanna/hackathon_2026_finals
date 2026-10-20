@@ -12,6 +12,7 @@ const DEFAULT_FONT = '"Nunito Sans", system-ui, sans-serif';
 const GROUND_R = 1.6; // radius of the ground disc
 const GROUND_HALF = 1.62; // half-size of the square the ground canvas covers
 const PLINTH_BOTTOM = -0.32;
+const RING_Y = -0.086; // selection ring, flat, just under the steel ledge
 const WARM = "#ffc98a";
 const AMBER = "#ffb46a";
 const NAVY = "#0d2a50";
@@ -30,8 +31,15 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 /** Locked look: sRGB in, grey-blue sRGB out. Keeps the value (luma) so the scene still reads. */
 export function lockedRGB(r: number, g: number, b: number): [number, number, number] {
   const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  const v = 0.08 + 0.84 * l;
+  const v = 0.06 + 0.55 * l;
   return [clamp01(v * 0.86), clamp01(v * 0.94), clamp01(v * 1.06 + 0.03)];
+}
+
+/** Selection ring under the centred plinth: fades in over the last 40% of the focus. */
+export function ringOpacity(focus: number): number {
+  const f = Number.isFinite(focus) ? Math.min(focus, 1) : 1;
+  const t = clamp01((f - 0.6) / 0.4);
+  return t * t * (3 - 2 * t);
 }
 
 /** World coordinate (x or z) to ground-canvas pixels. */
@@ -508,6 +516,7 @@ interface Kit extends PickerKit {
   poolTex: THREE.Texture;
   lockedGlass: THREE.MeshStandardMaterial;
   shadow: { geo: THREE.BufferGeometry; mat: THREE.MeshBasicMaterial };
+  ringGeo: THREE.BufferGeometry;
   padlock: { geo: THREE.BufferGeometry; mat: THREE.Material };
   twin(m: THREE.Material): THREE.Material;
   __kit: true;
@@ -544,7 +553,7 @@ function makeTwin(m: THREE.Material, lockedGlass: THREE.Material, created: { mat
     s.emissiveMap = null;
     t = s;
   } else if (m instanceof THREE.MeshBasicMaterial && lockAs === "dim") {
-    t = new THREE.MeshStandardMaterial({ color: "#4a566b", roughness: 0.85, map: greyMap(m.map) });
+    t = new THREE.MeshStandardMaterial({ color: "#2c3749", roughness: 0.85, map: greyMap(m.map) });
   } else if (m instanceof THREE.MeshBasicMaterial) {
     const s = m.clone();
     lockColor(s.color);
@@ -588,9 +597,9 @@ export function pickerKit(opts?: { fontFamily?: string }): PickerKit {
     woodDark: S("#4b3729", 0.66),
     foliage: S("#ffffff", 0.95, 0, { map: leafTex }),
     bark: S("#5b4636", 0.9),
-    plinth: S("#152b4c", 0.36, 0.15, E(0.55)),
+    plinth: S("#1e3d66", 0.45, 0.1, E(0.35)),
     soil: S("#3b3029", 1),
-    zinc: S("#7c8591", 0.38, 0.65, E(0.9)),
+    zinc: S("#7f8ba0", 0.35, 0.25, E(0.6)),
     door: S("#173f73", 0.32, 0, E(0.35)),
     shop: S("#183c69", 0.45, 0, E(0.3)),
     accent: S(ACCENT, 0.35, 0, E(0.3)),
@@ -610,12 +619,15 @@ export function pickerKit(opts?: { fontFamily?: string }): PickerKit {
   mat.awning.userData.uvScale = 1 / 0.19; // one white + one navy stripe = 0.19 units
   for (const m of Object.values(mat)) m.userData.kit = true;
 
-  const lockedGlass = S("#2b3a50", 0.12, 0, E(0.8));
+  const lockedGlass = S("#1d2839", 0.12, 0, E(0.7));
   lockedGlass.userData.kit = true;
 
   const shadowGeo = G.plane(4.7, 4.7);
   shadowGeo.rotateX(-Math.PI / 2);
   geos.push(shadowGeo);
+  const ringGeo = new THREE.RingGeometry(1.69, 1.715, 96, 1);
+  ringGeo.rotateX(-Math.PI / 2);
+  geos.push(ringGeo);
   const shadowMat = new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, toneMapped: false });
   shadowMat.userData.noLock = true;
 
@@ -670,6 +682,7 @@ export function pickerKit(opts?: { fontFamily?: string }): PickerKit {
     poolTex,
     lockedGlass,
     shadow: { geo: shadowGeo, mat: shadowMat },
+    ringGeo,
     padlock: { geo: padGeo, mat: padMat },
     twin(m) {
       let t = twins.get(m);
@@ -841,6 +854,8 @@ function aoDisc(g: CanvasRenderingContext2D, X: (x: number) => number, Z: (z: nu
 interface SceneOut {
   window: THREE.Mesh;
   stand: [number, number, number];
+  /** Yaw of the stand (turned a little towards the camera axis). */
+  standRotY: number;
   /** Padlock centre (scaled 0.8: spans y - 0.14 .. y + 0.34). */
   padlock: [number, number, number];
 }
@@ -853,8 +868,8 @@ function addPlinth(b: Builder, k: Kit, ground: THREE.Material): void {
   b.add(G.cyl(GROUND_R + 0.012, GROUND_R + 0.012, 0.075, 72, true), m.soil, M(0, -0.0375, 0));
   const ledge = new THREE.RingGeometry(GROUND_R, 1.665, 72, 1);
   ledge.rotateX(-Math.PI / 2);
-  b.add(ledge, m.trim, M(0, -0.075, 0));
-  b.add(G.cyl(1.665, 1.685, 0.02, 72, true), m.trim, M(0, -0.085, 0));
+  b.add(ledge, m.zinc, M(0, -0.075, 0));
+  b.add(G.cyl(1.665, 1.685, 0.02, 72, true), m.zinc, M(0, -0.085, 0));
   b.add(G.cyl(1.685, 1.685, 0.2, 72, true), m.plinth, M(0, -0.195, 0));
   b.add(G.cyl(1.685, 1.645, 0.025, 72, true), m.plinth, M(0, -0.3075, 0));
   const bottom = G.circle(1.645, 48);
@@ -1024,12 +1039,12 @@ function sceneHouse(c: Ctx): SceneOut {
   b.box(m.door, 0.215, 0.17, zF - 0.046, 0.425, 0.5, zF - 0.036, 0.008);
   b.add(G.sphere(0.017, 10, 8), m.brass, M(0.43, 0.52, zF - 0.03));
   b.box(m.brass, 0.27, 0.53, zF - 0.045, 0.37, 0.548, zF - 0.032);
-  b.box(m.accent, 0.545, 0.7, zF, 0.635, 0.765, zF + 0.012, 0.006);
-  // wall lantern
-  b.box(m.iron, 0.57, 0.86, zF, 0.61, 0.88, zF + 0.05);
-  b.box(m.iron, 0.555, 0.88, zF + 0.02, 0.625, 0.9, zF + 0.09);
-  b.add(G.box(0.05, 0.075, 0.05), warm, M(0.59, 0.94, zF + 0.055));
-  b.add(G.cyl(0.0, 0.05, 0.035, 4), m.iron, M(0.59, 0.995, zF + 0.055, 0, Math.PI / 4, 0));
+  // number plate (KBC accent) and wall lantern between the window and the door, clear of Thomas
+  b.box(m.accent, -0.015, 0.66, zF, 0.075, 0.725, zF + 0.012, 0.006);
+  b.box(m.iron, 0.01, 0.84, zF, 0.05, 0.86, zF + 0.05);
+  b.box(m.iron, -0.005, 0.86, zF + 0.02, 0.065, 0.88, zF + 0.09);
+  b.add(G.box(0.05, 0.075, 0.05), warm, M(0.03, 0.92, zF + 0.055));
+  b.add(G.cyl(0.0, 0.05, 0.035, 4), m.iron, M(0.03, 0.975, zF + 0.055, 0, Math.PI / 4, 0));
 
   // Attic window and oculus (dark glass).
   frameOpening(b, m.trim, ATTIC.x0, ATTIC.y0, ATTIC.x1, ATTIC.y1, zF, 0.028, 0.04, 0.025);
@@ -1081,7 +1096,6 @@ function sceneHouse(c: Ctx): SceneOut {
     b.add(G.rbox(0.3 - r() * 0.04, 0.03, 0.15, 0.014, 1), m.paving, M(0.32 + (r() - 0.5) * 0.05, 0.012, z, 0, (r() - 0.5) * 0.16, 0));
   }
   hedgeArc(b, m.foliage, 1.43, (83 * Math.PI) / 180, (146 * Math.PI) / 180, 0.2, 0.14);
-  hedgeArc(b, m.foliage, 1.43, (52 * Math.PI) / 180, (71 * Math.PI) / 180, 0.2, 0.14);
   movingBox(b, k, 0.36, 0.26, 0.3, M(1.1, 0, -0.12, 0, 0.32, 0));
   movingBox(b, k, 0.3, 0.21, 0.26, M(1.08, 0.26, -0.13, 0, 0.08, 0));
   movingBox(b, k, 0.25, 0.19, 0.22, M(1.3, 0, 0.26, 0, -0.42, 0));
@@ -1155,15 +1169,12 @@ function sceneHouse(c: Ctx): SceneOut {
       h.beginPath();
       h.arc(S / 2, S / 2, (1.43 / (2 * GROUND_HALF)) * S, (83 * Math.PI) / 180, (146 * Math.PI) / 180);
       h.stroke();
-      h.beginPath();
-      h.arc(S / 2, S / 2, (1.43 / (2 * GROUND_HALF)) * S, (52 * Math.PI) / 180, (71 * Math.PI) / 180);
-      h.stroke();
     });
   }, 21);
-  c.pool(b, 0.32, [[-0.31, zF + 0.34, 1.0, 0.62], [0.6, zF + 0.2, 0.5, 0.34]]);
+  c.pool(b, 0.32, [[-0.31, zF + 0.34, 1.0, 0.62], [0.05, zF + 0.2, 0.46, 0.32]]);
   addPlinth(b, k, ground);
   b.build(c.root);
-  return { window, stand: [0.8, 0, 0.78], padlock: [0, 2.44, 0.42] };
+  return { window, stand: [0.68, 0, 1.08], standRotY: -0.3, padlock: [0, 2.44, 0.42] };
 }
 
 // ───────────────────────────── coffee bar (Lina, first business) ─────────────────────────────
@@ -1464,7 +1475,7 @@ function sceneBusiness(c: Ctx): SceneOut {
     }
   });
   const chalk = c.own(new THREE.MeshStandardMaterial({ map: chalkTex, roughness: 0.9 }));
-  b.at(M(0.36, 0, 0.9, 0, -0.18, 0), () => {
+  b.at(M(0.2, 0, 0.92, 0, -0.18, 0), () => {
     for (const sgn of [1, -1]) {
       b.at(M(0, 0.29, sgn * 0.06, sgn * -0.2, 0, 0), () => {
         b.add(G.box(0.3, 0.46, 0.012), chalk, M(0, 0, 0));
@@ -1475,9 +1486,6 @@ function sceneBusiness(c: Ctx): SceneOut {
       });
     }
   });
-  b.add(G.cyl(0.08, 0.065, 0.16, 16), m.iron, M(1.1, 0.08, -0.46));
-  b.add(G.cyl(0.006, 0.006, 0.26, 5), m.iron, M(1.1, 0.29, -0.46));
-  b.add(G.ico(0.13, 2), m.foliage, M(1.1, 0.5, -0.46));
 
   // Ground: pale stone tiles, cobbled street strip at the front, contact shading.
   const ground = c.ground((g, X, Z, S, rr) => {
@@ -1505,13 +1513,12 @@ function sceneBusiness(c: Ctx): SceneOut {
     aoRect(g, X, Z, -0.78, -1.14, 0.92, zF + 0.03, 16, 0.75);
     aoDisc(g, X, Z, -0.48, 0.86, 0.17, 8, 0.45);
     aoDisc(g, X, Z, 1.16, -0.04, 0.17, 8, 0.45);
-    aoRect(g, X, Z, 0.18, 0.8, 0.54, 1.0, 8, 0.5);
-    aoDisc(g, X, Z, 1.1, -0.46, 0.09, 6, 0.6);
+    aoRect(g, X, Z, 0.02, 0.82, 0.38, 1.02, 8, 0.5);
   }, 17);
   c.pool(b, 0.3, [[-0.04, zF + 0.36, 1.5, 0.66], [1.16, -0.66, 0.7, 0.5, Math.PI / 2]]);
   addPlinth(b, k, ground);
   b.build(c.root);
-  return { window, stand: [0.9, 0, 0.74], padlock: [0, 2.44, 0.45] };
+  return { window, stand: [0.66, 0, 1.02], standRotY: -0.3, padlock: [0, 2.44, 0.45] };
 }
 
 function paintInterior(): HTMLCanvasElement {
@@ -1727,7 +1734,7 @@ function sceneRetire(c: Ctx): SceneOut {
   }, 31);
   addPlinth(b, k, ground);
   b.build(c.root);
-  return { window, stand: [0.48, 0, 0.92], padlock: [0.05, 2.42, 0.1] };
+  return { window, stand: [0.48, 0, 0.92], standRotY: -0.2, padlock: [0.05, 2.42, 0.1] };
 }
 
 function sceneBaby(c: Ctx): SceneOut {
@@ -1825,7 +1832,7 @@ function sceneBaby(c: Ctx): SceneOut {
   }, 41);
   addPlinth(b, k, ground);
   b.build(c.root);
-  return { window, stand: [0.5, 0, 0.95], padlock: [0, 2.42, 0.1] };
+  return { window, stand: [0.5, 0, 0.95], standRotY: -0.2, padlock: [0, 2.42, 0.1] };
 }
 
 function sceneCar(c: Ctx): SceneOut {
@@ -1929,7 +1936,7 @@ function sceneCar(c: Ctx): SceneOut {
   }, 51);
   addPlinth(b, k, ground);
   b.build(c.root);
-  return { window, stand: [0.98, 0, 0.7], padlock: [0, 2.12, -0.2] };
+  return { window, stand: [0.98, 0, 0.7], standRotY: -0.3, padlock: [0, 2.12, -0.2] };
 }
 
 const SCENES: Record<DioramaId, (c: Ctx) => SceneOut> = {
@@ -1953,6 +1960,7 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
   const stand = new THREE.Object3D();
   stand.name = "stand";
   stand.position.set(...out.stand);
+  stand.rotation.y = out.standRotY;
   root.add(stand);
 
   const shadow = new THREE.Mesh(kit.shadow.geo, kit.shadow.mat);
@@ -1960,6 +1968,13 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
   shadow.renderOrder = -1;
   shadow.userData.noLock = true;
   root.add(shadow);
+
+  const ringMat = c.own(new THREE.MeshBasicMaterial({ color: ACCENT, toneMapped: false, transparent: true, depthWrite: false, opacity: 1 }));
+  const ring = new THREE.Mesh(kit.ringGeo, ringMat);
+  ring.name = "selection-ring";
+  ring.position.y = RING_Y;
+  ring.userData.noLock = true;
+  root.add(ring);
 
   const padlock = new THREE.Group();
   padlock.name = "padlock";
@@ -1974,7 +1989,7 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
   // Geometry this diorama owns (the stand's future children, e.g. the character, are not ours to free).
   const ownMeshes: THREE.Mesh[] = [];
   root.traverse((o) => {
-    if (o instanceof THREE.Mesh && o !== shadow && o.parent !== padlock) ownMeshes.push(o);
+    if (o instanceof THREE.Mesh && o !== shadow && o !== ring && o.parent !== padlock) ownMeshes.push(o);
   });
 
   let locked = false;
@@ -1983,6 +1998,9 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
   const applyGlow = () => {
     const s = glowScale(focus);
     for (const g of c.glows) g.mat.color.copy(g.base).multiplyScalar(g.gain * s);
+    const o = locked ? 0 : ringOpacity(focus);
+    ringMat.opacity = o;
+    ring.visible = o > 0.01;
   };
   applyGlow();
 

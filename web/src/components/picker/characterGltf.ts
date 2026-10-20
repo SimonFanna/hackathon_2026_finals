@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader, type GLTF } from "three/addons/loaders/GLTFLoader.js";
+import { mergeVertices } from "three/addons/utils/BufferGeometryUtils.js";
 import { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
 import type { Character, CharacterId, Pose } from "./characterTypes";
 
@@ -30,6 +31,7 @@ const HEIGHT = 1.1;
 const SILHOUETTE = "#24426b";
 
 const CLIPS: Record<Pose, string> = { idle: "Idle", wave: "Wave", cheer: "Wave" };
+const HOP = 0.12;
 
 // A thin cool rim (fresnel) that separates the people from brick walls and the navy background.
 const RIM = new THREE.Color("#9cc8ff");
@@ -46,12 +48,51 @@ function addRim(mat: THREE.MeshStandardMaterial) {
   mat.customProgramCacheKey = () => "picker-rim";
 }
 
+// A soft contact shadow under the feet (one small quad each, no shadow map). Shared, like the glTF cache.
+let blob: { geo: THREE.PlaneGeometry; tex: THREE.CanvasTexture } | null = null;
+function blobShadow(): THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial> {
+  if (!blob) {
+    const c = document.createElement("canvas");
+    c.width = c.height = 64;
+    const g = c.getContext("2d")!;
+    const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, "rgba(0,8,24,0.62)");
+    grad.addColorStop(0.45, "rgba(0,8,24,0.34)");
+    grad.addColorStop(1, "rgba(0,8,24,0)");
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 64, 64);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    blob = { geo: new THREE.PlaneGeometry(0.56, 0.4).rotateX(-Math.PI / 2), tex };
+  }
+  const mat = new THREE.MeshBasicMaterial({ map: blob.tex, transparent: true, depthWrite: false, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -2 });
+  const m = new THREE.Mesh(blob.geo, mat);
+  m.position.y = 0.004;
+  m.renderOrder = 1;
+  return m;
+}
+
+// The models are exported flat-shaded (split normals): merge them once so faces read soft, not faceted.
+function smoothNormals(scene: THREE.Object3D) {
+  scene.traverse((o) => {
+    const mesh = o as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    const g = mesh.geometry.clone();
+    g.deleteAttribute("normal");
+    const merged = mergeVertices(g, 1e-4);
+    merged.computeVertexNormals();
+    g.dispose();
+    mesh.geometry.dispose();
+    mesh.geometry = merged;
+  });
+}
+
 let cache: Promise<Record<keyof typeof FILES, GLTF>> | null = null;
 
 function loadAll(): Promise<Record<keyof typeof FILES, GLTF>> {
   if (!cache) {
     const loader = new GLTFLoader();
-    cache = Promise.all(Object.entries(FILES).map(([k, url]) => loader.loadAsync(url).then((g) => [k, g] as const))).then(
+    cache = Promise.all(Object.entries(FILES).map(([k, url]) => loader.loadAsync(url).then((g) => (smoothNormals(g.scene), [k, g] as const)))).then(
       (entries) => Object.fromEntries(entries) as Record<keyof typeof FILES, GLTF>,
     );
     cache.catch(() => (cache = null));
@@ -100,6 +141,8 @@ function makeCharacter(id: CharacterId, gltf: GLTF): Character {
 
   const root = new THREE.Group();
   root.name = `character-${id}`;
+  const shadow = blobShadow();
+  root.add(shadow);
   root.userData.measured = { height: +size.y.toFixed(3), scale: +s.toFixed(4) };
   const hop = new THREE.Group();
   hop.add(model);
@@ -124,8 +167,13 @@ function makeCharacter(id: CharacterId, gltf: GLTF): Character {
 
   const applyColours = () => {
     for (const m of materials) {
-      if (locked) m.color.set(SILHOUETTE);
-      else m.color.copy(base.get(m)!).multiplyScalar(0.55 + 0.45 * focus);
+      if (locked) {
+        m.color.set(SILHOUETTE);
+        m.emissive.setRGB(0, 0, 0);
+      } else {
+        m.color.copy(base.get(m)!).multiplyScalar(0.55 + 0.45 * focus);
+        m.emissive.copy(m.color).multiplyScalar(0.07); // a touch of self-light so faces never go muddy
+      }
     }
   };
 
@@ -140,7 +188,7 @@ function makeCharacter(id: CharacterId, gltf: GLTF): Character {
       if (next === "cheer") cheerT = 0;
       if (!to || from === to) return;
       to.reset();
-      to.setEffectiveTimeScale(next === "cheer" ? 1.5 : 1);
+      to.setEffectiveTimeScale(1);
       to.setEffectiveWeight(1);
       to.play();
       if (from) to.crossFadeFrom(from, 0.3, false);
@@ -161,7 +209,9 @@ function makeCharacter(id: CharacterId, gltf: GLTF): Character {
       if (cheerT >= 0) {
         cheerT += dt;
         const k = Math.min(cheerT / 0.55, 1);
-        hop.position.y = Math.sin(k * Math.PI) * 0.16; // one happy hop
+        hop.position.y = Math.sin(k * Math.PI) * HOP; // one happy hop
+        shadow.scale.setScalar(1 - hop.position.y * 1.8); // the contact shadow tightens in the air
+        shadow.material.opacity = 1 - hop.position.y * 2.5;
         if (k >= 1) cheerT = -1;
       }
     },
@@ -169,6 +219,7 @@ function makeCharacter(id: CharacterId, gltf: GLTF): Character {
       mixer.stopAllAction();
       mixer.uncacheRoot(model);
       materials.forEach((m) => m.dispose());
+      shadow.material.dispose();
       // Geometries are shared with the cached glTF (SkeletonUtils.clone shares them): not disposed here.
     },
   };
