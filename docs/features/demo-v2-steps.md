@@ -39,7 +39,7 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 - Each item: verify in a browser on a prod build (GPU flags: `--use-angle=vulkan --enable-features=Vulkan --ignore-gpu-blocklist`); `npm run lint`, `npm test`, `npm run build` green; screenshot in `docs/screenshots/demo-v2/`; tick below.
 
 ## Status checklist
-- [ ] P1 notification dismiss + Kate pill
+- [x] P1 notification dismiss + Kate pill (14:15, kepa)
 - [ ] P2 business first, locked goals removed
 - [ ] P3 one page per chapter + one page per event (interleaved)
 - [ ] P4 3D build on the left

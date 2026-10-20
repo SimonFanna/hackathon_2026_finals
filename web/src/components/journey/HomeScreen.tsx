@@ -2,24 +2,66 @@
 
 import { ArrowsLeftRight, House, ListBullets, SquaresFour } from "@phosphor-icons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef } from "react";
 import type { Persona } from "@/engine";
 import { KateMark } from "./Kate";
 import { KbcLogo } from "./KbcLogo";
 
-/** S1: a normal KBC Mobile home screen, and Kate's notification sliding in from the top. */
-export function HomeScreen({ persona, showNotification, onOpen }: { persona: Persona; showNotification: boolean; onOpen: () => void }) {
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
+
+/**
+ * S1: a normal KBC Mobile home screen, and Kate's notification sliding in from the top.
+ * A tap anywhere outside the notification (or Esc, handled by the stage) slides it away;
+ * a small Kate pill then stays at the top of the screen to bring it back.
+ */
+export function HomeScreen({
+  persona,
+  showNotification,
+  dismissed = false,
+  onOpen,
+  onDismiss,
+  onReopen,
+}: {
+  persona: Persona;
+  showNotification: boolean;
+  dismissed?: boolean;
+  onOpen: () => void;
+  onDismiss?: () => void;
+  onReopen?: () => void;
+}) {
   const reduce = useReducedMotion();
   const { customer, copy, home } = persona;
+  const notifRef = useRef<HTMLButtonElement>(null);
+  const dismissRef = useRef(onDismiss);
+  const visible = showNotification && !dismissed;
+  const pill = showNotification && dismissed;
+
+  useEffect(() => {
+    dismissRef.current = onDismiss;
+  });
+
+  // A pointer-down anywhere outside the notification (even outside the phone) dismisses it.
+  useEffect(() => {
+    if (!visible) return;
+    const h = (e: PointerEvent) => {
+      if (e.target instanceof Node && notifRef.current?.contains(e.target)) return;
+      dismissRef.current?.();
+    };
+    document.addEventListener("pointerdown", h);
+    return () => document.removeEventListener("pointerdown", h);
+  }, [visible]);
+
   return (
     <div className="relative flex h-full flex-col">
       <AnimatePresence>
-        {showNotification && (
+        {visible && (
           <motion.button
             key="notif"
+            ref={notifRef}
             onClick={onOpen}
             initial={reduce ? { opacity: 0 } : { y: "-120%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={reduce ? { opacity: 0, transition: { duration: 0.25 } } : { y: "-120%", opacity: 0, transition: { duration: 0.25, ease: EASE_OUT } }}
             transition={{ type: "spring", bounce: 0, duration: 0.45 }}
             className="press absolute inset-x-3 top-1 z-20 flex gap-3 rounded-[18px] bg-white/95 p-3.5 text-left shadow-raised backdrop-blur"
           >
@@ -32,6 +74,27 @@ export function HomeScreen({ persona, showNotification, onOpen }: { persona: Per
               <span className="mt-0.5 block text-[15px] font-semibold leading-5 text-night">{copy.notification}</span>
             </span>
           </motion.button>
+        )}
+        {pill && (
+          <motion.div
+            key="pill"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            transition={{ duration: 0.25, ease: EASE_OUT }}
+            className="absolute inset-x-0 top-2 z-20 flex justify-center"
+          >
+            <button
+              type="button"
+              onClick={onReopen}
+              className="press flex items-center gap-2 rounded-full bg-kate py-1.5 pr-3.5 pl-1.5 text-[13px] font-semibold text-night shadow-card"
+            >
+              <span className="rounded-full ring-2 ring-white/90">
+                <KateMark size={20} />
+              </span>
+              Kate has a suggestion
+            </button>
+          </motion.div>
         )}
       </AnimatePresence>
 

@@ -74,6 +74,7 @@ export function Stage() {
 
   const [screen, setScreen] = useState<Screen>("select");
   const [notif, setNotif] = useState(false);
+  const [dismissed, setDismissed] = useState(false); // the notification was slid away; the Kate pill brings it back
   const [state, setState] = useState<JourneyState | null>(null);
   const [index, setIndex] = useState(0);
   const [modes, setModes] = useState<Record<string, ConsentMode>>({});
@@ -177,6 +178,7 @@ export function Stage() {
   const go = (s: Screen, m: Move = "forward") => {
     setMove(m);
     setSheet(null);
+    setDismissed(false);
     setScreen(s);
   };
 
@@ -353,6 +355,7 @@ export function Stage() {
       if (o?.available) setSelected(o.id);
       return;
     }
+    if (k === "escape" && screen === "home" && notif) return setDismissed(true);
     if (k === "arrowleft") return back();
     if (k === "s") {
       if (screen === "step") skip();
@@ -361,7 +364,7 @@ export function Stage() {
     }
     if (k === "arrowright" || (k === "enter" && !onControl)) {
       e.preventDefault();
-      if (screen === "home" && notif) go("intent");
+      if (screen === "home" && (notif || dismissed)) go("intent");
       else if (screen === "intent") confirm();
       else if (screen === "declined") reset();
       else if (screen === "path") go("step");
@@ -428,7 +431,16 @@ export function Stage() {
           transition={{ type: "spring", bounce: 0, duration: 0.4 }}
           className="absolute inset-0"
         >
-          {screen === "home" && <HomeScreen persona={persona} showNotification={notif} onOpen={() => go("intent")} />}
+          {screen === "home" && (
+            <HomeScreen
+              persona={persona}
+              showNotification={notif}
+              dismissed={dismissed}
+              onOpen={() => go("intent")}
+              onDismiss={() => setDismissed(true)}
+              onReopen={() => setDismissed(false)}
+            />
+          )}
           {screen === "intent" && intent && (
             <IntentScreen intent={intent} copy={persona.copy} onConfirm={confirm} onDecline={() => go("declined")} onBack={back} onWhy={() => setSheet("why")} />
           )}
