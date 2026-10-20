@@ -3,6 +3,7 @@
 import { CheckCircle } from "@phosphor-icons/react";
 import type { JourneyState } from "@/engine";
 import { providerName } from "./copy";
+import { EcosystemStrip } from "./EcosystemStrip";
 import { KateLine } from "./Kate";
 import { BackButton, PrimaryButton, ScreenLayout, TextButton } from "./ui";
 
@@ -64,7 +65,8 @@ export function PlanScreen({ state, onImpact, onBack, onAdvisor, final }: { stat
         </div>
         {skipped > 0 && <p className="mt-4 text-[14px] text-night-300">{skipped} {skipped === 1 ? "step" : "steps"} skipped. You can come back to them later.</p>}
 
-        <div className="mt-5 rounded-[8px] bg-element p-4 text-[16px] leading-[23px]">
+        <div className="mt-5"><EcosystemStrip journey={state.journey} compact /></div>
+        <div className="mt-3 rounded-[8px] bg-element p-4 text-[16px] leading-[23px]">
           {details > 0 ? (
             <>You shared <b className="tabular">{details}</b> {details === 1 ? "detail" : "details"} with <b className="tabular">{sharedWith.size}</b> {sharedWith.size === 1 ? "partner" : "partners"}. Nothing else left KBC.</>
           ) : (

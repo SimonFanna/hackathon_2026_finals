@@ -17,6 +17,7 @@ import { affectedStep, BuildStage } from "../build/BuildStage";
 import type { PlanPersona } from "../custom/CustomPlayer";
 import { CharacterSelect3D } from "../picker/CharacterSelect3D";
 import { ChapterScreen } from "./ChapterScreen";
+import { ChapterStepsScreen } from "./ChapterStepsScreen";
 import { providerName } from "./copy";
 import { buildDemoSequence, type DemoPage } from "./demoSequence";
 import { EngineHud, type AdaptStep, type Phase } from "./EngineHud";
@@ -29,8 +30,8 @@ import { PathScreen } from "./PathScreen";
 import { FRAME_H, Phone } from "./Phone";
 import { PlanScreen } from "./PlanScreen";
 import { PresenterPanel } from "./PresenterPanel";
-import { ConsentSheet, EstimateSheet, WhySheet } from "./Sheets";
-import { StepScreen, type ConsentMode } from "./StepScreen";
+import { EstimateSheet, WhySheet } from "./Sheets";
+import { groupPages, pageOfStep } from "./stepPages";
 import { useViewport } from "./useViewport";
 
 // "Your own" player (Demo V2 P5): code-split, it bundles the backend snapshot and the moment model.
@@ -38,21 +39,27 @@ const CustomPlayer = dynamic(() => import("../custom/CustomPlayer").then((m) => 
 
 /** After the plan (Demo V2): "chapter" and "event" are the pages of `buildDemoSequence`, then "finale". */
 type Screen = "select" | "custom" | "home" | "intent" | "declined" | "path" | "step" | "plan" | "chapter" | "event" | "finale";
-type SheetName = null | "why" | "consent" | "estimate";
+type SheetName = null | "why" | "estimate";
 type Move = "forward" | "accept" | "skip" | "back";
 /** "real" = the persona's signals; "weak" = only the weakest one, so the engine deliberately does nothing. */
 type SignalSet = "real" | "weak";
 type PersonaId = Persona["id"];
 
-/** Accept every step and share every field: the state the ?demo= backups jump to. */
-function acceptAll(journey: Journey): JourneyState {
-  let st = initState(journey);
-  for (const s of journey.steps) {
-    for (const f of s.dataShared) st = setConsent(st, s.id, f, true);
-    st = decide(st, s.id, "accepted");
-  }
+/** Kate's proposal: every detail pre-ticked, so each card starts from "share and continue" and can be unticked. */
+function proposeAll(st: JourneyState): JourneyState {
+  for (const s of st.journey.steps) for (const f of s.dataShared) st = setConsent(st, s.id, f, true);
   return st;
 }
+
+/** Accept every step and share every field: the state the ?demo= backups jump to. */
+function acceptAll(journey: Journey): JourneyState {
+  let st = proposeAll(initState(journey));
+  for (const s of journey.steps) st = decide(st, s.id, "accepted");
+  return st;
+}
+
+/** Steps accepted from one page drop into the 3D build one after the other, this far apart. */
+const CASCADE_MS = 120;
 
 /** Plays every surprise with Kate's recommendation: the ?demo=finale backup. */
 function autoPlay(model: OutcomeModel, accepted: ReadonlySet<string>): Run {
@@ -164,8 +171,8 @@ export function Stage() {
   const [notif, setNotif] = useState(false);
   const [dismissed, setDismissed] = useState(false); // the notification was slid away; the Kate pill brings it back
   const [state, setState] = useState<JourneyState | null>(null);
-  const [index, setIndex] = useState(0);
-  const [modes, setModes] = useState<Record<string, ConsentMode>>({});
+  const [index, setIndex] = useState(0); // the page of the step flow (Demo V2: a few steps per page)
+  const cascading = useRef(false); // a page's accepts are dropping into the build; ignore repeated Enter
   const [sheet, setSheet] = useState<SheetName>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [presenter, setPresenter] = useState(false);
@@ -193,7 +200,9 @@ export function Stage() {
 
   const board = beGoal && beBoard ? beBoard : state ? scoreboard(state) : EMPTY;
   const steps = state?.journey.steps ?? [];
-  const step = screen === "step" ? steps[index] ?? null : null;
+  const stepPages = useMemo(() => (state ? groupPages(state.journey) : []), [state]);
+  const pageSteps = useMemo(() => (screen === "step" ? stepPages[index]?.steps ?? [] : []), [screen, stepPages, index]);
+  const step = screen === "step" && state ? pageSteps.find((s) => state.decisions[s.id] === "pending") ?? pageSteps[0] ?? null : null;
   const accepted = useMemo(
     () => new Set(state ? state.journey.steps.filter((s) => state.decisions[s.id] === "accepted").map((s) => s.id) : []),
     [state],
@@ -237,9 +246,10 @@ export function Stage() {
       const journey = buildJourney(ps.journey.intentId, ps.customer);
       if (demo === "intent") return setScreen("intent");
       if (demo === "step") {
+        // Lands on the page that holds step n.
         const n = Math.min(Math.max(Number(p.get("n") ?? 1) || 1, 1), journey.steps.length);
-        setState(initState(journey));
-        setIndex(n - 1);
+        setState(proposeAll(initState(journey)));
+        setIndex(pageOfStep(groupPages(journey), journey.steps[n - 1].id));
         return setScreen("step");
       }
       const all = acceptAll(journey);
@@ -282,7 +292,7 @@ export function Stage() {
   const clearJourney = () => {
     setState(null);
     setIndex(0);
-    setModes({});
+    cascading.current = false;
     setNotif(false);
     setToast(null);
     setRun(null);
@@ -341,14 +351,13 @@ export function Stage() {
       const base = initState(live.journey);
       const consents = { ...base.consents };
       for (const [id, fields] of Object.entries(live.state.consents ?? {})) consents[id] = { ...consents[id], ...fields };
-      setState({ ...base, decisions: { ...base.decisions, ...live.state.decisions }, consents });
+      setState(proposeAll({ ...base, decisions: { ...base.decisions, ...live.state.decisions }, consents }));
       setBeGoal(live.goalId);
       setBeBoard(live.board);
       // Gauges follow the backend plan only when it has a real budget (the business goal has none: the story keeps its own).
       setBePlan(live.plan.limits.cost > 1 ? live.plan : null);
-    } else setState(initState(buildJourney(intent.intentId, customer)));
+    } else setState(proposeAll(initState(buildJourney(intent.intentId, customer))));
     setIndex(0);
-    setModes({});
     go("path");
   };
 
@@ -361,51 +370,67 @@ export function Stage() {
     setSignalSet("real");
     if (live) {
       const base = initState(live.journey);
-      setState({ ...base, decisions: { ...base.decisions, ...live.state.decisions } });
+      setState(proposeAll({ ...base, decisions: { ...base.decisions, ...live.state.decisions } }));
       setBeGoal(live.goalId);
       setBeBoard(live.board);
       setBePlan(live.plan.limits.cost > 1 ? live.plan : null);
-    } else setState(initState(buildJourney(getPersona(id).journey.intentId, getPersona(id).customer)));
+    } else setState(proposeAll(initState(buildJourney(getPersona(id).journey.intentId, getPersona(id).customer))));
     go("path");
   };
 
   const next = (m: Move) => {
-    if (index + 1 < steps.length) {
+    if (index + 1 < stepPages.length) {
       setMove(m);
       setSheet(null);
       setIndex(index + 1);
     } else go("plan", m);
   };
 
-  const accept = (shareAll: boolean | "none") => {
-    if (!state || !step) return;
+  /**
+   * Primary on a step page: accepts every step still proposed on it (skipped cards stay skipped), then the next page.
+   * The backend gets every step and consent in one loop; the phone state takes them one by one, `CASCADE_MS`
+   * apart, so the pieces drop into the 3D build as a cascade.
+   */
+  const acceptPage = () => {
+    if (!state || cascading.current) return;
+    const todo = pageSteps.filter((s) => state.decisions[s.id] === "pending");
+    const skippedHere = pageSteps.filter((s) => state.decisions[s.id] === "skipped");
     let st = state;
-    if (shareAll === "none") {
-      for (const f of step.dataShared) st = setConsent(st, step.id, f, false);
-    } else if (shareAll) {
-      for (const f of step.dataShared) st = setConsent(st, step.id, f, true);
-    }
-    st = decide(st, step.id, "accepted");
+    for (const s of todo) st = decide(st, s.id, "accepted");
+    syncSteps([...todo.map((s) => ({ s, action: "accept" as const })), ...skippedHere.map((s) => ({ s, action: "skip" as const }))], st);
+    const quiet = todo.filter((s) => s.provider.kind === "partner" && s.dataShared.length > 0 && !Object.values(st.consents[s.id] ?? {}).some(Boolean));
+    if (quiet.length > 0) showToast(`Added without sharing. ${quiet.map(providerName).join(" and ")} won't contact you.`);
+    if (todo.length === 0) return next("accept");
+    cascading.current = true;
+    todo.forEach((s, i) => {
+      setTimeout(() => setState((prev) => (prev && prev.decisions[s.id] === "pending" ? decide(prev, s.id, "accepted") : prev)), i * CASCADE_MS);
+    });
+    setTimeout(() => {
+      cascading.current = false;
+      next("accept");
+    }, (todo.length - 1) * CASCADE_MS + 320);
+  };
+
+  /** S on a step page: every step still proposed on it is skipped, then the next page. */
+  const skipPage = () => {
+    if (!state || cascading.current) return;
+    const todo = pageSteps.filter((s) => state.decisions[s.id] === "pending");
+    let st = state;
+    for (const s of todo) st = decide(st, s.id, "skipped");
     setState(st);
-    syncSteps([{ s: step, action: "accept" }], st);
-    const shared = Object.values(st.consents[step.id] ?? {}).some(Boolean);
-    if (step.provider.kind === "partner" && step.dataShared.length > 0 && !shared) {
-      showToast(`Added. ${providerName(step)} won't contact you; you can reach them yourself.`);
-    }
-    next("accept");
-  };
-
-  const primary = () => {
-    if (!step) return;
-    const mode = modes[step.id] ?? "proposed";
-    accept(step.dataShared.length === 0 ? false : mode === "proposed" ? true : false);
-  };
-
-  const skip = () => {
-    if (!state || !step) return;
-    setState(decide(state, step.id, "skipped"));
-    syncSteps([{ s: step, action: "skip" }], state);
+    syncSteps(todo.map((s) => ({ s, action: "skip" as const })), st);
     next("skip");
+  };
+
+  /** A card's Skip / Undo: the piece ghosts in the build at once; the backend hears about it with the page. */
+  const toggleStepSkip = (id: string) => {
+    if (!state || cascading.current) return;
+    setState(decide(state, id, state.decisions[id] === "skipped" ? "pending" : "skipped"));
+  };
+
+  const toggleConsent = (id: string, field: string, ok: boolean) => {
+    if (!state) return;
+    setState(setConsent(state, id, field, ok));
   };
 
   /** Presenter shortcut (F): add every remaining step as proposed, then show the plan. */
@@ -510,7 +535,7 @@ export function Stage() {
     } else if (screen === "path") go("intent", "back");
     else if (screen === "intent") go("home", "back");
     else if (screen === "plan") {
-      setIndex(steps.length - 1);
+      setIndex(stepPages.length - 1);
       go("step", "back");
     } else if (screen === "chapter" || screen === "event") {
       if (page > 0) openPage(page - 1, "back");
@@ -552,7 +577,7 @@ export function Stage() {
     if (k === "escape" && screen === "home" && notif) return setDismissed(true);
     if (k === "arrowleft") return back();
     if (k === "s") {
-      if (screen === "step") skip();
+      if (screen === "step") skipPage();
       else if (screen === "intent") go("declined");
       return;
     }
@@ -562,7 +587,7 @@ export function Stage() {
       else if (screen === "intent") confirm();
       else if (screen === "declined") reset();
       else if (screen === "path") go("step");
-      else if (screen === "step") primary();
+      else if (screen === "step") acceptPage();
       else if (screen === "plan") startPlan();
       else if (screen === "chapter") openPage(page + 1);
       else if (screen === "event") choose();
@@ -642,17 +667,17 @@ export function Stage() {
           )}
           {screen === "declined" && <DeclinedScreen onHome={() => reset()} />}
           {screen === "path" && state && <PathScreen journey={state.journey} title={persona.copy.pathTitle} onStart={() => go("step")} onBack={back} />}
-          {screen === "step" && state && step && (
-            <StepScreen
+          {screen === "step" && state && stepPages[index] && (
+            <ChapterStepsScreen
               state={state}
+              pages={stepPages}
               index={index}
               board={board}
-              consentMode={modes[step.id] ?? "proposed"}
-              onPrimary={primary}
-              onWithoutSharing={() => accept("none")}
-              onSkip={skip}
+              onAccept={acceptPage}
+              onSkipPage={skipPage}
               onBack={back}
-              onChoose={() => setSheet("consent")}
+              onToggleSkip={toggleStepSkip}
+              onToggleConsent={toggleConsent}
             />
           )}
           {screen === "plan" && state && (
@@ -699,20 +724,6 @@ export function Stage() {
       </AnimatePresence>
 
       <WhySheet open={sheet === "why"} signals={signals} note={persona.copy.whyNote} onClose={() => setSheet(null)} />
-      <ConsentSheet
-        open={sheet === "consent"}
-        step={step}
-        consents={step && state ? state.consents[step.id] ?? {} : {}}
-        onToggle={(f, ok) => {
-          if (!state || !step) return;
-          let st = state;
-          // First edit: start from the proposed selection (everything) so the switches match the sentence.
-          if ((modes[step.id] ?? "proposed") === "proposed") for (const x of step.dataShared) st = setConsent(st, step.id, x, true);
-          setModes((m) => ({ ...m, [step.id]: "custom" }));
-          setState(setConsent(st, step.id, f, ok));
-        }}
-        onClose={() => setSheet(null)}
-      />
       {!stageFinale && <EstimateSheet open={sheet === "estimate"} state={state} onClose={() => setSheet(null)} />}
     </div>
   );
