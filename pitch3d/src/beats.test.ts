@@ -26,6 +26,7 @@ describe("beats", () => {
     expect(parseParams("?beat=abc")).toEqual({ beat: 0, quality: null });
     expect(parseParams("")).toEqual({ beat: 0, quality: null });
     expect(clampBeat(-3)).toBe(0);
+    expect(parseParams("?q=high")).toEqual({ beat: 0, quality: "high" });
   });
 });
 

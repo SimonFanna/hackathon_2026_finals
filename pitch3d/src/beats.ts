@@ -21,8 +21,9 @@ export function actionForKey(key: string): Action | null {
   }
 }
 
-export function parseParams(search: string): { beat: number; quality: "low" | null } {
+export function parseParams(search: string): { beat: number; quality: "low" | "high" | null } {
   const p = new URLSearchParams(search);
   const n = Number(p.get("beat"));
-  return { beat: Number.isFinite(n) ? clampBeat(n) : 0, quality: p.get("q") === "low" ? "low" : null };
+  const q = p.get("q");
+  return { beat: Number.isFinite(n) ? clampBeat(n) : 0, quality: q === "low" || q === "high" ? q : null };
 }
