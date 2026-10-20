@@ -5,8 +5,13 @@ import { AnimatePresence, LayoutGroup, motion, useAnimate, useReducedMotion } fr
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   advance, buildJourney, decide, detectIntents, getPersona, hit, initState, isComplete, resolve, scoreboard, setConsent, startRun,
-  type Journey, type JourneyState, type OutcomeModel, type PendingHit, type Persona, type Run, type Scoreboard,
+  type DetectedIntent, type DisruptionKind, type Journey, type JourneyState, type JourneyStep, type OutcomeModel, type OutcomePlan,
+  type PendingHit, type Persona, type Run, type Scoreboard,
 } from "@/engine";
+import {
+  SLUG_FOR, chooseScenario, fetchIntent, injectDisruption, resetPersona, sendConsent, sendStep, startJourney,
+  type BackendIntent, type Preset,
+} from "@/lib/backend";
 import { CharacterSelect3D } from "../picker/CharacterSelect3D";
 import { providerName } from "./copy";
 import { EngineHud, type AdaptStep, type Phase } from "./EngineHud";
@@ -56,6 +61,29 @@ const EMPTY: Scoreboard = {
 
 const isPersonaId = (v: string | null): v is PersonaId => v === "house" || v === "business";
 
+/** The surprises the backend can replay (T6). Others (e.g. a rate rise) stay on the local story. */
+const PRESET_FOR: Partial<Record<DisruptionKind, Preset>> = { cost: "cost_overrun", delay: "partner_delay", income: "income_drop" };
+
+/** The backend speaks about its own synthetic customer (Sofie, Lucas); the story keeps the player's name. */
+function renameIntent(be: BackendIntent, name: string): DetectedIntent {
+  const swap = (s: string) => s.split(be.customer.name).join(name);
+  return { ...be.intent, label: swap(be.intent.label), reasons: be.intent.reasons.map(swap) };
+}
+
+/** A backend surprise shown in the local story: keeps the local id and month (the timeline, the finale) and the player's name. */
+function asLocalHit(be: PendingHit, local: PendingHit, from: string | undefined, name: string): PendingHit {
+  const swap = (s: string) => (from ? s.split(from).join(name) : s);
+  const options = be.options.map((o) => ({ ...o, label: swap(o.label), tradeoff: swap(o.tradeoff) }));
+  return {
+    ...be,
+    options,
+    disruption: {
+      ...be.disruption, id: local.disruption.id, month: local.disruption.month,
+      title: swap(be.disruption.title), detail: swap(be.disruption.detail), options,
+    },
+  };
+}
+
 export function Stage() {
   const [personaId, setPersonaId] = useState<PersonaId>("business"); // the entrepreneur is player 1
   const [picked, setPicked] = useState<PersonaId>("business");
@@ -69,7 +97,31 @@ export function Stage() {
     const w = persona.intentModel.weights;
     return [...own].sort((a, b) => (w[a.type] ?? 0) - (w[b.type] ?? 0)).slice(0, 1);
   }, [persona, signalSet]);
-  const intent = useMemo(() => detectIntents(customer, signals, persona.intentModel)[0], [customer, signals, persona.intentModel]);
+  const localIntent = useMemo(() => detectIntents(customer, signals, persona.intentModel)[0], [customer, signals, persona.intentModel]);
+
+  // Live backend (T1–T8 behind /api): ML confidence, plan, consents, outcome and replanning.
+  // Every call returns null when the API is unreachable, and the screen then keeps the local engine.
+  const slug = SLUG_FOR[personaId];
+  const [beIntent, setBeIntent] = useState<BackendIntent | null>(null);
+  const [beGoal, setBeGoal] = useState<string | null>(null);
+  const [beBoard, setBeBoard] = useState<Scoreboard | null>(null);
+  const [bePlan, setBePlan] = useState<OutcomePlan | null>(null);
+  const [beScenarios, setBeScenarios] = useState<Record<string, string> | null>(null);
+  useEffect(() => {
+    let live = true;
+    // A previous run leaves a goal in progress, and the engine then rightly stays quiet: each demo run starts fresh.
+    resetPersona(slug)
+      .then(() => fetchIntent(slug))
+      .then((r) => {
+        if (live) setBeIntent(r);
+      });
+    return () => {
+      live = false;
+    };
+  }, [slug]);
+  const intent = signalSet === "real" && beIntent && beIntent.intent.intentId === localIntent?.intentId
+    ? renameIntent(beIntent, customer.name)
+    : localIntent;
   const speaks = !!intent && intent.level !== "none";
 
   const [screen, setScreen] = useState<Screen>("select");
@@ -99,7 +151,7 @@ export function Stage() {
   const base = Math.min((h * 0.92) / FRAME_H, 1.3);
   const scale = stageFinale ? base * 0.82 : base;
 
-  const board = state ? scoreboard(state) : EMPTY;
+  const board = beGoal && beBoard ? beBoard : state ? scoreboard(state) : EMPTY;
   const steps = state?.journey.steps ?? [];
   const step = screen === "step" ? steps[index] ?? null : null;
   const accepted = useMemo(
@@ -192,6 +244,28 @@ export function Stage() {
     setPending(null);
     setSelected(null);
     setLastChanged([]);
+    setBeGoal(null);
+    setBeBoard(null);
+    setBePlan(null);
+    setBeScenarios(null);
+  };
+
+  /** Mirrors a step decision (and its consents) to the backend; the backend's outcome becomes the scoreboard. */
+  const syncSteps = (items: { s: JourneyStep; action: "accept" | "skip" }[], st: JourneyState) => {
+    if (!beGoal) return;
+    const goal = beGoal;
+    void (async () => {
+      for (const { s, action } of items) {
+        if (action === "accept" && s.provider.kind === "partner") {
+          for (const f of s.dataShared) {
+            const b = await sendConsent(goal, s.id, s.provider.name, f, !!st.consents[s.id]?.[f]);
+            if (b) setBeBoard(b);
+          }
+        }
+        const b = await sendStep(goal, s.id, action);
+        if (b) setBeBoard(b);
+      }
+    })();
   };
 
   const reset = (next: SignalSet = signalSet) => {
@@ -214,9 +288,20 @@ export function Stage() {
     go("select", "back");
   };
 
-  const confirm = () => {
+  const confirm = async () => {
     if (!intent) return;
-    setState(initState(buildJourney(intent.intentId, customer)));
+    const live = intent !== localIntent && beIntent?.goalType ? await startJourney(slug, beIntent.goalType) : null;
+    if (live) {
+      // Start from the local shape (every step and consent field present), then apply the backend's decisions.
+      const base = initState(live.journey);
+      const consents = { ...base.consents };
+      for (const [id, fields] of Object.entries(live.state.consents ?? {})) consents[id] = { ...consents[id], ...fields };
+      setState({ ...base, decisions: { ...base.decisions, ...live.state.decisions }, consents });
+      setBeGoal(live.goalId);
+      setBeBoard(live.board);
+      // Gauges follow the backend plan only when it has a real budget (the business goal has none: the story keeps its own).
+      setBePlan(live.plan.limits.cost > 1 ? live.plan : null);
+    } else setState(initState(buildJourney(intent.intentId, customer)));
     setIndex(0);
     setModes({});
     go("path");
@@ -240,6 +325,7 @@ export function Stage() {
     }
     st = decide(st, step.id, "accepted");
     setState(st);
+    syncSteps([{ s: step, action: "accept" }], st);
     const shared = Object.values(st.consents[step.id] ?? {}).some(Boolean);
     if (step.provider.kind === "partner" && step.dataShared.length > 0 && !shared) {
       showToast(`Added. ${providerName(step)} won't contact you; you can reach them yourself.`);
@@ -256,6 +342,7 @@ export function Stage() {
   const skip = () => {
     if (!state || !step) return;
     setState(decide(state, step.id, "skipped"));
+    syncSteps([{ s: step, action: "skip" }], state);
     next("skip");
   };
 
@@ -263,23 +350,27 @@ export function Stage() {
   const fillPlan = () => {
     if (!state) return;
     let st = state;
+    const added: JourneyStep[] = [];
     for (const s of st.journey.steps) {
       if (st.decisions[s.id] !== "pending") continue;
       for (const f of s.dataShared) st = setConsent(st, s.id, f, true);
       st = decide(st, s.id, "accepted");
+      added.push(s);
     }
     setState(st);
+    syncSteps(added.map((s) => ({ s, action: "accept" as const })), st);
     go("plan");
   };
 
   const startPlan = () => {
-    setRun(startRun(model));
+    const r = startRun(model);
+    setRun(bePlan ? { ...r, plan: bePlan } : r); // the gauges start from the backend's real plan when there is one
     setLastChanged([]);
     go("live");
   };
 
   /** Time moves on until the next surprise hits the plan (or the finish line). */
-  const fastForward = () => {
+  const fastForward = async () => {
     if (!run) return;
     if (isComplete(run, model)) {
       if (run.month < finishLine) {
@@ -288,22 +379,36 @@ export function Stage() {
       } else go("finale");
       return;
     }
-    const p = hit(run, model, accepted);
-    if (!p) return;
+    const local = hit(run, model, accepted);
+    if (!local) return;
+    // The surprise is replayed in the backend (T6): its impact and its scenarios A/B replace the scripted ones.
+    const preset = beGoal ? PRESET_FOR[local.disruption.kind] : undefined;
+    const live = preset ? await injectDisruption(slug, preset) : null;
+    const fromBackend = !!live && live.pending.options.length > 0 && live.pending.disruption.kind === local.disruption.kind;
+    const p: PendingHit = fromBackend ? asLocalHit(live.pending, local, beIntent?.customer.name, customer.name) : local;
+    setBeScenarios(fromBackend ? live.scenarioIdByOption : null);
     setPending(p);
     setSelected(p.options.find((o) => o.recommended)?.id ?? null);
-    setRun(advance(run, p.disruption.month));
+    setRun(advance(run, local.disruption.month));
     setLastChanged([]);
     go("event");
     setShock((n) => n + 1);
     if (!reduce && phoneScope.current) animatePhone(phoneScope.current, { x: [0, -10, 10, -7, 7, -3, 0] }, { duration: 0.45 });
   };
 
-  const choose = () => {
+  const choose = async () => {
     if (!run || !pending || !selected) return;
     const opt = pending.options.find((o) => o.id === selected);
     if (!opt?.available) return;
-    setRun(resolve(run, model, pending, selected));
+    const sid = beScenarios?.[selected];
+    const live = beGoal && sid ? await chooseScenario(beGoal, sid) : null;
+    const resolved = resolve(run, model, pending, selected);
+    if (live) {
+      setRun({ ...resolved, plan: live.plan }); // the backend's new plan version drives the gauges
+      setBeBoard(live.board);
+      setBePlan(live.plan);
+    } else setRun(resolved);
+    setBeScenarios(null);
     setLastChanged(opt.changes?.map((c) => c.stepId) ?? []);
     setPending(null);
     showToast(opt.recommended ? `Plan updated: ${opt.label}.` : `Your call: ${opt.label}.`);
@@ -596,7 +701,10 @@ export function Stage() {
       )}
 
       <footer className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-between px-8 pb-4 text-[13px] text-white/60">
-        <span>{customer.name}, {customer.age} · {customer.city} · synthetic demo customer</span>
+        <span>
+          {customer.name}, {customer.age} · {customer.city} · synthetic demo customer ·{" "}
+          {intent !== localIntent ? `live engine (${beIntent?.source ?? "api"})` : "offline engine"}
+        </span>
         <span>{presenter ? "" : "Press P for the presenter view · "}Built for the KBC challenge at Tectonic Hackathon 2026</span>
       </footer>
     </main>
