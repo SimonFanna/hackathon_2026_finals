@@ -25,7 +25,7 @@ const ADAPT: { id: AdaptStep; label: string }[] = [
 ];
 
 /**
- * The engine's view, next to the phone: pipeline, goal health, constraints and the four surprises.
+ * The engine's view, next to the phone: pipeline, goal health, constraints and the surprises.
  * It reads the same engine state as the phone; nothing here is staged.
  */
 export function EngineHud({
@@ -95,7 +95,7 @@ export function EngineHud({
         </div>
       </div>
 
-      {/* The four surprises */}
+      {/* The surprises */}
       <h3 className="mt-5 text-[13px] font-bold text-white/60">Unexpected events</h3>
       <ol className="mt-2 space-y-2">
         {model.disruptions.map((d, i) => {
