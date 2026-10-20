@@ -133,17 +133,19 @@ export async function runPipeline(slug: DemoSlug, deps: Deps, opts: { asOf?: str
   const outcomes: Outcome[] = [];
   const impacts: Impact[] = [];
   const scenarios: Scenario[] = [];
+  let trigger: { impact: Impact; disruption: Disruption; goal: Goal } | undefined;
   for (const goal of s.goals.filter((g) => ACTIVE.includes(g.status))) {
     const stored = await deps.repo.getPlan(goal.id);
     if (!stored) continue;
     let plan = applyDecisionRules(stored, ctx, feedback, rules);
-    const goalImpacts = disruptions.map((d) => ({ d, impact: assessImpact(d, goal, plan, ctx) }));
-    const hit = goalImpacts.filter(({ impact }) => impact.broken.length > 0 || impact.affectedStepIds.length > 0);
+    // T6 call order (docs/features/backend-t6-replanning.md): replan only when a constraint breaks, and pass the disruption.
+    const hit = disruptions.map((d) => ({ d, impact: assessImpact(d, goal, plan, ctx) })).filter(({ impact }) => impact.broken.length > 0);
     for (const { d, impact } of hit) {
       impacts.push(impact);
       scenarios.push(...replan(goal, plan, ctx, impact, rules, asOf, d));
+      trigger ??= { impact, disruption: d, goal };
     }
-    if (hit.some(({ impact }) => impact.broken.length > 0)) plan = { ...plan, atRisk: true };
+    if (hit.length) plan = { ...plan, atRisk: true };
     goals.push(hit.length && goal.status !== "replanned" ? { ...goal, status: "at_risk" } : goal);
     plans.push(plan);
     outcomes.push(trackOutcome(goal, plan, await deps.repo.getConsents(goal.id)));
@@ -151,9 +153,10 @@ export async function runPipeline(slug: DemoSlug, deps: Deps, opts: { asOf?: str
   lap("plans");
 
   let kate: KateMessage | null = null;
-  const dt = impacts[0] && rules.disruptionTypes.find((t) => t.code === impacts[0].disruption);
-  if (impacts[0] && dt && scenarios.length) {
-    kate = engine.kateForScenarios(impacts[0], scenarios.filter((x) => x.goalId === impacts[0].goalId), ctx, dt);
+  const dt = trigger && rules.disruptionTypes.find((t) => t.code === trigger.impact.disruption);
+  const triggered = trigger ? scenarios.filter((x) => x.goalId === trigger.goal.id) : [];
+  if (trigger && dt && triggered.length) {
+    kate = engine.kateForScenarios(trigger.impact, triggered, ctx, dt, trigger.goal, trigger.disruption);
   } else {
     const speaker = decisions.find((d) => d.level === "ASK" || d.level === "SUGGEST");
     const intent = speaker && rules.intents.find((i) => i.code === speaker.intent);

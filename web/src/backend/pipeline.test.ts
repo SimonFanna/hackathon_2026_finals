@@ -1,37 +1,10 @@
-// T7 — the demo checks (backend/TASKS.md §6), offline: snapshot facts + rules, in-memory state.
-// Until T1 lands, signals come from T3's persona fixtures (and the injected income drop is read the T1 way).
+// T7 — the demo checks (backend/TASKS.md §6), offline: snapshot facts + rules, in-memory state, real engine (T1 → T8).
 import { describe, expect, it } from "vitest";
 import { memoryRepo } from "./data/repo";
-import * as F from "./fixtures/t3-inputs";
 import { type Deps, runPipeline } from "./pipeline";
 import { chooseScenarioFor, consentFor, createGoalFor, injectFor, resetFor, stepActionFor } from "./service";
-import { type Engine, engine } from "./stages";
-import type { Signal } from "./types";
 
-const FIXTURE_SIGNALS: Record<number, Signal[]> = { 1: F.sofieSignals, 2: F.lucasSignals, 5: F.elsSignals, 6: F.thomasSignals };
-
-const t1Sim: Engine = {
-  ...engine,
-  extractSignals: (events) => {
-    const customerId = events[0]?.customerId ?? 0;
-    const base = FIXTURE_SIGNALS[customerId] ?? [];
-    const benefits = events.find((e) => e.kind === "tx:benefits" && e.id.startsWith("inj:"));
-    if (!benefits) return base;
-    const amount = Number(benefits.detail.amount);
-    return [
-      ...base,
-      { code: "INCOME_DROP", customerId, strength: 0.9, at: benefits.at, count: 1, value: amount, evidence: [benefits.id], isDisruption: true },
-      { code: "BENEFITS_INFLOW", customerId, strength: 0.9, at: benefits.at, count: 1, value: amount, evidence: [benefits.id], isDisruption: true },
-    ];
-  },
-  buildContext: (facts, signals) => {
-    const ctx = engine.buildContext(facts, signals);
-    const benefits = facts.injectedEvents.find((e) => e.kind === "tx:benefits");
-    return benefits ? { ...ctx, monthlyIncome: Number(benefits.detail.amount), cashflowPressure: "high" } : ctx;
-  },
-};
-
-const deps = (): Deps => ({ db: null, repo: memoryRepo(), engine: t1Sim });
+const deps = (): Deps => ({ db: null, repo: memoryRepo() });
 
 describe("pipeline, offline", () => {
   it("runs for every demo persona from the snapshot", async () => {
