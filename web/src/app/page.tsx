@@ -1,5 +1,5 @@
-import { Stage } from "@/components/journey/Stage";
+import { IntroExperience } from "@/components/pain/IntroExperience";
 
 export default function Home() {
-  return <Stage />;
+  return <IntroExperience />;
 }

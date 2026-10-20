@@ -56,7 +56,7 @@ const EMPTY: Scoreboard = {
 
 const isPersonaId = (v: string | null): v is PersonaId => v === "house" || v === "business";
 
-export function Stage() {
+export function Stage({ startAtHome = false }: { startAtHome?: boolean } = {}) {
   const [personaId, setPersonaId] = useState<PersonaId>("house");
   const [picked, setPicked] = useState<PersonaId>("house");
   const persona = getPersona(personaId);
@@ -72,7 +72,7 @@ export function Stage() {
   const intent = useMemo(() => detectIntents(customer, signals, persona.intentModel)[0], [customer, signals, persona.intentModel]);
   const speaks = !!intent && intent.level !== "none";
 
-  const [screen, setScreen] = useState<Screen>("select");
+  const [screen, setScreen] = useState<Screen>(startAtHome ? "home" : "select");
   const [notif, setNotif] = useState(false);
   const [state, setState] = useState<JourneyState | null>(null);
   const [index, setIndex] = useState(0);
