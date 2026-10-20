@@ -62,6 +62,26 @@ describe.each(personas.map((p) => [p.id, p] as const))("demo sequence · %s", (_
   });
 });
 
+describe("demo sequence · backend-built journey", () => {
+  // The backend returns its own step ids and chapters derived from labels: no step link, so events go by month order.
+  const p = getPersona("business");
+  const journey = {
+    ...p.journey,
+    chapters: [{ id: "launch", label: "Launch" }, { id: "finance-it", label: "Finance it" }, { id: "run-it", label: "Run it" }],
+    steps: p.journey.steps.slice(0, 6).map((s, i) => ({ ...s, id: `uuid-${i}`, chapter: ["launch", "launch", "finance-it", "finance-it", "run-it", "run-it"][i] })),
+  };
+  const accepted = new Set(journey.steps.map((s) => s.id));
+  const pages = buildDemoSequence(p, accepted, journey);
+
+  it("keeps every chapter and every surprise, surprises placed by month over an even split of the horizon", () => {
+    expect(label(p, pages)).toEqual(["Launch", "[fit-out-delay]", "Finance it", "[equipment-overrun]", "Run it", "[late-payer]", "[injury]"]);
+  });
+
+  it("estimates the months of a chapter it has no schedule for", () => {
+    expect(chapterSpan("finance-it", journey, p.outcome)).toEqual({ from: 3, to: 6 });
+  });
+});
+
 describe("demo sequence · pitch order", () => {
   it("house: Find · Finance · [rate rise] · Renovate · [quote, delay, job loss] · Protect", () => {
     expect(label(getPersona("house"))).toEqual([

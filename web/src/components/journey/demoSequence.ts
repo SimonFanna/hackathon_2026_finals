@@ -19,11 +19,11 @@ function linkedChapter(d: Disruption, journey: Journey, model: OutcomeModel): nu
     const i = chapterIndex(id);
     if (i >= 0) return i;
   }
-  // No link to a step: the last chapter that has started by the disruption's month; fallback: the last chapter.
+  // No link to a step (e.g. a backend-built journey with its own step ids): by month order, the last chapter started by then.
   let best = -1;
   journey.chapters.forEach((c, i) => {
-    const started = journey.steps.some((s) => s.chapter === c.id && (model.schedule[s.id]?.start ?? Infinity) <= d.month);
-    if (started) best = i;
+    const span = chapterSpan(c.id, journey, model);
+    if (span && span.from <= d.month) best = i;
   });
   return best >= 0 ? best : journey.chapters.length - 1;
 }
@@ -34,8 +34,8 @@ function linkedChapter(d: Disruption, journey: Journey, model: OutcomeModel): nu
  * so a surprise linked to an earlier chapter than the previous one slides forward to that chapter.
  * With `accepted`, chapters without any accepted step are dropped and their events attach to the chapter before.
  */
-export function buildDemoSequence(persona: Persona, accepted?: ReadonlySet<string>): DemoPage[] {
-  const { journey, outcome } = persona;
+export function buildDemoSequence(persona: Persona, accepted?: ReadonlySet<string>, journey: Journey = persona.journey): DemoPage[] {
+  const { outcome } = persona;
   const kept = journey.chapters.map((c) => !accepted || journey.steps.some((s) => s.chapter === c.id && accepted.has(s.id)));
   const lastKept = kept.lastIndexOf(true);
 
@@ -63,10 +63,18 @@ export function buildDemoSequence(persona: Persona, accepted?: ReadonlySet<strin
   return pages;
 }
 
-/** The chapter's accepted steps, in plan order, plus the months it spans in the schedule. */
+/**
+ * The months a chapter spans in the schedule. Steps the schedule doesn't know (a backend-built journey has its own
+ * step ids) fall back to an even split of the horizon over the chapters, in order.
+ */
 export function chapterSpan(chapterId: Chapter, journey: Journey, model: OutcomeModel): { from: number; to: number } | null {
   const steps = journey.steps.filter((s) => s.chapter === chapterId && model.schedule[s.id]);
-  if (steps.length === 0) return null;
+  if (steps.length === 0) {
+    const i = journey.chapters.findIndex((c) => c.id === chapterId);
+    if (i < 0) return null;
+    const n = journey.chapters.length;
+    return { from: Math.round((i * model.horizon) / n), to: Math.round(((i + 1) * model.horizon) / n) };
+  }
   const from = Math.min(...steps.map((s) => model.schedule[s.id].start));
   const to = Math.max(...steps.map((s) => model.schedule[s.id].start + model.schedule[s.id].months));
   return { from, to };

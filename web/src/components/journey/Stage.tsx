@@ -195,7 +195,7 @@ export function Stage() {
     [state],
   );
   const finishLine = run ? Math.max(model.horizon, run.plan.values.finish) : model.horizon;
-  const pages = useMemo(() => buildDemoSequence(persona, accepted), [persona, accepted]);
+  const pages = useMemo(() => buildDemoSequence(persona, accepted, state?.journey), [persona, accepted, state]); // the journey may be the backend's
 
   // Kate's notification arrives shortly after the home screen settles, unless the engine chose NO_ACTION.
   useEffect(() => {
