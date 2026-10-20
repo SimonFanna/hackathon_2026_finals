@@ -138,9 +138,9 @@ export function CharacterSelect3D({
           <span className="ml-auto hidden text-[13px] text-white/50 sm:block">Synthetic demo customers · illustrative figures</span>
         </header>
 
-        <div className="mx-auto mt-6 text-center">
+        <div className="mx-auto mt-3 text-center">
           <p className="text-[15px] font-bold text-kate">Choose your player</p>
-          <h1 className="mt-1.5 text-[clamp(28px,3.1vw,46px)] font-extrabold leading-[1.08] tracking-[-0.02em]">
+          <h1 className="mt-1 text-[clamp(26px,2.6vw,40px)] font-extrabold leading-[1.08] tracking-[-0.02em]">
             Pick a goal. Then watch life get in the way.
           </h1>
         </div>
@@ -166,7 +166,7 @@ function PlayerCard({ persona: p, onPlay, disabled, reduce }: { persona: Persona
     { label: "Partners", value: String(partners.size) },
   ];
   return (
-    <div className="grid items-center gap-x-8 gap-y-4 rounded-[8px] bg-[rgb(2_30_67/0.72)] p-5 ring-1 ring-white/12 backdrop-blur-md sm:grid-cols-[1.25fr_1fr] sm:p-6">
+    <div className="grid items-center gap-x-8 gap-y-3 rounded-[8px] bg-[rgb(2_30_67/0.72)] p-4 ring-1 ring-white/12 backdrop-blur-md sm:grid-cols-[1.25fr_1fr] sm:px-6 sm:py-5">
       <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={p.id}

@@ -166,7 +166,36 @@ function mergeAll(list: THREE.BufferGeometry[]): THREE.BufferGeometry {
   const merged = ready.length === 1 ? ready[0] : mergeGeometries(ready, false);
   if (ready.length > 1) ready.forEach((g) => g.dispose());
   if (!merged) throw new Error("mergeGeometries failed");
+  sanitize(merged);
   return merged;
+}
+
+/**
+ * Degenerate faces (duplicate outline points in extrusions) get zero normals; under MSAA a single
+ * sample can still hit them and write NaN, which bloom then smears over the whole frame. Fix them.
+ */
+function sanitize(geo: THREE.BufferGeometry): void {
+  const n = geo.getAttribute("normal") as THREE.BufferAttribute | undefined;
+  if (n) {
+    const a = n.array as Float32Array;
+    for (let i = 0; i < a.length; i += 3) {
+      const l = Math.hypot(a[i], a[i + 1], a[i + 2]);
+      if (!Number.isFinite(l) || l < 1e-6) {
+        a[i] = 0;
+        a[i + 1] = 1;
+        a[i + 2] = 0;
+      } else if (Math.abs(l - 1) > 1e-3) {
+        a[i] /= l;
+        a[i + 1] /= l;
+        a[i + 2] /= l;
+      }
+    }
+  }
+  const uv = geo.getAttribute("uv") as THREE.BufferAttribute | undefined;
+  if (uv) {
+    const a = uv.array as Float32Array;
+    for (let i = 0; i < a.length; i++) if (!Number.isFinite(a[i])) a[i] = 0;
+  }
 }
 
 /** Collects geometry per material, then emits one merged mesh per material (one draw call each). */
@@ -413,6 +442,21 @@ function paintEnv(): HTMLCanvasElement {
   return c;
 }
 
+/** Soft light spill for the ground in front of lit windows (additive; black = no light). */
+function paintPool(): HTMLCanvasElement {
+  const S = 128;
+  const { c, g } = makeCanvas(S, S);
+  g.fillStyle = "#000";
+  g.fillRect(0, 0, S, S);
+  const grd = g.createRadialGradient(S / 2, S * 0.3, 2, S / 2, S * 0.45, S * 0.52);
+  grd.addColorStop(0, "#ffffff");
+  grd.addColorStop(0.35, "#8a8a8a");
+  grd.addColorStop(1, "#000000");
+  g.fillStyle = grd;
+  g.fillRect(0, 0, S, S);
+  return c;
+}
+
 function paintShadow(): HTMLCanvasElement {
   const S = 256;
   const { c, g } = makeCanvas(S, S);
@@ -461,9 +505,10 @@ interface Kit extends PickerKit {
   font: (px: number, weight?: number) => string;
   mat: Record<Role, THREE.MeshStandardMaterial>;
   windowTex: THREE.Texture;
+  poolTex: THREE.Texture;
   lockedGlass: THREE.MeshStandardMaterial;
   shadow: { geo: THREE.BufferGeometry; mat: THREE.MeshBasicMaterial };
-  padlock: { body: THREE.BufferGeometry; shackle: THREE.BufferGeometry; key: THREE.BufferGeometry; bodyMat: THREE.Material; shackleMat: THREE.Material; keyMat: THREE.Material };
+  padlock: { geo: THREE.BufferGeometry; mat: THREE.Material };
   twin(m: THREE.Material): THREE.Material;
   __kit: true;
 }
@@ -524,6 +569,7 @@ export function pickerKit(opts?: { fontFamily?: string }): PickerKit {
   const leafTex = keep(canvasTexture(paintFoliage(), { repeat: true }));
   const awningTex = keep(canvasTexture(paintAwning(), { repeat: true }));
   const windowTex = keep(canvasTexture(paintWindow()));
+  const poolTex = keep(canvasTexture(paintPool()));
   const shadowTex = keep(canvasTexture(paintShadow(), { color: false }));
 
   const S = (color: string, roughness: number, metalness = 0, extra: THREE.MeshStandardMaterialParameters = {}) =>
@@ -581,7 +627,6 @@ export function pickerKit(opts?: { fontFamily?: string }): PickerKit {
   legR.translate(0.115, 0.22, 0);
   const arc = G.torus(0.115, 0.032, 10, 24, Math.PI);
   arc.translate(0, 0.32, 0);
-  const shackle = mergeAll([legL, legR, arc]);
   const keyShape = new THREE.Shape();
   keyShape.absarc(0, 0.025, 0.032, 0, Math.PI * 2, false);
   const keySlot = new THREE.Shape();
@@ -590,13 +635,28 @@ export function pickerKit(opts?: { fontFamily?: string }): PickerKit {
   keySlot.lineTo(0.022, -0.075);
   keySlot.lineTo(-0.022, -0.075);
   keySlot.closePath();
-  const key = mergeAll([new THREE.ShapeGeometry(keyShape, 16), new THREE.ShapeGeometry(keySlot)]);
-  key.translate(0, 0, 0.0705);
-  geos.push(body, shackle, key);
-  const bodyMat = S("#dfe5ec", 0.26, 0.8, E(1.2));
-  const shackleMat = S("#eef1f5", 0.12, 1, E(1.3));
-  const keyMat = S("#0b1a30", 0.6);
-  for (const m of [bodyMat, shackleMat, keyMat]) m.userData.noLock = true;
+  const key1 = new THREE.ShapeGeometry(keyShape, 16);
+  const key2 = new THREE.ShapeGeometry(keySlot);
+  key1.translate(0, 0, 0.0705);
+  key2.translate(0, 0, 0.0705);
+  // one mesh, one draw call: parts are told apart by vertex colour
+  const tinted = (g: THREE.BufferGeometry, hex: string) => {
+    const ni = g.index ? g.toNonIndexed() : g;
+    const col = new THREE.Color(hex);
+    const n = ni.getAttribute("position").count;
+    const a = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) col.toArray(a, i * 3);
+    ni.setAttribute("color", new THREE.BufferAttribute(a, 3));
+    for (const k of Object.keys(ni.attributes)) if (!["position", "normal", "uv", "color"].includes(k)) ni.deleteAttribute(k);
+    return ni;
+  };
+  const parts = [tinted(body, "#d9dfe7"), tinted(legL, "#f4f6f9"), tinted(legR, "#f4f6f9"), tinted(arc, "#f4f6f9"), tinted(key1, "#0b1a30"), tinted(key2, "#0b1a30")];
+  const padGeo = mergeGeometries(parts, false);
+  if (!padGeo) throw new Error("padlock merge failed");
+  sanitize(padGeo);
+  geos.push(padGeo);
+  const padMat = S("#ffffff", 0.22, 0.85, { vertexColors: true, ...E(1.25) });
+  padMat.userData.noLock = true;
 
   const twins = new Map<THREE.Material, THREE.Material>();
   const created = { mats: [] as THREE.Material[], texs: [] as THREE.Texture[] };
@@ -607,9 +667,10 @@ export function pickerKit(opts?: { fontFamily?: string }): PickerKit {
     font: (px, weight = 800) => `${weight} ${Math.round(px)}px ${fontFamily}`,
     mat,
     windowTex,
+    poolTex,
     lockedGlass,
     shadow: { geo: shadowGeo, mat: shadowMat },
-    padlock: { body, shackle, key, bodyMat, shackleMat, keyMat },
+    padlock: { geo: padGeo, mat: padMat },
     twin(m) {
       let t = twins.get(m);
       if (!t) {
@@ -620,7 +681,7 @@ export function pickerKit(opts?: { fontFamily?: string }): PickerKit {
     },
     dispose() {
       for (const m of Object.values(mat)) m.dispose();
-      for (const m of [lockedGlass, shadowMat, bodyMat, shackleMat, keyMat, ...created.mats]) m.dispose();
+      for (const m of [lockedGlass, shadowMat, padMat, ...created.mats]) m.dispose();
       for (const t of [...texs, ...created.texs]) t.dispose();
       for (const g of geos) g.dispose();
       twins.clear();
@@ -661,7 +722,7 @@ class Ctx {
   }
 
   /** Unlit glow (bloom catches values above ~0.85). Scaled by focus, swapped out when locked. */
-  glow(hex: string, gain: number, opts: { map?: THREE.Texture; additive?: boolean; lockAs?: "glass" | "dim" } = {}): THREE.MeshBasicMaterial {
+  glow(hex: string, gain: number, opts: { map?: THREE.Texture; additive?: boolean; lockAs?: "glass" | "dim" | "hide" } = {}): THREE.MeshBasicMaterial {
     const mat = new THREE.MeshBasicMaterial({ color: hex, map: opts.map ?? null, toneMapped: false });
     if (opts.additive) {
       mat.transparent = true;
@@ -682,6 +743,16 @@ class Ctx {
       this.twins.set(m, t);
     }
     return t;
+  }
+
+  /** Warm light spill on the ground (top-view plane), scaled by focus, hidden when locked. */
+  pool(b: Builder, gain: number, spots: [number, number, number, number, number?][]): void {
+    const mat = this.glow(WARM, gain, { map: this.kit.poolTex, additive: true, lockAs: "hide" });
+    for (const [x, z, w, d, ry = 0] of spots) {
+      const g = G.plane(w, d);
+      g.rotateX(-Math.PI / 2);
+      b.add(g, mat, M(x, 0.004, z, 0, ry, 0));
+    }
   }
 
   /** Canvas texture with text; repainted once the web font is ready. */
@@ -770,7 +841,8 @@ function aoDisc(g: CanvasRenderingContext2D, X: (x: number) => number, Z: (z: nu
 interface SceneOut {
   window: THREE.Mesh;
   stand: [number, number, number];
-  padlockY: number;
+  /** Padlock centre (scaled 0.8: spans y - 0.14 .. y + 0.34). */
+  padlock: [number, number, number];
 }
 
 function addPlinth(b: Builder, k: Kit, ground: THREE.Material): void {
@@ -801,7 +873,7 @@ function frameOpening(b: Builder, mat: THREE.Material, x0: number, y0: number, x
 }
 
 /** A window applied on a plain wall (local frame: wall surface at z = 0, centred at 0,0). */
-function appliedWindow(b: Builder, k: Kit, w: number, h: number, opts: { glass?: THREE.Material; sill?: boolean; cross?: boolean } = {}): void {
+function appliedWindow(b: Builder, k: Kit, w: number, h: number, opts: { glass?: THREE.Material; sill?: boolean; cross?: boolean; sillMat?: THREE.Material } = {}): void {
   const m = k.mat;
   const f = 0.032;
   const glass = G.plane(w, h);
@@ -814,7 +886,7 @@ function appliedWindow(b: Builder, k: Kit, w: number, h: number, opts: { glass?:
     b.box(m.trim, -0.011, -h / 2, 0.004, 0.011, h / 2, 0.022);
     b.box(m.trim, -w / 2, h * 0.12 - 0.011, 0.004, w / 2, h * 0.12 + 0.011, 0.022);
   }
-  if (opts.sill !== false) b.box(m.bluestone, -w / 2 - 0.05, -h / 2 - f - 0.035, 0, w / 2 + 0.05, -h / 2 - f, 0.06);
+  if (opts.sill !== false) b.box(opts.sillMat ?? m.bluestone, -w / 2 - 0.05, -h / 2 - f - 0.035, 0, w / 2 + 0.05, -h / 2 - f, 0.06);
 }
 
 function movingBox(b: Builder, k: Kit, w: number, h: number, d: number, m4: THREE.Matrix4): void {
@@ -997,10 +1069,10 @@ function sceneHouse(c: Ctx): SceneOut {
     b.add(G.cyl(0.016, 0.016, EAVE, 8), m.zinc, M(sgn * (run + 0.01), EAVE / 2, -1.17));
   }
   b.add(G.box(0.075, 0.075, depth + 0.02), m.zinc, M(0, RIDGE + 0.055, zc, 0, 0, Math.PI / 4));
-  b.box(m.brick, 0.22, 1.7, -0.95, 0.42, 2.46, -0.75);
-  b.box(m.trim, 0.2, 2.46, -0.97, 0.44, 2.5, -0.73);
-  b.add(G.cyl(0.03, 0.035, 0.08, 10), m.bluestone, M(0.27, 2.54, -0.85));
-  b.add(G.cyl(0.03, 0.035, 0.08, 10), m.bluestone, M(0.37, 2.54, -0.85));
+  b.box(m.brick, -0.47, 1.62, -1.02, -0.27, 2.28, -0.84);
+  b.box(m.trim, -0.49, 2.28, -1.04, -0.25, 2.32, -0.82);
+  b.add(G.cyl(0.028, 0.034, 0.08, 10), m.bluestone, M(-0.415, 2.36, -0.93));
+  b.add(G.cyl(0.028, 0.034, 0.08, 10), m.bluestone, M(-0.325, 2.36, -0.93));
 
   // Garden: stepping-stone path, low curved hedge, moving boxes, FOR SALE sign.
   const r = rand(3);
@@ -1010,9 +1082,10 @@ function sceneHouse(c: Ctx): SceneOut {
   }
   hedgeArc(b, m.foliage, 1.43, (83 * Math.PI) / 180, (146 * Math.PI) / 180, 0.2, 0.14);
   hedgeArc(b, m.foliage, 1.43, (52 * Math.PI) / 180, (71 * Math.PI) / 180, 0.2, 0.14);
-  movingBox(b, k, 0.36, 0.26, 0.3, M(1.12, 0, -0.04, 0, 0.32, 0));
-  movingBox(b, k, 0.3, 0.21, 0.26, M(1.1, 0.26, -0.05, 0, 0.08, 0));
-  movingBox(b, k, 0.25, 0.19, 0.22, M(0.96, 0, 0.3, 0, -0.42, 0));
+  movingBox(b, k, 0.36, 0.26, 0.3, M(1.1, 0, -0.12, 0, 0.32, 0));
+  movingBox(b, k, 0.3, 0.21, 0.26, M(1.08, 0.26, -0.13, 0, 0.08, 0));
+  movingBox(b, k, 0.25, 0.19, 0.22, M(1.3, 0, 0.26, 0, -0.42, 0));
+  movingBox(b, k, 0.2, 0.15, 0.18, M(1.32, 0.19, 0.25, 0, -0.2, 0));
   // potted bay tree next to the boxes
   b.add(G.cyl(0.075, 0.06, 0.13, 14), m.iron, M(-0.62, 0.065, 0.24));
   b.add(G.cyl(0.006, 0.006, 0.22, 5), m.bark, M(-0.62, 0.22, 0.24));
@@ -1024,30 +1097,32 @@ function sceneHouse(c: Ctx): SceneOut {
   b.box(m.trim, post.x - 0.03, 1.22, post.z - 0.022, post.x + 0.52, 1.262, post.z + 0.022, 0.006);
   b.add(G.cyl(0.0, 0.04, 0.05, 4), m.trim, M(post.x, 1.305, post.z, 0, Math.PI / 4, 0));
   b.add(G.box(0.012, 0.16, 0.012), m.trim, M(post.x + 0.11, 1.17, post.z, 0, 0, -0.7));
-  const signTex = c.text(512, 336, (g, font) => {
+  const signTex = c.text(512, 368, (g, font) => {
     g.fillStyle = "#f6f3ec";
-    g.fillRect(0, 0, 512, 336);
-    g.fillStyle = NAVY;
-    g.fillRect(0, 0, 512, 64);
-    g.fillRect(0, 300, 512, 36);
-    g.fillStyle = ACCENT;
-    g.fillRect(36, 236, 440, 12);
+    g.fillRect(0, 0, 512, 368);
+    g.strokeStyle = NAVY;
+    g.lineWidth = 18;
+    g.strokeRect(9, 9, 494, 350);
     g.fillStyle = NAVY;
     g.textAlign = "center";
     g.textBaseline = "middle";
-    g.font = font(132, 800);
-    const w = g.measureText("FOR SALE").width;
-    if (w > 460) g.font = font((132 * 460) / w, 800);
-    g.fillText("FOR SALE", 256, 158);
-    g.fillStyle = "#f6f3ec";
-    g.font = font(30, 800);
-    g.fillText("GHENT  ·  3 BEDROOMS", 256, 33);
+    const fit = (txt: string, px: number, max: number) => {
+      g.font = font(px, 800);
+      const w = g.measureText(txt).width;
+      if (w > max) g.font = font((px * max) / w, 800);
+    };
+    fit("FOR", 128, 420);
+    g.fillText("FOR", 256, 108);
+    fit("SALE", 150, 430);
+    g.fillText("SALE", 256, 232);
+    g.fillStyle = ACCENT;
+    g.fillRect(150, 312, 212, 12);
   });
   const signMat = c.own(new THREE.MeshStandardMaterial({ map: signTex, roughness: 0.5 }));
   const swing = new THREE.Group();
   swing.position.set(post.x + 0.3, 1.215, post.z);
   const sb = new Builder();
-  sb.add(G.box(0.46, 0.3, 0.016), signMat, M(0, -0.2, 0));
+  sb.add(G.box(0.46, 0.33, 0.016), signMat, M(0, -0.215, 0));
   sb.add(G.torus(0.014, 0.004, 4, 10), m.iron, M(-0.17, -0.035, 0));
   sb.add(G.torus(0.014, 0.004, 4, 10), m.iron, M(0.17, -0.035, 0));
   sb.add(G.box(0.006, 0.03, 0.006), m.iron, M(-0.17, -0.06, 0));
@@ -1060,7 +1135,7 @@ function sceneHouse(c: Ctx): SceneOut {
 
   // Ground: lawn, gravel under the path, contact shading under everything.
   const ground = c.ground((g, X, Z, S, rr) => {
-    paintLawn(g, S, rr);
+    paintLawn(g, S, rr, "#35523f");
     g.fillStyle = "#8c8478";
     soft(g, 3, "rgba(140,132,120,0.9)", (h) => {
       roundRect(h, X(0.12), Z(0.12), X(0.52) - X(0.12), Z(1.62) - Z(0.12), 6);
@@ -1071,7 +1146,8 @@ function sceneHouse(c: Ctx): SceneOut {
       g.fillRect(X(0.14) + rr() * (X(0.5) - X(0.14)), Z(0.14) + rr() * (Z(1.6) - Z(0.14)), 1.5, 1.5);
     }
     aoRect(g, X, Z, -0.78, -1.22, 0.78, zF + 0.02, 16, 0.75);
-    aoRect(g, X, Z, 0.9, -0.24, 1.32, 0.46, 10, 0.55);
+    aoRect(g, X, Z, 0.88, -0.32, 1.32, 0.06, 10, 0.55);
+    aoRect(g, X, Z, 1.16, 0.12, 1.46, 0.4, 9, 0.5);
     aoDisc(g, X, Z, -0.62, 0.24, 0.09, 6, 0.6);
     aoDisc(g, X, Z, post.x, post.z, 0.05, 5, 0.6);
     soft(g, 8, "rgba(6,10,18,0.5)", (h) => {
@@ -1084,9 +1160,10 @@ function sceneHouse(c: Ctx): SceneOut {
       h.stroke();
     });
   }, 21);
+  c.pool(b, 0.32, [[-0.31, zF + 0.34, 1.0, 0.62], [0.6, zF + 0.2, 0.5, 0.34]]);
   addPlinth(b, k, ground);
   b.build(c.root);
-  return { window, stand: [0.66, 0, 0.74], padlockY: 2.45 };
+  return { window, stand: [0.8, 0, 0.78], padlock: [0, 2.44, 0.42] };
 }
 
 // ───────────────────────────── coffee bar (Lina, first business) ─────────────────────────────
@@ -1112,8 +1189,10 @@ function sceneBusiness(c: Ctx): SceneOut {
   b.add(prism(foot(0.04), 2.34, 2.41), m.trim);
   b.add(prism(foot(0.012), 2.31, 2.34), m.trim);
   b.add(prism(foot(0), 2.41, 2.411, { size: 0.2, thickness: 0.22, offset: -0.2 }), m.slate);
-  b.box(m.brick, -0.5, 2.4, -0.82, -0.28, 2.74, -0.64);
+  b.box(m.render, -0.5, 2.4, -0.82, -0.28, 2.74, -0.64);
   b.box(m.trim, -0.52, 2.74, -0.84, -0.26, 2.775, -0.62);
+  b.add(G.cyl(0.035, 0.04, 0.06, 10), m.slate, M(-0.44, 2.8, -0.73));
+  b.add(G.cyl(0.035, 0.04, 0.06, 10), m.slate, M(-0.34, 2.8, -0.73));
 
   // Ground floor: night-blue shopfront on the front, the chamfered corner and the right side.
   const PANE = { y0: 0.56, y1: 1.22 };
@@ -1142,7 +1221,7 @@ function sceneBusiness(c: Ctx): SceneOut {
     frameOpening(b, m.trim, -0.13, 1.07, 0.13, 1.22, 0, 0.022, 0.04, 0.03);
     b.box(m.shop, -0.104, 0.05, -0.07, 0.104, 0.4, -0.045);
     b.box(m.trim, -0.104, 0.4, -0.07, 0.104, 0.425, -0.04);
-    b.box(m.brass, 0.06, 0.48, -0.04, 0.072, 0.68, -0.025);
+    b.box(m.chrome, 0.06, 0.48, -0.04, 0.072, 0.68, -0.025);
     b.box(m.slate, -0.17, 0, 0, 0.17, 0.05, 0.1);
   });
   b.box(m.shop, -0.72, 0, -0.38, -0.64, GF, zF - 0.08);
@@ -1158,50 +1237,52 @@ function sceneBusiness(c: Ctx): SceneOut {
 
   // Side window on the right (shows the painted interior).
   b.at(M(0.86, 0.89, -0.66, 0, Math.PI / 2, 0), () => {
-    b.box(m.trim, -0.27, -0.36, 0, 0.27, 0.36, 0.025);
-    b.box(m.trim, -0.29, -0.4, 0, 0.29, -0.34, 0.04);
+    b.box(m.trim, -0.27, -0.36, 0, -0.24, 0.36, 0.03);
+    b.box(m.trim, 0.24, -0.36, 0, 0.27, 0.36, 0.03);
+    b.box(m.trim, -0.24, 0.33, 0, 0.24, 0.36, 0.03);
+    b.box(m.trim, -0.29, -0.4, 0, 0.29, -0.33, 0.045);
+    b.box(m.trim, -0.012, -0.33, 0.002, 0.012, 0.33, 0.022);
   });
 
   // Interior seen through the glass: lit back wall, counter, espresso machine, grinder, pendants.
   const interiorTex = c.tex(canvasTexture(paintInterior()));
   const interior = c.glow("#ffd9ae", 1.0, { map: interiorTex, lockAs: "dim" });
   b.add(G.plane(1.42, GF), interior, M(0.07, GF / 2, -0.375));
-  b.add(G.plane(0.5, 0.68), interior, M(0.866, 0.89, -0.66, 0, Math.PI / 2, 0));
+  b.add(G.plane(0.48, 0.66), interior, M(0.866, 0.89, -0.66, 0, Math.PI / 2, 0));
   b.at(cornerM, () => {
     b.add(G.plane(0.21, 0.6), interior, M(0, 0.72, -0.06));
     b.add(G.plane(0.21, 0.11), interior, M(0, 1.145, -0.06));
   });
   b.box(m.woodDark, -0.64, 0, -0.38, 0.78, 0.04, zF - 0.08);
-  b.box(m.wood, -0.5, 0.04, -0.33, 0.5, 0.58, -0.15);
+  b.box(m.woodDark, -0.5, 0.04, -0.33, 0.5, 0.58, -0.15);
   for (let i = 0; i < 6; i++) b.box(m.woodDark, -0.49 + i * 0.165, 0.08, -0.152, -0.49 + i * 0.165 + 0.012, 0.55, -0.145);
   b.box(m.trim, -0.52, 0.58, -0.345, 0.52, 0.6, -0.13);
   // espresso machine (chrome, domed top, two group heads, amber gauge + lights)
   const amber = c.glow(AMBER, 2.4);
-  b.at(M(-0.02, 0.6, -0.25), () => {
-    b.box(m.iron, -0.19, 0, -0.08, 0.19, 0.025, 0.09);
-    b.add(G.rbox(0.36, 0.2, 0.15, 0.03, 2), m.chrome, M(0, 0.125, -0.005));
-    b.box(m.iron, -0.17, 0.12, 0.07, 0.17, 0.18, 0.075);
-    b.add(G.sphere(0.07, 16, 8, ), m.chrome, M(0, 0.225, -0.01, 0, 0, 0, 1, 0.75, 1));
-    b.add(G.cyl(0.012, 0.02, 0.03, 10), m.brass, M(0, 0.285, -0.01));
-    for (const gx of [-0.085, 0.085]) {
-      b.add(G.cyl(0.03, 0.034, 0.035, 14), m.chrome, M(gx, 0.075, 0.08));
-      b.add(G.cyl(0.009, 0.009, 0.085, 6), m.iron, M(gx, 0.06, 0.13, Math.PI / 2 - 0.25, 0, 0));
-      b.add(G.cyl(0.022, 0.018, 0.03, 10), m.trim, M(gx, 0.04, 0.085));
+  b.at(M(0, 0.6, -0.24), () => {
+    b.box(m.iron, -0.22, 0, -0.08, 0.22, 0.03, 0.1);
+    b.add(G.rbox(0.42, 0.22, 0.16, 0.035, 2), m.chrome, M(0, 0.14, -0.005));
+    b.box(m.shop, -0.2, 0.15, 0.074, 0.2, 0.215, 0.08);
+    b.add(G.sphere(0.085, 18, 8), m.chrome, M(0, 0.25, -0.01, 0, 0, 0, 1, 0.8, 1));
+    b.add(G.cyl(0.014, 0.022, 0.035, 10), m.chrome, M(0, 0.33, -0.01));
+    for (const gx of [-0.1, 0.1]) {
+      b.add(G.cyl(0.034, 0.038, 0.04, 14), m.chrome, M(gx, 0.085, 0.085));
+      b.add(G.cyl(0.01, 0.01, 0.1, 6), m.iron, M(gx, 0.065, 0.14, Math.PI / 2 - 0.25, 0, 0));
+      b.add(G.cyl(0.026, 0.02, 0.034, 10), m.trim, M(gx, 0.045, 0.09));
     }
-    b.add(G.cyl(0.024, 0.024, 0.008, 18), amber, M(0, 0.15, 0.072, Math.PI / 2, 0, 0));
-    b.add(G.sphere(0.009, 8, 6), amber, M(-0.13, 0.17, 0.073));
-    b.add(G.sphere(0.009, 8, 6), amber, M(0.13, 0.17, 0.073));
-    b.add(G.cyl(0.006, 0.006, 0.12, 6), m.chrome, M(0.2, 0.09, 0.03, 0, 0, 0.35));
-    // cups on the warmer
-    for (const cx of [-0.11, -0.04, 0.03]) b.add(G.cyl(0.018, 0.014, 0.028, 10), m.trim, M(cx, 0.26, -0.03));
+    b.add(G.cyl(0.028, 0.028, 0.008, 18), amber, M(0, 0.183, 0.082, Math.PI / 2, 0, 0));
+    b.add(G.sphere(0.011, 8, 6), amber, M(-0.15, 0.183, 0.082));
+    b.add(G.sphere(0.011, 8, 6), amber, M(0.15, 0.183, 0.082));
+    b.add(G.cyl(0.007, 0.007, 0.14, 6), m.chrome, M(0.235, 0.1, 0.03, 0, 0, 0.35));
+    for (const cx of [-0.15, -0.09, 0.09, 0.15]) b.add(G.cyl(0.02, 0.015, 0.03, 10), m.trim, M(cx, 0.265, -0.03));
   });
-  b.at(M(0.33, 0.6, -0.25), () => {
+  b.at(M(0.36, 0.6, -0.25), () => {
     b.add(G.rbox(0.09, 0.16, 0.1, 0.015), m.iron, M(0, 0.08, 0));
     b.add(G.cyl(0.05, 0.022, 0.1, 12), m.glass, M(0, 0.21, 0));
   });
   for (const px of [-0.42, 0.4]) {
     b.add(G.cyl(0.003, 0.003, GF - 1.16, 4), m.iron, M(px, (GF + 1.16) / 2, -0.17));
-    b.add(G.cyl(0.026, 0.065, 0.055, 16, true), m.brass, M(px, 1.135, -0.17));
+    b.add(G.cyl(0.026, 0.065, 0.055, 16, true), m.chrome, M(px, 1.135, -0.17));
     b.add(G.sphere(0.022, 10, 8), amber, M(px, 1.11, -0.17));
   }
 
@@ -1239,50 +1320,44 @@ function sceneBusiness(c: Ctx): SceneOut {
   const awW = AW.x1 - AW.x0;
   const awX = (AW.x0 + AW.x1) / 2;
   b.add(G.box(awW, 0.01, awLen), m.awning, M(awX, (AW.y0 + AW.y1) / 2, (zF + AW.z1) / 2, awAng, 0, 0));
-  const val = new THREE.Shape();
   const n = Math.round(awW / 0.095);
   const sw = awW / n;
-  val.moveTo(-awW / 2, 0);
-  val.lineTo(awW / 2, 0);
-  val.lineTo(awW / 2, -0.04);
+  const valPts = [new THREE.Vector2(-awW / 2, 0), new THREE.Vector2(awW / 2, 0)];
   for (let i = n - 1; i >= 0; i--) {
     const cx = -awW / 2 + (i + 0.5) * sw;
-    val.absarc(cx, -0.04, sw / 2, 0, Math.PI, true);
+    for (let j = 0; j < 6; j++) {
+      const ang = (-j / 6) * Math.PI; // 0 .. -pi: the scallop hangs below
+      valPts.push(new THREE.Vector2(cx + (sw / 2) * Math.cos(ang), -0.04 + (sw / 2) * Math.sin(ang)));
+    }
   }
-  val.closePath();
-  b.add(new THREE.ExtrudeGeometry(val, { depth: 0.008, bevelEnabled: false, curveSegments: 6 }), m.awning, M(awX, AW.y1 + 0.004, AW.z1 - 0.004));
+  valPts.push(new THREE.Vector2(-awW / 2, -0.04));
+  b.add(new THREE.ExtrudeGeometry(new THREE.Shape(valPts), { depth: 0.008, bevelEnabled: false }), m.awning, M(awX, AW.y1 + 0.004, AW.z1 - 0.004));
   b.add(G.cyl(0.011, 0.011, awW + 0.02, 8), m.iron, M(awX, AW.y1, AW.z1, 0, 0, Math.PI / 2));
-  for (const x of [AW.x0 + 0.03, AW.x1 - 0.03]) {
-    const from = new THREE.Vector3(x, 1.12, zF + 0.01);
-    const to = new THREE.Vector3(x, AW.y1, AW.z1);
-    const len = from.distanceTo(to);
-    const ang = Math.atan2(to.z - from.z, to.y - from.y);
-    b.add(G.cyl(0.006, 0.006, len, 6), m.iron, M(x, (from.y + to.y) / 2, (from.z + to.z) / 2, ang, 0, 0));
-  }
+  b.box(m.iron, AW.x0 - 0.01, AW.y0 - 0.015, zF, AW.x1 + 0.01, AW.y0 + 0.02, zF + 0.03);
 
   // Cup sign on a bracket at the corner, swinging gently.
   const cn = new THREE.Vector3(Math.SQRT1_2, 0, Math.SQRT1_2);
-  const bStart = new THREE.Vector3(0.73, 1.5, -0.05);
-  const bEnd = bStart.clone().addScaledVector(cn, 0.32);
+  const bStart = new THREE.Vector3(0.73, 1.4, -0.05);
+  const bEnd = bStart.clone().addScaledVector(cn, 0.3);
   b.at(M(bStart.x, bStart.y, bStart.z, 0, Math.PI / 4, 0), () => {
-    b.add(G.cyl(0.009, 0.009, 0.32, 6), m.iron, M(0, 0, 0.16, Math.PI / 2, 0, 0));
-    b.add(G.cyl(0.006, 0.006, 0.24, 6), m.iron, M(0, -0.07, 0.11, -0.95, 0, 0));
-    b.box(m.iron, -0.03, -0.05, 0, 0.03, 0.05, 0.012);
+    b.add(G.cyl(0.011, 0.011, 0.3, 8), m.iron, M(0, 0, 0.15, Math.PI / 2, 0, 0));
+    b.add(G.cyl(0.006, 0.006, 0.26, 6), m.iron, M(0, -0.09, 0.12, -1.0, 0, 0));
+    b.box(m.iron, -0.035, -0.17, 0, 0.035, 0.05, 0.014);
   });
   const cupSwing = new THREE.Group();
   cupSwing.position.copy(bEnd);
-  cupSwing.rotation.y = Math.PI / 4;
+  cupSwing.rotation.order = "YXZ";
+  cupSwing.rotation.y = -Math.PI / 4;
   const cb = new Builder();
   const cupPts = [new THREE.Vector2(0.0, 0), new THREE.Vector2(0.06, 0), new THREE.Vector2(0.075, 0.03), new THREE.Vector2(0.085, 0.1), new THREE.Vector2(0.089, 0.115), new THREE.Vector2(0.078, 0.115), new THREE.Vector2(0.07, 0.04), new THREE.Vector2(0.0, 0.03)];
-  cb.add(new THREE.LatheGeometry(cupPts, 20), m.trim, M(0, -0.25, 0));
-  cb.add(G.torus(0.036, 0.011, 6, 14), m.trim, M(0.088, -0.18, 0));
-  cb.add(G.cyl(0.115, 0.1, 0.014, 22), m.trim, M(0, -0.255, 0));
-  cb.add(G.cyl(0.004, 0.004, 0.13, 4), m.iron, M(-0.05, -0.065, 0, 0, 0, 0.35));
-  cb.add(G.cyl(0.004, 0.004, 0.13, 4), m.iron, M(0.05, -0.065, 0, 0, 0, -0.35));
+  cb.add(G.cyl(0.13, 0.115, 0.016, 24), m.trim, M(0, 0.02, 0));
+  cb.add(new THREE.LatheGeometry(cupPts, 22), m.trim, M(0, 0.028, 0, 0, 0, 0, 1.25));
+  cb.add(G.torus(0.045, 0.014, 6, 14), m.trim, M(0.115, 0.1, 0));
+  cb.add(G.cyl(0.02, 0.03, 0.012, 10), m.trim, M(0, 0.006, 0));
   cb.build(cupSwing);
   c.root.add(cupSwing);
   c.anim.push((t) => {
-    cupSwing.rotation.x = sway(t + 2, 0.06, 0.9);
+    cupSwing.rotation.z = sway(t + 2, 0.035, 0.9);
   });
 
   // Upper-floor windows with iron balconettes.
@@ -1294,29 +1369,30 @@ function sceneBusiness(c: Ctx): SceneOut {
       for (let i = 0; i <= 6; i++) b.box(m.iron, -0.15 + i * 0.05 - 0.003, -0.225, 0.07, -0.15 + i * 0.05 + 0.003, -0.11, 0.076);
     });
   }
-  b.at(M(0.73, 2.0, -0.05, 0, Math.PI / 4, 0), () => appliedWindow(b, k, 0.16, 0.4, { cross: false }));
-  for (const z of [-0.5, -0.86]) b.at(M(0.86, 2.0, z, 0, Math.PI / 2, 0), () => appliedWindow(b, k, 0.22, 0.38));
-  b.at(M(-0.72, 2.0, -0.5, 0, -Math.PI / 2, 0), () => appliedWindow(b, k, 0.22, 0.38));
-  for (const x of [-0.3, 0.4]) b.at(M(x, 2.0, -1.08, 0, Math.PI, 0), () => appliedWindow(b, k, 0.22, 0.38));
+  const sillMat = m.trim;
+  b.at(M(0.73, 2.0, -0.05, 0, Math.PI / 4, 0), () => appliedWindow(b, k, 0.16, 0.4, { cross: false, sillMat }));
+  for (const z of [-0.5, -0.86]) b.at(M(0.86, 2.0, z, 0, Math.PI / 2, 0), () => appliedWindow(b, k, 0.22, 0.38, { sillMat }));
+  b.at(M(-0.72, 2.0, -0.5, 0, -Math.PI / 2, 0), () => appliedWindow(b, k, 0.22, 0.38, { sillMat }));
+  for (const x of [-0.3, 0.4]) b.at(M(x, 2.0, -1.08, 0, Math.PI, 0), () => appliedWindow(b, k, 0.22, 0.38, { sillMat }));
   for (const x of [-0.36, 0.24]) {
     // dormers on the mansard
     b.box(m.slate, x - 0.11, 2.4, -0.06, x + 0.11, 2.56, 0.05);
     b.at(M(x, 2.47, 0.05), () => appliedWindow(b, k, 0.12, 0.1, { sill: false, cross: false }));
-    b.add(G.cyl(0.0, 0.16, 0.08, 4, false), m.zinc, M(x, 2.6, -0.005, 0, Math.PI / 4, 0, 1, 1, 0.75));
+    b.add(G.cyl(0.0, 0.16, 0.08, 4, false), m.slate, M(x, 2.6, -0.005, 0, Math.PI / 4, 0, 1, 1, 0.75));
   }
 
   // Terrace: two bistro tables with chairs, a cup with steam, the A-frame, a topiary.
   bistroTable(b, k, -0.48, 0.86);
   bistroChair(b, k, -0.72, 0.86, Math.PI / 2);
   bistroChair(b, k, -0.25, 0.9, -Math.PI / 2);
-  bistroTable(b, k, 1.13, 0.04);
-  bistroChair(b, k, 1.15, -0.2, 0);
-  bistroChair(b, k, 1.1, 0.28, Math.PI);
+  bistroTable(b, k, 1.16, -0.04);
+  bistroChair(b, k, 1.18, -0.28, 0);
+  bistroChair(b, k, 1.14, 0.2, Math.PI);
   b.add(G.cyl(0.035, 0.026, 0.05, 14), m.trim, M(-0.45, 0.497, 0.86));
   b.add(G.cyl(0.055, 0.05, 0.008, 18), m.trim, M(-0.45, 0.474, 0.86));
   b.add(G.torus(0.015, 0.005, 5, 10), m.trim, M(-0.41, 0.5, 0.86));
   b.add(G.cyl(0.03, 0.03, 0.002, 12), m.woodDark, M(-0.45, 0.521, 0.86));
-  b.add(G.cyl(0.03, 0.022, 0.045, 12), m.trim, M(1.1, 0.495, 0.08));
+  b.add(G.cyl(0.03, 0.022, 0.045, 12), m.trim, M(1.13, 0.495, 0.0));
   // steam wisp (texture scrolls upwards; one draw call)
   const steamTex = c.tex(canvasTexture(paintSteam(), { repeat: true }));
   steamTex.wrapS = THREE.ClampToEdgeWrapping;
@@ -1392,15 +1468,15 @@ function sceneBusiness(c: Ctx): SceneOut {
     for (const sgn of [1, -1]) {
       b.at(M(0, 0.29, sgn * 0.06, sgn * -0.2, 0, 0), () => {
         b.add(G.box(0.3, 0.46, 0.012), chalk, M(0, 0, 0));
-        b.box(m.wood, -0.17, -0.29, -0.012, -0.15, 0.27, 0.012);
-        b.box(m.wood, 0.15, -0.29, -0.012, 0.17, 0.27, 0.012);
-        b.box(m.wood, -0.17, 0.23, -0.012, 0.17, 0.27, 0.012);
-        b.box(m.wood, -0.15, -0.25, -0.01, 0.15, -0.23, 0.01);
+        b.box(m.woodDark, -0.17, -0.29, -0.012, -0.15, 0.27, 0.012);
+        b.box(m.woodDark, 0.15, -0.29, -0.012, 0.17, 0.27, 0.012);
+        b.box(m.woodDark, -0.17, 0.23, -0.012, 0.17, 0.27, 0.012);
+        b.box(m.woodDark, -0.15, -0.25, -0.01, 0.15, -0.23, 0.01);
       });
     }
   });
   b.add(G.cyl(0.08, 0.065, 0.16, 16), m.iron, M(1.1, 0.08, -0.46));
-  b.add(G.cyl(0.006, 0.006, 0.26, 5), m.bark, M(1.1, 0.29, -0.46));
+  b.add(G.cyl(0.006, 0.006, 0.26, 5), m.iron, M(1.1, 0.29, -0.46));
   b.add(G.ico(0.13, 2), m.foliage, M(1.1, 0.5, -0.46));
 
   // Ground: pale stone tiles, cobbled street strip at the front, contact shading.
@@ -1428,13 +1504,14 @@ function sceneBusiness(c: Ctx): SceneOut {
     }
     aoRect(g, X, Z, -0.78, -1.14, 0.92, zF + 0.03, 16, 0.75);
     aoDisc(g, X, Z, -0.48, 0.86, 0.17, 8, 0.45);
-    aoDisc(g, X, Z, 1.13, 0.04, 0.17, 8, 0.45);
+    aoDisc(g, X, Z, 1.16, -0.04, 0.17, 8, 0.45);
     aoRect(g, X, Z, 0.18, 0.8, 0.54, 1.0, 8, 0.5);
     aoDisc(g, X, Z, 1.1, -0.46, 0.09, 6, 0.6);
   }, 17);
+  c.pool(b, 0.3, [[-0.04, zF + 0.36, 1.5, 0.66], [1.16, -0.66, 0.7, 0.5, Math.PI / 2]]);
   addPlinth(b, k, ground);
   b.build(c.root);
-  return { window, stand: [0.9, 0, 0.72], padlockY: 2.5 };
+  return { window, stand: [0.9, 0, 0.74], padlock: [0, 2.44, 0.45] };
 }
 
 function paintInterior(): HTMLCanvasElement {
@@ -1650,7 +1727,7 @@ function sceneRetire(c: Ctx): SceneOut {
   }, 31);
   addPlinth(b, k, ground);
   b.build(c.root);
-  return { window, stand: [0.48, 0, 0.92], padlockY: 2.5 };
+  return { window, stand: [0.48, 0, 0.92], padlock: [0.05, 2.42, 0.1] };
 }
 
 function sceneBaby(c: Ctx): SceneOut {
@@ -1748,7 +1825,7 @@ function sceneBaby(c: Ctx): SceneOut {
   }, 41);
   addPlinth(b, k, ground);
   b.build(c.root);
-  return { window, stand: [0.5, 0, 0.95], padlockY: 2.5 };
+  return { window, stand: [0.5, 0, 0.95], padlock: [0, 2.42, 0.1] };
 }
 
 function sceneCar(c: Ctx): SceneOut {
@@ -1784,7 +1861,7 @@ function sceneCar(c: Ctx): SceneOut {
   b.add(G.box(0.08, 0.008, 0.004), led, M(-0.27, 0.66, zF + 0.072));
   b.add(G.torus(0.045, 0.01, 6, 14), m.rubber, M(-0.27, 0.48, zF + 0.04, 0, 0, 0));
   // the car: rounded EV body, dark glasshouse, wheels; nose turned towards the camera
-  const car = M(0.05, 0, 0.12, 0, -0.32, 0);
+  const car = M(-0.12, 0, 0.08, 0, -0.32, 0);
   const lightBar = c.glow("#fff2e0", 1.6);
   b.at(car, () => {
     const side = new THREE.Shape();
@@ -1844,7 +1921,7 @@ function sceneCar(c: Ctx): SceneOut {
     aoRect(g, X, Z, -1.16, -1.2, 1.16, zF + 0.04, 14, 0.75);
     soft(g, 14, "rgba(6,10,18,0.7)", (h) => {
       h.save();
-      h.translate(X(0.05), Z(0.12));
+      h.translate(X(-0.12), Z(0.08));
       h.rotate(0.32);
       h.fillRect(-0.9 * 158, -0.36 * 158, 1.8 * 158, 0.72 * 158);
       h.restore();
@@ -1852,7 +1929,7 @@ function sceneCar(c: Ctx): SceneOut {
   }, 51);
   addPlinth(b, k, ground);
   b.build(c.root);
-  return { window, stand: [1.08, 0, 0.62], padlockY: 2.3 };
+  return { window, stand: [0.98, 0, 0.7], padlock: [0, 2.12, -0.2] };
 }
 
 const SCENES: Record<DioramaId, (c: Ctx) => SceneOut> = {
@@ -1886,13 +1963,11 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
 
   const padlock = new THREE.Group();
   padlock.name = "padlock";
-  const pl = kit.padlock;
-  for (const [geo, mat] of [[pl.body, pl.bodyMat], [pl.shackle, pl.shackleMat], [pl.key, pl.keyMat]] as const) {
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.userData.noLock = true;
-    padlock.add(mesh);
-  }
-  padlock.position.set(0, out.padlockY, 0.1);
+  const padMesh = new THREE.Mesh(kit.padlock.geo, kit.padlock.mat);
+  padMesh.userData.noLock = true;
+  padlock.add(padMesh);
+  padlock.position.set(...out.padlock);
+  padlock.scale.setScalar(0.8);
   padlock.visible = false;
   root.add(padlock);
 
@@ -1921,7 +1996,8 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
           orig = o.material as THREE.Material;
           originals.set(o, orig);
         }
-        o.material = l ? c.twin(orig) : orig;
+        if (orig.userData.lockAs === "hide") o.visible = !l;
+        else o.material = l ? c.twin(orig) : orig;
       });
       padlock.visible = l;
       applyGlow();
@@ -1934,7 +2010,7 @@ export function buildDiorama(id: DioramaId, kitIn: PickerKit): Diorama {
     update(t: number, dt: number) {
       if (!locked) for (const a of c.anim) a(t, dt);
       if (padlock.visible) {
-        padlock.position.y = out.padlockY + Math.sin(t * 1.3) * 0.04;
+        padlock.position.y = out.padlock[1] + Math.sin(t * 1.3) * 0.03;
         padlock.rotation.y = Math.sin(t * 0.6) * 0.3;
         padlock.rotation.z = Math.sin(t * 0.9 + 1) * 0.04;
       }

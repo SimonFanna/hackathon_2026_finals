@@ -33,8 +33,8 @@ export interface PickerCanvasProps {
 
 const NIGHT = "#021e43";
 const PERSON: Record<DioramaId, CharacterId> = { house: "thomas", business: "lina", retire: "retiree", baby: "parent", car: "driver" };
-const CAM_POS = new THREE.Vector3(0, 3.1, 12.6);
-const CAM_LOOK = new THREE.Vector3(0, 0.15, -1.4);
+const CAM_POS = new THREE.Vector3(0, 3.0, 13.6);
+const CAM_LOOK = new THREE.Vector3(0, 0.55, -1.4);
 const ease = {
   inCubic: (x: number) => x * x * x,
   inOutCubic: (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
@@ -57,7 +57,8 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     let disposed = false;
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
+      // Native MSAA, no post-processing by default: crisp edges and 55–60 fps on an integrated GPU.
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
     } catch {
       live.current.onFail("init");
       return;
@@ -127,23 +128,39 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         /* the scenes still work without people */
       });
 
-    // Post: bloom at half resolution on a multisampled half-float target (keeps edges clean).
-    const target = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
-    const composer = new EffectComposer(renderer, target);
-    composer.addPass(new RenderPass(scene, camera));
-    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.55, 0.5, 0.86);
-    composer.addPass(bloom);
-    composer.addPass(new OutputPass());
-    let useBloom = true;
+    // Window halos: one additive sprite per lit window replaces bloom (cheap, no extra render pass).
+    const haloTex = haloTexture();
+    const halos = dioramas.map((d, i) => {
+      const m = new THREE.SpriteMaterial({ map: haloTex, color: "#ffcf96", transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
+      const sp = new THREE.Sprite(m);
+      sp.scale.setScalar(1.25);
+      sp.renderOrder = 2;
+      sp.visible = !items[i].locked;
+      d.window.add(sp);
+      sp.position.set(0, 0, 0.06);
+      return sp;
+    });
 
+    // Optional bloom (?bloom=1) for strong GPUs: half resolution, multisampled half-float target.
+    let useBloom = new URLSearchParams(window.location.search).get("bloom") === "1";
+    const target = useBloom ? new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }) : null;
+    const composer = target ? new EffectComposer(renderer, target) : null;
+    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.55, 0.5, 0.86);
+    if (composer) {
+      composer.addPass(new RenderPass(scene, camera));
+      composer.addPass(bloom);
+      composer.addPass(new OutputPass());
+    }
+
+    let calmFrom = performance.now() + 3500; // fps governor ignores start-up, asset uploads and resizes
     const resize = () => {
       const w = el.clientWidth || window.innerWidth;
       const h = el.clientHeight || window.innerHeight;
       renderer.setSize(w, h, false);
       renderer.domElement.style.width = `${w}px`;
       renderer.domElement.style.height = `${h}px`;
-      composer.setPixelRatio(dpr);
-      composer.setSize(w, h);
+      composer?.setPixelRatio(dpr);
+      composer?.setSize(w, h);
       calmFrom = Math.max(calmFrom, performance.now() + 1500);
       bloom.resolution.set((w * dpr) / 2, (h * dpr) / 2);
       camera.aspect = w / h;
@@ -300,10 +317,8 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     const times: number[] = [];
     let lowSince = 0;
     let slowSince = 0;
-    let fastSince = 0;
-    let calmFrom = performance.now() + 3500; // ignore start-up, asset uploads and resizes
     let readySent = false;
-    const stats = { fps: 60, calls: 0, triangles: 0, bloom: true, people: [] as unknown[] };
+    const stats = { fps: 60, calls: 0, triangles: 0, bloom: useBloom, people: [] as unknown[] };
     (window as unknown as { __picker?: typeof stats }).__picker = stats;
     const proj = new THREE.Vector3();
 
@@ -343,6 +358,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         h.rotation.y = s.rotY + spin * (1 - settle) + shake;
         const d = dioramas[i];
         if (!diving || d !== dioramas[indexOfId(live.current.selected)]) d.setFocus(s.light);
+        halos[i].material.opacity = items[i].locked ? 0 : 0.25 + 0.75 * s.light;
         d.update(t, dt);
         const person = people[i];
         if (person) {
@@ -388,7 +404,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       }
 
       renderer.info.reset();
-      if (useBloom) composer.render();
+      if (useBloom && composer) composer.render();
       else renderer.render(scene, camera);
       stats.calls = renderer.info.render.calls;
       stats.triangles = renderer.info.render.triangles;
@@ -416,14 +432,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
               calmFrom = now + 1500;
             }
           } else slowSince = 0;
-        } else if (stats.fps > 57) {
-          fastSince ||= now;
-          if (now - fastSince > 4000) {
-            useBloom = true; // the GPU has headroom again
-            stats.bloom = true;
-            fastSince = 0;
-          }
-        } else fastSince = 0;
+        }
         if (stats.fps < 30) {
           lowSince ||= now;
           if (now - lowSince > 2500) live.current.onFail("fps");
@@ -447,9 +456,11 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       floor.geometry.dispose();
       (floor.material as THREE.Material).dispose();
       floorTex.dispose();
-      target.dispose();
+      halos.forEach((h) => h.material.dispose());
+      haloTex.dispose();
+      target?.dispose();
       bloom.dispose();
-      composer.dispose();
+      composer?.dispose();
       renderer.dispose();
       if (!renderer.getContext().isContextLost()) renderer.forceContextLoss();
       canvas.remove();
@@ -495,6 +506,22 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       </div>
     </div>
   );
+}
+
+function haloTexture(): THREE.CanvasTexture {
+  const size = 128;
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  const g = c.getContext("2d")!;
+  const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  grad.addColorStop(0, "rgba(255,255,255,0.55)");
+  grad.addColorStop(0.35, "rgba(255,255,255,0.18)");
+  grad.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = grad;
+  g.fillRect(0, 0, size, size);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
 }
 
 function radialTexture(inner: string, outer: string): THREE.CanvasTexture {
