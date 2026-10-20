@@ -10,7 +10,7 @@ import { CAPABILITY_CODES, GOAL_TYPES } from "./vocabulary";
 export { BadRequest } from "./errors";
 
 const MAX_BODY_BYTES = 16_000;
-const WRITES_PER_MINUTE = 30;
+const WRITES_PER_MINUTE = 120; // one full demo run is ~35 writes
 const isoDate = z.iso.date();
 const isoDateTime = z.union([z.iso.date(), z.iso.datetime({ offset: true })]);
 const code = z.string().regex(/^[A-Za-z0-9_:-]{1,80}$/);

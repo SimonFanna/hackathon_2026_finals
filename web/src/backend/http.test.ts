@@ -35,7 +35,7 @@ describe("write guard", () => {
 
   it("rate-limits one client", () => {
     const r = () => guardWrite(req({ "x-forwarded-for": "2.2.2.2" }), "t2");
-    for (let i = 0; i < 30; i++) r();
+    for (let i = 0; i < 120; i++) r();
     expect(r).toThrow(/too many/);
   });
 
