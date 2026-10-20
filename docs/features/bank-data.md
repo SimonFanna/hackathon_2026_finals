@@ -105,5 +105,5 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/bank_data/load.sql   # run fr
 - [x] Full load via `\copy` (7.6 s locally, re-runnable) + demo-only SQL tested on an empty DB
 - [x] RLS checked as anon: only the 6 demo personas are visible, `ml` is denied
 - [x] Migration applied on Supabase `endbafjcxanzmlwiezwe`. The advisors raise only the expected INFO "RLS, no policy" on `ml.customer_truth`; anon/authenticated have no access to `ml`.
-- [ ] Data loaded by Simon (`load.sql`) + counts checked
+- [x] Data loaded by Simon (`load.sql`). Remote counts match the local run (2,000 customers, 427,265 transactions, 214,141 app events). Via the publishable key, only the 6 demo personas are visible, `ml` is not exposed (PGRST106) and writes are refused (401).
 - [ ] ML: clustering → personas, life-moment detection (see `prediction-model.md`)
