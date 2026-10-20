@@ -1,0 +1,15 @@
+[
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "__bias__", "weight": -4.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "sig_MORTGAGE_SIMULATION", "weight": 8.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "sig_HOME_LOAN_APPLICATION", "weight": 8.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "sig_NOTARY_PAYMENT", "weight": 8.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "sig_HOUSING_BUDGET_VIEW", "weight": 6.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "sig_PROPERTY_VALUATION_VIEW", "weight": 5.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "sig_HOME_LOAN_KATE_QUESTION", "weight": 5.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "sig_SAVING_FOR_DOWN_PAYMENT", "weight": 5.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "sig_HOME_LOAN_VIEW", "weight": 3.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "sig_HOME_SEARCH_IN_APP", "weight": 3.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "sig_RENOVATION_VIEW", "weight": 3.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "is_tenant", "weight": 1.0 },
+  { "modelVersion": "hand-v0", "moment": "HOME_BUYING", "feature": "is_owner", "weight": -1.5 }
+]
