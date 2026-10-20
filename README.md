@@ -55,7 +55,10 @@ Two journeys run on the **same code**: *buying and renovating a home* (14 steps,
 
 - **One logistic regression per life moment**, trained on the synthetic bank (2,000 customers, 6 months of history). Cross-validated AUC 0.990–0.996. On synthetic data the model mostly re-learns the generator: the value is the pipeline, the explainability and the feedback loop, not the score.
 - **Explainable by construction:** every confidence comes with its top contributions, which become Kate's *"why am I seeing this?"*.
-- **Cheap:** scoring 2.5M customers × 5 moments takes about 1.2 s on one core. Only customers with new events are re-scored.
+- **Cheap** (`scripts/ml/benchmark.ts`, 2.5M customers × 5 moments, one core):
+  - about 1.2 s as a dense batch (92 ns per score);
+  - about 3 µs per score through the explained path the app uses (about 36 s for the whole base).
+  - Only customers with new events are re-scored, so a daily run touches a small fraction.
 - **No language model decides anything.** Kate's LLM (optional) only rephrases an answer the engine already built, and a guard falls back to the deterministic text.
 
 Details: [`docs/features/prediction-model.md`](docs/features/prediction-model.md), [`backend/T2-ml-model.md`](backend/T2-ml-model.md).
