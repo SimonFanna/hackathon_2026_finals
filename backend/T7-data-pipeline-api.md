@@ -39,9 +39,9 @@ export interface PipelineResult { facts: { customerId: number; firstName: string
 2. `toEvents` (T1)
 3. `extractSignals` (T1)
 4. `buildContext` (T1)
-5. `detectMoments` (T3, which calls T2 `predict`)
+5. `detectMoments(signals, ctx, rules, asOf, model?)` (T3). `model` = T2's `{ features, predict }` (`MomentModel` in `engine/moments.ts`), injected; without it T3 falls back to `moment_rules`
 6. `deriveIntents` (T3)
-7. `decide` (T3, with the stored feedback and goals)
+7. `decide(intents, moments, ctx, feedback, goals, rules, asOf)` (T3). It returns **one `Decision` per intent definition**, speakers first; Kate acts on `decisions.find(d => d.level === "ASK" || d.level === "SUGGEST")` (at most one)
 8. For each active goal:
    - load the plan, then `applyDecisionRules` (T5) and `trackOutcome` (T5);
    - `detectDisruptions` (T6), comparing the context without and with the injected events; for each disruption, `assessImpact` and `replan`;
