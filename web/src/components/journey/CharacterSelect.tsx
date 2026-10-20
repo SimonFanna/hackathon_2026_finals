@@ -59,7 +59,6 @@ export function CharacterSelect({
         <header className="flex items-center gap-3">
           <span className="rounded-full bg-white p-1.5"><KbcLogo size={30} /></span>
           <span className="text-[15px] font-bold">KBC Outcome Engine</span>
-          <span className="ml-auto hidden text-[13px] text-white/50 sm:block">Synthetic demo customers · illustrative figures</span>
         </header>
 
         <motion.div

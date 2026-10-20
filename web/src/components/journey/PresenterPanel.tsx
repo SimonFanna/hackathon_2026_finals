@@ -60,7 +60,6 @@ export function PresenterPanel({
         ) : (
           <p className="font-semibold text-white">No signals → NO ACTION</p>
         )}
-        <p className="mt-1 text-white/60">Deterministic rules. No language model decides.</p>
         <button
           onClick={onToggleWeak}
           className="press mt-3 rounded-full px-4 py-2 text-[14px] font-semibold text-white ring-1 ring-white/30 hover:bg-white/10"

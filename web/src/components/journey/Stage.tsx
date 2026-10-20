@@ -855,7 +855,7 @@ export function Stage() {
 
       <footer className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-between px-8 pb-4 text-[13px] text-white/60">
         <span>
-          {customer.name}, {customer.age} · {customer.city} · synthetic demo customer ·{" "}
+          {customer.name}, {customer.age} · {customer.city} ·{" "}
           {intent !== localIntent ? `live engine (${beIntent?.source ?? "api"})` : "offline engine"}
         </span>
         <span>{presenter ? "" : "Press P for the presenter view · "}Built for the KBC challenge at Tectonic Hackathon 2026</span>

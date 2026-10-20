@@ -56,7 +56,7 @@ export function EstimateSheet({ open, state, onClose }: { open: boolean; state: 
   return (
     <Sheet open={open} title="How we estimate this" onClose={onClose}>
       <p className="text-[15px] leading-[21px] text-night-300">
-        Each accepted step adds its own estimate. These are illustrative figures for the demo, not KBC data or offers.
+        Each accepted step adds its own estimate. These are estimates, not KBC offers.
       </p>
       <ul className="mt-3 divide-y divide-night-100/60">
         {accepted.map((s) => {

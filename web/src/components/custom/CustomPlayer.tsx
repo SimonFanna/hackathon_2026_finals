@@ -182,7 +182,7 @@ export function CustomPlayer({ onBack, onPlan }: {
           </section>
         </div>
         <p className="mt-4 text-[12px] text-white/45">
-          Synthetic demo customers. Simulated signals use the backend&apos;s own strength formula (seen 3 times, last one a week ago). Figures are estimates.
+          Simulated signals use the backend&apos;s own strength formula (seen 3 times, last one a week ago). Figures are estimates.
         </p>
       </div>
     </main>
