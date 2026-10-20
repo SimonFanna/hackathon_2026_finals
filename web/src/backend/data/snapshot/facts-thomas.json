@@ -1,0 +1,2202 @@
+{
+ "asOf": "2026-10-01",
+ "customer": {
+  "id": 6,
+  "slug": "thomas",
+  "firstName": "Thomas",
+  "birthDate": "1999-09-22",
+  "region": "flanders",
+  "maritalStatus": "single",
+  "segment": "private",
+  "language": "nl"
+ },
+ "employment": {
+  "status": "employee",
+  "monthlyNetIncome": 2361.43,
+  "since": "2023-09-04"
+ },
+ "housing": {
+  "status": "tenant",
+  "monthlyRent": 1006
+ },
+ "children": [],
+ "properties": [],
+ "accounts": [
+  {
+   "kind": "current",
+   "balance": 2165.57,
+   "sourceRow": 142
+  },
+  {
+   "kind": "savings",
+   "balance": 58176.76,
+   "sourceRow": 74
+  }
+ ],
+ "loans": [
+  {
+   "kind": "car",
+   "monthlyPayment": 537.47,
+   "outstanding": 6768.11,
+   "status": "active",
+   "sourceRow": 25
+  }
+ ],
+ "holdings": [
+  {
+   "sourceRow": 147,
+   "status": "active"
+  },
+  {
+   "sourceRow": 148,
+   "status": "active"
+  },
+  {
+   "sourceRow": 152,
+   "status": "active"
+  },
+  {
+   "sourceRow": 31,
+   "status": "active"
+  },
+  {
+   "sourceRow": 157,
+   "status": "active"
+  },
+  {
+   "sourceRow": 163,
+   "status": "active"
+  },
+  {
+   "sourceRow": 159,
+   "status": "active"
+  }
+ ],
+ "transactions": [
+  {
+   "id": "1118",
+   "bookedOn": "2026-04-03",
+   "amount": -161.88,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "1119",
+   "bookedOn": "2026-04-04",
+   "amount": -33.89,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "1120",
+   "bookedOn": "2026-04-04",
+   "amount": -73.15,
+   "category": "health",
+   "counterparty": "Tandarts"
+  },
+  {
+   "id": "1121",
+   "bookedOn": "2026-04-04",
+   "amount": -100.47,
+   "category": "other",
+   "counterparty": "Payconiq transfer"
+  },
+  {
+   "id": "1122",
+   "bookedOn": "2026-04-05",
+   "amount": -1006,
+   "category": "rent",
+   "counterparty": "Landlord"
+  },
+  {
+   "id": "1123",
+   "bookedOn": "2026-04-05",
+   "amount": -37.33,
+   "category": "shopping",
+   "counterparty": "Action"
+  },
+  {
+   "id": "1124",
+   "bookedOn": "2026-04-08",
+   "amount": -22.82,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "1125",
+   "bookedOn": "2026-04-08",
+   "amount": -23.8,
+   "category": "restaurants",
+   "counterparty": "Pizza Hut"
+  },
+  {
+   "id": "1126",
+   "bookedOn": "2026-04-09",
+   "amount": -10,
+   "category": "subscriptions",
+   "counterparty": "Streamz"
+  },
+  {
+   "id": "1127",
+   "bookedOn": "2026-04-09",
+   "amount": -100,
+   "category": "cash_withdrawal",
+   "counterparty": "KBC ATM"
+  },
+  {
+   "id": "1128",
+   "bookedOn": "2026-04-10",
+   "amount": -537.47,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "1129",
+   "bookedOn": "2026-04-11",
+   "amount": -24.04,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "1130",
+   "bookedOn": "2026-04-11",
+   "amount": -75.7,
+   "category": "shopping",
+   "counterparty": "Bol.com"
+  },
+  {
+   "id": "1131",
+   "bookedOn": "2026-04-13",
+   "amount": -51.31,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "1132",
+   "bookedOn": "2026-04-14",
+   "amount": -25,
+   "category": "subscriptions",
+   "counterparty": "De Standaard"
+  },
+  {
+   "id": "1133",
+   "bookedOn": "2026-04-14",
+   "amount": -48.6,
+   "category": "shopping",
+   "counterparty": "Primark"
+  },
+  {
+   "id": "1134",
+   "bookedOn": "2026-04-15",
+   "amount": -94.7,
+   "category": "energy_utilities",
+   "counterparty": "Luminus"
+  },
+  {
+   "id": "1135",
+   "bookedOn": "2026-04-16",
+   "amount": -38.71,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "1136",
+   "bookedOn": "2026-04-17",
+   "amount": -119.62,
+   "category": "shopping",
+   "counterparty": "Coolblue"
+  },
+  {
+   "id": "1137",
+   "bookedOn": "2026-04-20",
+   "amount": -52.68,
+   "category": "telecom",
+   "counterparty": "Proximus"
+  },
+  {
+   "id": "1138",
+   "bookedOn": "2026-04-20",
+   "amount": -85.34,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "1139",
+   "bookedOn": "2026-04-21",
+   "amount": -45,
+   "category": "fuel",
+   "counterparty": "Esso"
+  },
+  {
+   "id": "1140",
+   "bookedOn": "2026-04-23",
+   "amount": -30.26,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "1141",
+   "bookedOn": "2026-04-26",
+   "amount": 2372.73,
+   "category": "salary",
+   "counterparty": "Lumen Studio"
+  },
+  {
+   "id": "1142",
+   "bookedOn": "2026-04-26",
+   "amount": -83.44,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "1143",
+   "bookedOn": "2026-04-26",
+   "amount": -49.68,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "1144",
+   "bookedOn": "2026-04-26",
+   "amount": -61.65,
+   "category": "health",
+   "counterparty": "AZ Ziekenhuis"
+  },
+  {
+   "id": "1145",
+   "bookedOn": "2026-04-27",
+   "amount": -30,
+   "category": "subscriptions",
+   "counterparty": "Basic-Fit"
+  },
+  {
+   "id": "1146",
+   "bookedOn": "2026-04-27",
+   "amount": -25.16,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "1147",
+   "bookedOn": "2026-04-27",
+   "amount": -245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "1148",
+   "bookedOn": "2026-04-27",
+   "amount": 245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "1149",
+   "bookedOn": "2026-04-28",
+   "amount": -137.63,
+   "category": "shopping",
+   "counterparty": "Bol.com"
+  },
+  {
+   "id": "1150",
+   "bookedOn": "2026-04-30",
+   "amount": -22.21,
+   "category": "groceries",
+   "counterparty": "Aldi"
+  },
+  {
+   "id": "1151",
+   "bookedOn": "2026-04-30",
+   "amount": -53.14,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "1152",
+   "bookedOn": "2026-04-30",
+   "amount": -61.23,
+   "category": "fuel",
+   "counterparty": "Q8"
+  },
+  {
+   "id": "1153",
+   "bookedOn": "2026-05-01",
+   "amount": -25,
+   "category": "subscriptions",
+   "counterparty": "De Standaard"
+  },
+  {
+   "id": "1154",
+   "bookedOn": "2026-05-01",
+   "amount": -26.31,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "1155",
+   "bookedOn": "2026-05-02",
+   "amount": -28.9,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "1156",
+   "bookedOn": "2026-05-02",
+   "amount": -76.35,
+   "category": "fuel",
+   "counterparty": "Q8"
+  },
+  {
+   "id": "1157",
+   "bookedOn": "2026-05-03",
+   "amount": -10,
+   "category": "subscriptions",
+   "counterparty": "Streamz"
+  },
+  {
+   "id": "1158",
+   "bookedOn": "2026-05-03",
+   "amount": -161.88,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "1159",
+   "bookedOn": "2026-05-03",
+   "amount": -26.65,
+   "category": "restaurants",
+   "counterparty": "Ellis Gourmet Burger"
+  },
+  {
+   "id": "1160",
+   "bookedOn": "2026-05-05",
+   "amount": -1006,
+   "category": "rent",
+   "counterparty": "Landlord"
+  },
+  {
+   "id": "1161",
+   "bookedOn": "2026-05-10",
+   "amount": -537.47,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "1162",
+   "bookedOn": "2026-05-10",
+   "amount": -30,
+   "category": "subscriptions",
+   "counterparty": "Basic-Fit"
+  },
+  {
+   "id": "1163",
+   "bookedOn": "2026-05-11",
+   "amount": -68.74,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "1164",
+   "bookedOn": "2026-05-13",
+   "amount": -34.13,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "1165",
+   "bookedOn": "2026-05-13",
+   "amount": -321.07,
+   "category": "health",
+   "counterparty": "AZ Ziekenhuis"
+  },
+  {
+   "id": "1166",
+   "bookedOn": "2026-05-15",
+   "amount": -99.15,
+   "category": "energy_utilities",
+   "counterparty": "Luminus"
+  },
+  {
+   "id": "1167",
+   "bookedOn": "2026-05-15",
+   "amount": -30.89,
+   "category": "shopping",
+   "counterparty": "H&M"
+  },
+  {
+   "id": "1168",
+   "bookedOn": "2026-05-17",
+   "amount": -65.47,
+   "category": "fuel",
+   "counterparty": "Esso"
+  },
+  {
+   "id": "1169",
+   "bookedOn": "2026-05-18",
+   "amount": -98.84,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "1170",
+   "bookedOn": "2026-05-19",
+   "amount": -56.17,
+   "category": "fuel",
+   "counterparty": "Shell"
+  },
+  {
+   "id": "1171",
+   "bookedOn": "2026-05-19",
+   "amount": -116.37,
+   "category": "shopping",
+   "counterparty": "Bol.com"
+  },
+  {
+   "id": "1172",
+   "bookedOn": "2026-05-20",
+   "amount": -82.61,
+   "category": "telecom",
+   "counterparty": "Proximus"
+  },
+  {
+   "id": "1173",
+   "bookedOn": "2026-05-20",
+   "amount": -8.37,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "1174",
+   "bookedOn": "2026-05-22",
+   "amount": -36.82,
+   "category": "health",
+   "counterparty": "Huisartsenpraktijk"
+  },
+  {
+   "id": "1175",
+   "bookedOn": "2026-05-23",
+   "amount": -36.86,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "1176",
+   "bookedOn": "2026-05-24",
+   "amount": -51.81,
+   "category": "groceries",
+   "counterparty": "Aldi"
+  },
+  {
+   "id": "1177",
+   "bookedOn": "2026-05-24",
+   "amount": -8.31,
+   "category": "shopping",
+   "counterparty": "Hema"
+  },
+  {
+   "id": "1178",
+   "bookedOn": "2026-05-24",
+   "amount": -61.22,
+   "category": "shopping",
+   "counterparty": "Bol.com"
+  },
+  {
+   "id": "1179",
+   "bookedOn": "2026-05-25",
+   "amount": -48.26,
+   "category": "shopping",
+   "counterparty": "Primark"
+  },
+  {
+   "id": "1180",
+   "bookedOn": "2026-05-26",
+   "amount": 2346.36,
+   "category": "salary",
+   "counterparty": "Lumen Studio"
+  },
+  {
+   "id": "1181",
+   "bookedOn": "2026-05-27",
+   "amount": -245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "1182",
+   "bookedOn": "2026-05-27",
+   "amount": 245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "1183",
+   "bookedOn": "2026-06-01",
+   "amount": -1006,
+   "category": "rent",
+   "counterparty": "Landlord"
+  },
+  {
+   "id": "1184",
+   "bookedOn": "2026-06-03",
+   "amount": -161.88,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "1185",
+   "bookedOn": "2026-06-03",
+   "amount": -18.67,
+   "category": "shopping",
+   "counterparty": "Primark"
+  },
+  {
+   "id": "1186",
+   "bookedOn": "2026-06-05",
+   "amount": -21.87,
+   "category": "public_transport",
+   "counterparty": "De Lijn"
+  },
+  {
+   "id": "1187",
+   "bookedOn": "2026-06-06",
+   "amount": -58.09,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "1188",
+   "bookedOn": "2026-06-07",
+   "amount": -83.52,
+   "category": "fuel",
+   "counterparty": "Shell"
+  },
+  {
+   "id": "1189",
+   "bookedOn": "2026-06-08",
+   "amount": -25,
+   "category": "subscriptions",
+   "counterparty": "De Standaard"
+  },
+  {
+   "id": "1190",
+   "bookedOn": "2026-06-10",
+   "amount": -537.47,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "1191",
+   "bookedOn": "2026-06-11",
+   "amount": -31.46,
+   "category": "restaurants",
+   "counterparty": "Ellis Gourmet Burger"
+  },
+  {
+   "id": "1192",
+   "bookedOn": "2026-06-13",
+   "amount": -69.41,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "1193",
+   "bookedOn": "2026-06-15",
+   "amount": -99.34,
+   "category": "energy_utilities",
+   "counterparty": "Luminus"
+  },
+  {
+   "id": "1194",
+   "bookedOn": "2026-06-15",
+   "amount": -34.39,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "1195",
+   "bookedOn": "2026-06-16",
+   "amount": -41.29,
+   "category": "restaurants",
+   "counterparty": "Pizza Hut"
+  },
+  {
+   "id": "1196",
+   "bookedOn": "2026-06-17",
+   "amount": -22.77,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "1197",
+   "bookedOn": "2026-06-19",
+   "amount": -13.71,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "1198",
+   "bookedOn": "2026-06-20",
+   "amount": -77.61,
+   "category": "telecom",
+   "counterparty": "Proximus"
+  },
+  {
+   "id": "1199",
+   "bookedOn": "2026-06-21",
+   "amount": -10,
+   "category": "subscriptions",
+   "counterparty": "Streamz"
+  },
+  {
+   "id": "1200",
+   "bookedOn": "2026-06-21",
+   "amount": -67.69,
+   "category": "fuel",
+   "counterparty": "Shell"
+  },
+  {
+   "id": "1201",
+   "bookedOn": "2026-06-21",
+   "amount": -60.72,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "1202",
+   "bookedOn": "2026-06-21",
+   "amount": -70.51,
+   "category": "shopping",
+   "counterparty": "Bol.com"
+  },
+  {
+   "id": "1203",
+   "bookedOn": "2026-06-23",
+   "amount": -28.57,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "1204",
+   "bookedOn": "2026-06-26",
+   "amount": 2356.28,
+   "category": "salary",
+   "counterparty": "Lumen Studio"
+  },
+  {
+   "id": "1205",
+   "bookedOn": "2026-06-26",
+   "amount": -30,
+   "category": "subscriptions",
+   "counterparty": "Basic-Fit"
+  },
+  {
+   "id": "1206",
+   "bookedOn": "2026-06-27",
+   "amount": -245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "1207",
+   "bookedOn": "2026-06-27",
+   "amount": 245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "1208",
+   "bookedOn": "2026-07-02",
+   "amount": -78.32,
+   "category": "fuel",
+   "counterparty": "Esso"
+  },
+  {
+   "id": "1209",
+   "bookedOn": "2026-07-02",
+   "amount": -42.11,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "1210",
+   "bookedOn": "2026-07-03",
+   "amount": -1006,
+   "category": "rent",
+   "counterparty": "Landlord"
+  },
+  {
+   "id": "1211",
+   "bookedOn": "2026-07-03",
+   "amount": -161.88,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "1212",
+   "bookedOn": "2026-07-03",
+   "amount": -56.5,
+   "category": "fuel",
+   "counterparty": "Q8"
+  },
+  {
+   "id": "1213",
+   "bookedOn": "2026-07-03",
+   "amount": -8.61,
+   "category": "shopping",
+   "counterparty": "Hema"
+  },
+  {
+   "id": "1214",
+   "bookedOn": "2026-07-05",
+   "amount": -25,
+   "category": "subscriptions",
+   "counterparty": "De Standaard"
+  },
+  {
+   "id": "1215",
+   "bookedOn": "2026-07-05",
+   "amount": -30,
+   "category": "subscriptions",
+   "counterparty": "Basic-Fit"
+  },
+  {
+   "id": "1216",
+   "bookedOn": "2026-07-05",
+   "amount": -43.39,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "1217",
+   "bookedOn": "2026-07-08",
+   "amount": -94.42,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "1218",
+   "bookedOn": "2026-07-08",
+   "amount": -39.31,
+   "category": "restaurants",
+   "counterparty": "Pizza Hut"
+  },
+  {
+   "id": "1219",
+   "bookedOn": "2026-07-10",
+   "amount": -537.47,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "1220",
+   "bookedOn": "2026-07-11",
+   "amount": -10,
+   "category": "subscriptions",
+   "counterparty": "Streamz"
+  },
+  {
+   "id": "1221",
+   "bookedOn": "2026-07-12",
+   "amount": -26.42,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "1222",
+   "bookedOn": "2026-07-15",
+   "amount": -92.53,
+   "category": "energy_utilities",
+   "counterparty": "Luminus"
+  },
+  {
+   "id": "1223",
+   "bookedOn": "2026-07-16",
+   "amount": -38.63,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "1224",
+   "bookedOn": "2026-07-18",
+   "amount": -10.02,
+   "category": "public_transport",
+   "counterparty": "De Lijn"
+  },
+  {
+   "id": "1225",
+   "bookedOn": "2026-07-20",
+   "amount": -77.51,
+   "category": "telecom",
+   "counterparty": "Proximus"
+  },
+  {
+   "id": "1226",
+   "bookedOn": "2026-07-22",
+   "amount": -37.57,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "1227",
+   "bookedOn": "2026-07-23",
+   "amount": -72,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "1228",
+   "bookedOn": "2026-07-26",
+   "amount": 2357.42,
+   "category": "salary",
+   "counterparty": "Lumen Studio"
+  },
+  {
+   "id": "1229",
+   "bookedOn": "2026-07-26",
+   "amount": -17.8,
+   "category": "public_transport",
+   "counterparty": "De Lijn"
+  },
+  {
+   "id": "1230",
+   "bookedOn": "2026-07-27",
+   "amount": -35.19,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "1231",
+   "bookedOn": "2026-07-27",
+   "amount": -245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "1232",
+   "bookedOn": "2026-07-27",
+   "amount": 245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "1233",
+   "bookedOn": "2026-07-29",
+   "amount": -79.16,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "1234",
+   "bookedOn": "2026-07-29",
+   "amount": -76.87,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "1235",
+   "bookedOn": "2026-07-29",
+   "amount": -22.11,
+   "category": "shopping",
+   "counterparty": "Action"
+  },
+  {
+   "id": "1236",
+   "bookedOn": "2026-07-30",
+   "amount": -32.66,
+   "category": "groceries",
+   "counterparty": "Aldi"
+  },
+  {
+   "id": "1237",
+   "bookedOn": "2026-07-30",
+   "amount": -15.8,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "1238",
+   "bookedOn": "2026-07-30",
+   "amount": -337.89,
+   "category": "car_maintenance",
+   "counterparty": "Midas"
+  },
+  {
+   "id": "1239",
+   "bookedOn": "2026-07-30",
+   "amount": -26.28,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "1240",
+   "bookedOn": "2026-07-31",
+   "amount": -15.96,
+   "category": "shopping",
+   "counterparty": "Hema"
+  },
+  {
+   "id": "1241",
+   "bookedOn": "2026-08-01",
+   "amount": -47.81,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "1242",
+   "bookedOn": "2026-08-01",
+   "amount": -34.44,
+   "category": "restaurants",
+   "counterparty": "Le Pain Quotidien"
+  },
+  {
+   "id": "1243",
+   "bookedOn": "2026-08-03",
+   "amount": -161.88,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "1244",
+   "bookedOn": "2026-08-03",
+   "amount": -10.35,
+   "category": "restaurants",
+   "counterparty": "Panos"
+  },
+  {
+   "id": "1245",
+   "bookedOn": "2026-08-03",
+   "amount": -526.01,
+   "category": "health",
+   "counterparty": "AZ Ziekenhuis"
+  },
+  {
+   "id": "1246",
+   "bookedOn": "2026-08-04",
+   "amount": -25,
+   "category": "subscriptions",
+   "counterparty": "De Standaard"
+  },
+  {
+   "id": "1247",
+   "bookedOn": "2026-08-05",
+   "amount": -1006,
+   "category": "rent",
+   "counterparty": "Landlord"
+  },
+  {
+   "id": "1248",
+   "bookedOn": "2026-08-06",
+   "amount": -224.36,
+   "category": "travel",
+   "counterparty": "Ryanair"
+  },
+  {
+   "id": "1249",
+   "bookedOn": "2026-08-07",
+   "amount": -74.53,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "1250",
+   "bookedOn": "2026-08-08",
+   "amount": -24.53,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "1251",
+   "bookedOn": "2026-08-08",
+   "amount": -62.89,
+   "category": "shopping",
+   "counterparty": "Coolblue"
+  },
+  {
+   "id": "1252",
+   "bookedOn": "2026-08-09",
+   "amount": -10,
+   "category": "subscriptions",
+   "counterparty": "Streamz"
+  },
+  {
+   "id": "1253",
+   "bookedOn": "2026-08-10",
+   "amount": -537.47,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "1254",
+   "bookedOn": "2026-08-10",
+   "amount": -30,
+   "category": "subscriptions",
+   "counterparty": "Basic-Fit"
+  },
+  {
+   "id": "1255",
+   "bookedOn": "2026-08-10",
+   "amount": -8.89,
+   "category": "public_transport",
+   "counterparty": "De Lijn"
+  },
+  {
+   "id": "1256",
+   "bookedOn": "2026-08-12",
+   "amount": -12.86,
+   "category": "restaurants",
+   "counterparty": "Le Pain Quotidien"
+  },
+  {
+   "id": "1257",
+   "bookedOn": "2026-08-15",
+   "amount": -87.51,
+   "category": "energy_utilities",
+   "counterparty": "Luminus"
+  },
+  {
+   "id": "1258",
+   "bookedOn": "2026-08-15",
+   "amount": -58.11,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "1259",
+   "bookedOn": "2026-08-16",
+   "amount": -62.42,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "1260",
+   "bookedOn": "2026-08-18",
+   "amount": -36.19,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "1261",
+   "bookedOn": "2026-08-18",
+   "amount": -32.78,
+   "category": "public_transport",
+   "counterparty": "NMBS/SNCB"
+  },
+  {
+   "id": "1262",
+   "bookedOn": "2026-08-20",
+   "amount": -70.97,
+   "category": "telecom",
+   "counterparty": "Proximus"
+  },
+  {
+   "id": "1263",
+   "bookedOn": "2026-08-20",
+   "amount": -44.55,
+   "category": "shopping",
+   "counterparty": "Zalando"
+  },
+  {
+   "id": "1264",
+   "bookedOn": "2026-08-21",
+   "amount": -62.56,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "1265",
+   "bookedOn": "2026-08-21",
+   "amount": -92.85,
+   "category": "fuel",
+   "counterparty": "Shell"
+  },
+  {
+   "id": "1266",
+   "bookedOn": "2026-08-22",
+   "amount": -97.4,
+   "category": "health",
+   "counterparty": "Tandarts"
+  },
+  {
+   "id": "1267",
+   "bookedOn": "2026-08-24",
+   "amount": -95.89,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "1268",
+   "bookedOn": "2026-08-24",
+   "amount": -83.77,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "1269",
+   "bookedOn": "2026-08-24",
+   "amount": -445.34,
+   "category": "car_maintenance",
+   "counterparty": "Midas"
+  },
+  {
+   "id": "1270",
+   "bookedOn": "2026-08-25",
+   "amount": -58,
+   "category": "shopping",
+   "counterparty": "Bol.com"
+  },
+  {
+   "id": "1271",
+   "bookedOn": "2026-08-26",
+   "amount": 2376.33,
+   "category": "salary",
+   "counterparty": "Lumen Studio"
+  },
+  {
+   "id": "1272",
+   "bookedOn": "2026-08-27",
+   "amount": -20.14,
+   "category": "restaurants",
+   "counterparty": "Le Pain Quotidien"
+  },
+  {
+   "id": "1273",
+   "bookedOn": "2026-08-27",
+   "amount": -245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "1274",
+   "bookedOn": "2026-08-27",
+   "amount": 245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "1275",
+   "bookedOn": "2026-08-29",
+   "amount": -32.69,
+   "category": "restaurants",
+   "counterparty": "Pizza Hut"
+  },
+  {
+   "id": "1276",
+   "bookedOn": "2026-09-01",
+   "amount": -35.46,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "1277",
+   "bookedOn": "2026-09-01",
+   "amount": -18.62,
+   "category": "restaurants",
+   "counterparty": "Le Pain Quotidien"
+  },
+  {
+   "id": "1278",
+   "bookedOn": "2026-09-03",
+   "amount": -1006,
+   "category": "rent",
+   "counterparty": "Landlord"
+  },
+  {
+   "id": "1279",
+   "bookedOn": "2026-09-03",
+   "amount": -161.88,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "1280",
+   "bookedOn": "2026-09-05",
+   "amount": -82,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "1281",
+   "bookedOn": "2026-09-06",
+   "amount": -26.27,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "1282",
+   "bookedOn": "2026-09-07",
+   "amount": -14.47,
+   "category": "restaurants",
+   "counterparty": "Le Pain Quotidien"
+  },
+  {
+   "id": "1283",
+   "bookedOn": "2026-09-08",
+   "amount": -29.56,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "1284",
+   "bookedOn": "2026-09-09",
+   "amount": -46.04,
+   "category": "restaurants",
+   "counterparty": "Ellis Gourmet Burger"
+  },
+  {
+   "id": "1285",
+   "bookedOn": "2026-09-10",
+   "amount": -537.47,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "1286",
+   "bookedOn": "2026-09-10",
+   "amount": -114.51,
+   "category": "other",
+   "counterparty": "Payconiq transfer"
+  },
+  {
+   "id": "1287",
+   "bookedOn": "2026-09-11",
+   "amount": -51.85,
+   "category": "fuel",
+   "counterparty": "Shell"
+  },
+  {
+   "id": "1288",
+   "bookedOn": "2026-09-12",
+   "amount": -12.73,
+   "category": "restaurants",
+   "counterparty": "Panos"
+  },
+  {
+   "id": "1289",
+   "bookedOn": "2026-09-15",
+   "amount": -101.04,
+   "category": "energy_utilities",
+   "counterparty": "Luminus"
+  },
+  {
+   "id": "1290",
+   "bookedOn": "2026-09-15",
+   "amount": -16.23,
+   "category": "restaurants",
+   "counterparty": "Panos"
+  },
+  {
+   "id": "1291",
+   "bookedOn": "2026-09-16",
+   "amount": -46.32,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "1292",
+   "bookedOn": "2026-09-17",
+   "amount": -18.24,
+   "category": "public_transport",
+   "counterparty": "De Lijn"
+  },
+  {
+   "id": "1293",
+   "bookedOn": "2026-09-18",
+   "amount": -23.9,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "1294",
+   "bookedOn": "2026-09-19",
+   "amount": -32.06,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "1295",
+   "bookedOn": "2026-09-19",
+   "amount": -37.52,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "1296",
+   "bookedOn": "2026-09-20",
+   "amount": -65.94,
+   "category": "telecom",
+   "counterparty": "Proximus"
+  },
+  {
+   "id": "1297",
+   "bookedOn": "2026-09-20",
+   "amount": -25,
+   "category": "subscriptions",
+   "counterparty": "De Standaard"
+  },
+  {
+   "id": "1298",
+   "bookedOn": "2026-09-20",
+   "amount": -30,
+   "category": "subscriptions",
+   "counterparty": "Basic-Fit"
+  },
+  {
+   "id": "1299",
+   "bookedOn": "2026-09-21",
+   "amount": -23.75,
+   "category": "shopping",
+   "counterparty": "Action"
+  },
+  {
+   "id": "1300",
+   "bookedOn": "2026-09-22",
+   "amount": -10,
+   "category": "subscriptions",
+   "counterparty": "Streamz"
+  },
+  {
+   "id": "1301",
+   "bookedOn": "2026-09-22",
+   "amount": -14.68,
+   "category": "restaurants",
+   "counterparty": "Panos"
+  },
+  {
+   "id": "1302",
+   "bookedOn": "2026-09-24",
+   "amount": -9.52,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "1303",
+   "bookedOn": "2026-09-25",
+   "amount": -64.17,
+   "category": "fuel",
+   "counterparty": "Q8"
+  },
+  {
+   "id": "1304",
+   "bookedOn": "2026-09-26",
+   "amount": 2389.87,
+   "category": "salary",
+   "counterparty": "Lumen Studio"
+  },
+  {
+   "id": "1305",
+   "bookedOn": "2026-09-27",
+   "amount": -28.61,
+   "category": "health",
+   "counterparty": "Apotheek"
+  },
+  {
+   "id": "1306",
+   "bookedOn": "2026-09-27",
+   "amount": -245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "1307",
+   "bookedOn": "2026-09-27",
+   "amount": 245.69,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  }
+ ],
+ "appEvents": [
+  {
+   "id": "646",
+   "occurredAt": "2026-04-02T12:56:36+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "647",
+   "occurredAt": "2026-04-06T08:50:38+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 43,
+   "detail": {}
+  },
+  {
+   "id": "648",
+   "occurredAt": "2026-04-06T11:11:12+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "649",
+   "occurredAt": "2026-04-06T14:50:24+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "650",
+   "occurredAt": "2026-04-06T18:34:18+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "651",
+   "occurredAt": "2026-04-06T20:02:36+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 43,
+   "detail": {}
+  },
+  {
+   "id": "652",
+   "occurredAt": "2026-04-06T20:30:12+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "653",
+   "occurredAt": "2026-04-06T21:49:00+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 211,
+   "detail": {}
+  },
+  {
+   "id": "654",
+   "occurredAt": "2026-04-11T04:13:58+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": 223,
+   "detail": {
+    "question": "Block my debit card"
+   }
+  },
+  {
+   "id": "655",
+   "occurredAt": "2026-04-12T10:57:18+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": 224,
+   "detail": {
+    "question": "Transfer 50 euros to my savings account"
+   }
+  },
+  {
+   "id": "656",
+   "occurredAt": "2026-04-14T12:18:01+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 65,
+   "detail": {}
+  },
+  {
+   "id": "657",
+   "occurredAt": "2026-04-14T19:24:11+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 155,
+   "detail": {}
+  },
+  {
+   "id": "658",
+   "occurredAt": "2026-04-15T07:00:54+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "659",
+   "occurredAt": "2026-04-18T08:54:55+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "660",
+   "occurredAt": "2026-04-18T09:38:12+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "661",
+   "occurredAt": "2026-04-21T09:07:49+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 8,
+   "detail": {}
+  },
+  {
+   "id": "662",
+   "occurredAt": "2026-04-25T11:15:26+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 201,
+   "detail": {}
+  },
+  {
+   "id": "663",
+   "occurredAt": "2026-04-25T19:10:12+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 223,
+   "detail": {}
+  },
+  {
+   "id": "664",
+   "occurredAt": "2026-05-03T16:24:48+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 215,
+   "detail": {}
+  },
+  {
+   "id": "665",
+   "occurredAt": "2026-05-03T20:53:09+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "666",
+   "occurredAt": "2026-05-20T19:50:23+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "667",
+   "occurredAt": "2026-05-24T18:36:02+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 155,
+   "detail": {}
+  },
+  {
+   "id": "668",
+   "occurredAt": "2026-06-02T11:48:18+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 204,
+   "detail": {}
+  },
+  {
+   "id": "669",
+   "occurredAt": "2026-06-04T08:15:02+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "670",
+   "occurredAt": "2026-06-04T19:02:41+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 152,
+   "detail": {}
+  },
+  {
+   "id": "671",
+   "occurredAt": "2026-06-04T19:38:25+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "672",
+   "occurredAt": "2026-06-13T01:41:34+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "673",
+   "occurredAt": "2026-06-13T07:34:53+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "674",
+   "occurredAt": "2026-07-01T19:47:56+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "675",
+   "occurredAt": "2026-07-03T18:20:49+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "676",
+   "occurredAt": "2026-07-05T15:23:24+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "677",
+   "occurredAt": "2026-07-11T12:33:43+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "678",
+   "occurredAt": "2026-07-11T13:41:20+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 31,
+   "detail": {}
+  },
+  {
+   "id": "679",
+   "occurredAt": "2026-07-11T17:11:04+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "680",
+   "occurredAt": "2026-07-13T07:09:34+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 152,
+   "detail": {}
+  },
+  {
+   "id": "681",
+   "occurredAt": "2026-07-17T08:45:42+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 157,
+   "detail": {}
+  },
+  {
+   "id": "682",
+   "occurredAt": "2026-07-19T09:47:26+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 2,
+   "detail": {}
+  },
+  {
+   "id": "683",
+   "occurredAt": "2026-07-24T07:01:49+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": 222,
+   "detail": {
+    "question": "What are my fixed costs?"
+   }
+  },
+  {
+   "id": "684",
+   "occurredAt": "2026-07-26T06:56:54+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "685",
+   "occurredAt": "2026-07-26T08:22:54+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "686",
+   "occurredAt": "2026-07-26T20:25:47+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "687",
+   "occurredAt": "2026-07-26T20:59:57+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "688",
+   "occurredAt": "2026-07-28T14:36:21+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "689",
+   "occurredAt": "2026-07-31T04:04:34+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "690",
+   "occurredAt": "2026-07-31T08:54:18+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 153,
+   "detail": {}
+  },
+  {
+   "id": "691",
+   "occurredAt": "2026-07-31T09:37:38+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "692",
+   "occurredAt": "2026-07-31T10:16:54+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "693",
+   "occurredAt": "2026-07-31T14:22:36+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "694",
+   "occurredAt": "2026-07-31T22:13:08+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 153,
+   "detail": {}
+  },
+  {
+   "id": "695",
+   "occurredAt": "2026-08-02T00:38:19+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 226,
+   "detail": {}
+  },
+  {
+   "id": "696",
+   "occurredAt": "2026-08-02T06:52:48+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 31,
+   "detail": {}
+  },
+  {
+   "id": "697",
+   "occurredAt": "2026-08-02T07:42:25+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "698",
+   "occurredAt": "2026-08-02T09:02:54+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 42,
+   "detail": {}
+  },
+  {
+   "id": "699",
+   "occurredAt": "2026-08-02T14:31:49+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 31,
+   "detail": {}
+  },
+  {
+   "id": "700",
+   "occurredAt": "2026-08-02T17:27:53+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "701",
+   "occurredAt": "2026-08-02T18:04:17+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 65,
+   "detail": {}
+  },
+  {
+   "id": "702",
+   "occurredAt": "2026-08-02T19:40:25+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 65,
+   "detail": {}
+  },
+  {
+   "id": "703",
+   "occurredAt": "2026-08-12T09:14:02+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 201,
+   "detail": {}
+  },
+  {
+   "id": "704",
+   "occurredAt": "2026-08-12T13:23:45+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "705",
+   "occurredAt": "2026-08-12T22:51:33+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "706",
+   "occurredAt": "2026-08-13T00:46:15+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "707",
+   "occurredAt": "2026-08-13T08:37:25+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "708",
+   "occurredAt": "2026-08-13T21:56:47+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "709",
+   "occurredAt": "2026-08-14T08:15:28+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 204,
+   "detail": {}
+  },
+  {
+   "id": "710",
+   "occurredAt": "2026-08-14T09:46:48+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 127,
+   "detail": {}
+  },
+  {
+   "id": "711",
+   "occurredAt": "2026-08-19T14:46:30+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 153,
+   "detail": {}
+  },
+  {
+   "id": "712",
+   "occurredAt": "2026-08-19T18:36:56+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "713",
+   "occurredAt": "2026-08-23T06:29:36+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "714",
+   "occurredAt": "2026-08-23T08:48:27+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "715",
+   "occurredAt": "2026-08-23T11:12:16+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 223,
+   "detail": {}
+  },
+  {
+   "id": "716",
+   "occurredAt": "2026-08-23T16:41:47+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "717",
+   "occurredAt": "2026-08-23T20:16:16+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 127,
+   "detail": {}
+  },
+  {
+   "id": "718",
+   "occurredAt": "2026-08-24T09:41:18+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 18,
+   "detail": {}
+  },
+  {
+   "id": "719",
+   "occurredAt": "2026-08-26T08:26:24+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "720",
+   "occurredAt": "2026-08-26T22:15:24+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "721",
+   "occurredAt": "2026-08-29T17:47:52+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 204,
+   "detail": {}
+  },
+  {
+   "id": "722",
+   "occurredAt": "2026-08-30T09:26:42+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "723",
+   "occurredAt": "2026-08-30T12:53:03+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "724",
+   "occurredAt": "2026-08-30T17:25:41+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "725",
+   "occurredAt": "2026-09-01T09:03:54+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "726",
+   "occurredAt": "2026-09-01T18:02:39+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "727",
+   "occurredAt": "2026-09-03T09:37:36+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 152,
+   "detail": {}
+  },
+  {
+   "id": "728",
+   "occurredAt": "2026-09-03T12:33:52+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "729",
+   "occurredAt": "2026-09-03T20:00:54+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "730",
+   "occurredAt": "2026-09-05T17:06:54+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "731",
+   "occurredAt": "2026-09-08T19:55:54+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "732",
+   "occurredAt": "2026-09-09T14:45:33+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 226,
+   "detail": {}
+  },
+  {
+   "id": "733",
+   "occurredAt": "2026-09-09T22:26:23+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 155,
+   "detail": {}
+  },
+  {
+   "id": "734",
+   "occurredAt": "2026-09-11T20:17:45+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 127,
+   "detail": {}
+  },
+  {
+   "id": "735",
+   "occurredAt": "2026-09-12T07:21:18+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 15,
+   "detail": {}
+  },
+  {
+   "id": "736",
+   "occurredAt": "2026-09-14T09:14:09+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 31,
+   "detail": {}
+  },
+  {
+   "id": "737",
+   "occurredAt": "2026-09-15T05:11:05+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": 222,
+   "detail": {
+    "question": "What are my fixed costs?"
+   }
+  },
+  {
+   "id": "738",
+   "occurredAt": "2026-09-16T16:13:16+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 15,
+   "detail": {}
+  },
+  {
+   "id": "739",
+   "occurredAt": "2026-09-25T19:00:38+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "740",
+   "occurredAt": "2026-09-25T19:49:39+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 65,
+   "detail": {}
+  },
+  {
+   "id": "741",
+   "occurredAt": "2026-09-27T16:21:12+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 15,
+   "detail": {}
+  },
+  {
+   "id": "742",
+   "occurredAt": "2026-09-28T14:09:17+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 152,
+   "detail": {}
+  },
+  {
+   "id": "743",
+   "occurredAt": "2026-09-30T18:07:36+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 2,
+   "detail": {}
+  }
+ ],
+ "injectedEvents": []
+}

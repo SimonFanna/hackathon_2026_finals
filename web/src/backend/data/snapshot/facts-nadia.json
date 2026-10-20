@@ -1,0 +1,2777 @@
+{
+ "asOf": "2026-10-01",
+ "customer": {
+  "id": 3,
+  "slug": "nadia",
+  "firstName": "Nadia",
+  "birthDate": "1995-06-23",
+  "region": "flanders",
+  "maritalStatus": "cohabiting",
+  "segment": "private",
+  "language": "nl"
+ },
+ "employment": {
+  "status": "employee",
+  "monthlyNetIncome": 2688.23,
+  "since": "2021-05-18"
+ },
+ "housing": {
+  "status": "owner",
+  "monthlyRent": null
+ },
+ "children": [
+  {
+   "birthDate": "2026-09-07"
+  }
+ ],
+ "properties": [
+  {
+   "kind": "house",
+   "buildYear": 1962,
+   "epcLabel": "D",
+   "estimatedValue": 348000
+  }
+ ],
+ "accounts": [
+  {
+   "kind": "current",
+   "balance": 1964.14,
+   "sourceRow": 141
+  },
+  {
+   "kind": "savings",
+   "balance": 51529.91,
+   "sourceRow": 74
+  }
+ ],
+ "loans": [
+  {
+   "kind": "home",
+   "monthlyPayment": 1106.03,
+   "outstanding": 204489.67,
+   "status": "active",
+   "sourceRow": 2
+  },
+  {
+   "kind": "car",
+   "monthlyPayment": 572.37,
+   "outstanding": 3383.63,
+   "status": "active",
+   "sourceRow": 25
+  }
+ ],
+ "holdings": [
+  {
+   "sourceRow": 147,
+   "status": "active"
+  },
+  {
+   "sourceRow": 148,
+   "status": "active"
+  },
+  {
+   "sourceRow": 152,
+   "status": "active"
+  },
+  {
+   "sourceRow": 8,
+   "status": "active"
+  },
+  {
+   "sourceRow": 31,
+   "status": "active"
+  },
+  {
+   "sourceRow": 157,
+   "status": "active"
+  },
+  {
+   "sourceRow": 65,
+   "status": "active"
+  },
+  {
+   "sourceRow": 10,
+   "status": "active"
+  },
+  {
+   "sourceRow": 127,
+   "status": "active"
+  }
+ ],
+ "transactions": [
+  {
+   "id": "414",
+   "bookedOn": "2026-04-01",
+   "amount": -129.21,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "415",
+   "bookedOn": "2026-04-01",
+   "amount": -70.13,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "416",
+   "bookedOn": "2026-04-02",
+   "amount": -23.99,
+   "category": "furniture",
+   "counterparty": "Casa"
+  },
+  {
+   "id": "417",
+   "bookedOn": "2026-04-03",
+   "amount": -163.58,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "418",
+   "bookedOn": "2026-04-07",
+   "amount": -53.54,
+   "category": "restaurants",
+   "counterparty": "Ellis Gourmet Burger"
+  },
+  {
+   "id": "419",
+   "bookedOn": "2026-04-08",
+   "amount": -52.14,
+   "category": "fuel",
+   "counterparty": "Q8"
+  },
+  {
+   "id": "420",
+   "bookedOn": "2026-04-09",
+   "amount": -26.62,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "421",
+   "bookedOn": "2026-04-10",
+   "amount": -1106.03,
+   "category": "mortgage_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "422",
+   "bookedOn": "2026-04-10",
+   "amount": -572.37,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "423",
+   "bookedOn": "2026-04-11",
+   "amount": -78.65,
+   "category": "shopping",
+   "counterparty": "H&M"
+  },
+  {
+   "id": "424",
+   "bookedOn": "2026-04-12",
+   "amount": -150,
+   "category": "investment",
+   "counterparty": "KBC Asset Management"
+  },
+  {
+   "id": "425",
+   "bookedOn": "2026-04-13",
+   "amount": -539.39,
+   "category": "travel",
+   "counterparty": "Booking.com"
+  },
+  {
+   "id": "426",
+   "bookedOn": "2026-04-14",
+   "amount": -88.37,
+   "category": "groceries",
+   "counterparty": "Aldi"
+  },
+  {
+   "id": "427",
+   "bookedOn": "2026-04-14",
+   "amount": -13.07,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "428",
+   "bookedOn": "2026-04-15",
+   "amount": -140.88,
+   "category": "energy_utilities",
+   "counterparty": "TotalEnergies Power & Gas"
+  },
+  {
+   "id": "429",
+   "bookedOn": "2026-04-16",
+   "amount": -105.89,
+   "category": "other",
+   "counterparty": "Payconiq transfer"
+  },
+  {
+   "id": "430",
+   "bookedOn": "2026-04-20",
+   "amount": -21.75,
+   "category": "telecom",
+   "counterparty": "BASE"
+  },
+  {
+   "id": "431",
+   "bookedOn": "2026-04-22",
+   "amount": -44.96,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "432",
+   "bookedOn": "2026-04-22",
+   "amount": -198.29,
+   "category": "health",
+   "counterparty": "AZ Ziekenhuis"
+  },
+  {
+   "id": "433",
+   "bookedOn": "2026-04-23",
+   "amount": -69.87,
+   "category": "groceries",
+   "counterparty": "Aldi"
+  },
+  {
+   "id": "434",
+   "bookedOn": "2026-04-23",
+   "amount": -83.8,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "435",
+   "bookedOn": "2026-04-23",
+   "amount": -19.91,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "436",
+   "bookedOn": "2026-04-24",
+   "amount": -29.04,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "437",
+   "bookedOn": "2026-04-25",
+   "amount": -274.06,
+   "category": "home_improvement",
+   "counterparty": "Gamma"
+  },
+  {
+   "id": "438",
+   "bookedOn": "2026-04-26",
+   "amount": 2735.64,
+   "category": "salary",
+   "counterparty": "Kempen Studio"
+  },
+  {
+   "id": "439",
+   "bookedOn": "2026-04-26",
+   "amount": -14.5,
+   "category": "subscriptions",
+   "counterparty": "Spotify"
+  },
+  {
+   "id": "440",
+   "bookedOn": "2026-04-26",
+   "amount": -27.63,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "441",
+   "bookedOn": "2026-04-27",
+   "amount": -69.25,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "442",
+   "bookedOn": "2026-04-27",
+   "amount": -384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "443",
+   "bookedOn": "2026-04-27",
+   "amount": 384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "444",
+   "bookedOn": "2026-04-29",
+   "amount": -39.77,
+   "category": "restaurants",
+   "counterparty": "Pizza Hut"
+  },
+  {
+   "id": "445",
+   "bookedOn": "2026-04-30",
+   "amount": -28.96,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "446",
+   "bookedOn": "2026-05-02",
+   "amount": -50.22,
+   "category": "fuel",
+   "counterparty": "Shell"
+  },
+  {
+   "id": "447",
+   "bookedOn": "2026-05-03",
+   "amount": -163.58,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "448",
+   "bookedOn": "2026-05-03",
+   "amount": -113.3,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "449",
+   "bookedOn": "2026-05-04",
+   "amount": -57.75,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "450",
+   "bookedOn": "2026-05-06",
+   "amount": -30.73,
+   "category": "restaurants",
+   "counterparty": "Pizza Hut"
+  },
+  {
+   "id": "451",
+   "bookedOn": "2026-05-08",
+   "amount": -82.47,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "452",
+   "bookedOn": "2026-05-10",
+   "amount": -1106.03,
+   "category": "mortgage_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "453",
+   "bookedOn": "2026-05-10",
+   "amount": -572.37,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "454",
+   "bookedOn": "2026-05-10",
+   "amount": -24.63,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "455",
+   "bookedOn": "2026-05-11",
+   "amount": -73.89,
+   "category": "fuel",
+   "counterparty": "Shell"
+  },
+  {
+   "id": "456",
+   "bookedOn": "2026-05-12",
+   "amount": -100,
+   "category": "investment",
+   "counterparty": "KBC Asset Management"
+  },
+  {
+   "id": "457",
+   "bookedOn": "2026-05-13",
+   "amount": -88.64,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "458",
+   "bookedOn": "2026-05-13",
+   "amount": -70.8,
+   "category": "restaurants",
+   "counterparty": "Brasserie Lombard"
+  },
+  {
+   "id": "459",
+   "bookedOn": "2026-05-14",
+   "amount": -130.16,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "460",
+   "bookedOn": "2026-05-15",
+   "amount": -163.2,
+   "category": "energy_utilities",
+   "counterparty": "TotalEnergies Power & Gas"
+  },
+  {
+   "id": "461",
+   "bookedOn": "2026-05-16",
+   "amount": -55.86,
+   "category": "fuel",
+   "counterparty": "Esso"
+  },
+  {
+   "id": "462",
+   "bookedOn": "2026-05-16",
+   "amount": -90.95,
+   "category": "shopping",
+   "counterparty": "Coolblue"
+  },
+  {
+   "id": "463",
+   "bookedOn": "2026-05-17",
+   "amount": -89.64,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "464",
+   "bookedOn": "2026-05-20",
+   "amount": -29.96,
+   "category": "telecom",
+   "counterparty": "BASE"
+  },
+  {
+   "id": "465",
+   "bookedOn": "2026-05-21",
+   "amount": -42.97,
+   "category": "other",
+   "counterparty": "Payconiq transfer"
+  },
+  {
+   "id": "466",
+   "bookedOn": "2026-05-22",
+   "amount": -49.49,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "467",
+   "bookedOn": "2026-05-22",
+   "amount": -16.84,
+   "category": "restaurants",
+   "counterparty": "Panos"
+  },
+  {
+   "id": "468",
+   "bookedOn": "2026-05-23",
+   "amount": -68.19,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "469",
+   "bookedOn": "2026-05-23",
+   "amount": -9.43,
+   "category": "restaurants",
+   "counterparty": "Panos"
+  },
+  {
+   "id": "470",
+   "bookedOn": "2026-05-24",
+   "amount": -92.4,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "471",
+   "bookedOn": "2026-05-24",
+   "amount": -110.85,
+   "category": "shopping",
+   "counterparty": "Bol.com"
+  },
+  {
+   "id": "472",
+   "bookedOn": "2026-05-25",
+   "amount": -159.79,
+   "category": "baby_kids",
+   "counterparty": "Baby-Dump"
+  },
+  {
+   "id": "473",
+   "bookedOn": "2026-05-26",
+   "amount": 2624.05,
+   "category": "salary",
+   "counterparty": "Kempen Studio"
+  },
+  {
+   "id": "474",
+   "bookedOn": "2026-05-26",
+   "amount": -39.88,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "475",
+   "bookedOn": "2026-05-27",
+   "amount": -14.5,
+   "category": "subscriptions",
+   "counterparty": "Spotify"
+  },
+  {
+   "id": "476",
+   "bookedOn": "2026-05-27",
+   "amount": -13.03,
+   "category": "restaurants",
+   "counterparty": "Panos"
+  },
+  {
+   "id": "477",
+   "bookedOn": "2026-05-27",
+   "amount": -384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "478",
+   "bookedOn": "2026-05-27",
+   "amount": 384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "479",
+   "bookedOn": "2026-05-28",
+   "amount": -44.9,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "480",
+   "bookedOn": "2026-05-28",
+   "amount": -127.48,
+   "category": "baby_kids",
+   "counterparty": "Baby-Dump"
+  },
+  {
+   "id": "481",
+   "bookedOn": "2026-05-30",
+   "amount": -30.24,
+   "category": "health",
+   "counterparty": "Huisartsenpraktijk"
+  },
+  {
+   "id": "482",
+   "bookedOn": "2026-06-01",
+   "amount": -52.8,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "483",
+   "bookedOn": "2026-06-01",
+   "amount": -48.39,
+   "category": "shopping",
+   "counterparty": "Action"
+  },
+  {
+   "id": "484",
+   "bookedOn": "2026-06-03",
+   "amount": -163.58,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "485",
+   "bookedOn": "2026-06-03",
+   "amount": -152.34,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "486",
+   "bookedOn": "2026-06-07",
+   "amount": -16.06,
+   "category": "public_transport",
+   "counterparty": "De Lijn"
+  },
+  {
+   "id": "487",
+   "bookedOn": "2026-06-08",
+   "amount": -50.69,
+   "category": "restaurants",
+   "counterparty": "Ellis Gourmet Burger"
+  },
+  {
+   "id": "488",
+   "bookedOn": "2026-06-09",
+   "amount": -14.27,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "489",
+   "bookedOn": "2026-06-09",
+   "amount": -46.99,
+   "category": "fuel",
+   "counterparty": "Esso"
+  },
+  {
+   "id": "490",
+   "bookedOn": "2026-06-10",
+   "amount": -1106.03,
+   "category": "mortgage_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "491",
+   "bookedOn": "2026-06-10",
+   "amount": -572.37,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "492",
+   "bookedOn": "2026-06-10",
+   "amount": -14.5,
+   "category": "subscriptions",
+   "counterparty": "Spotify"
+  },
+  {
+   "id": "493",
+   "bookedOn": "2026-06-10",
+   "amount": -79.66,
+   "category": "fuel",
+   "counterparty": "Shell"
+  },
+  {
+   "id": "494",
+   "bookedOn": "2026-06-11",
+   "amount": -18.5,
+   "category": "restaurants",
+   "counterparty": "Le Pain Quotidien"
+  },
+  {
+   "id": "495",
+   "bookedOn": "2026-06-12",
+   "amount": -250,
+   "category": "investment",
+   "counterparty": "KBC Asset Management"
+  },
+  {
+   "id": "496",
+   "bookedOn": "2026-06-12",
+   "amount": -29.09,
+   "category": "health",
+   "counterparty": "Apotheek"
+  },
+  {
+   "id": "497",
+   "bookedOn": "2026-06-13",
+   "amount": -5.54,
+   "category": "shopping",
+   "counterparty": "Hema"
+  },
+  {
+   "id": "498",
+   "bookedOn": "2026-06-14",
+   "amount": -47,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "499",
+   "bookedOn": "2026-06-14",
+   "amount": -54.74,
+   "category": "restaurants",
+   "counterparty": "Ellis Gourmet Burger"
+  },
+  {
+   "id": "500",
+   "bookedOn": "2026-06-14",
+   "amount": -139.21,
+   "category": "home_improvement",
+   "counterparty": "Brico"
+  },
+  {
+   "id": "501",
+   "bookedOn": "2026-06-15",
+   "amount": -144.69,
+   "category": "energy_utilities",
+   "counterparty": "TotalEnergies Power & Gas"
+  },
+  {
+   "id": "502",
+   "bookedOn": "2026-06-15",
+   "amount": -130.94,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "503",
+   "bookedOn": "2026-06-16",
+   "amount": -15.06,
+   "category": "public_transport",
+   "counterparty": "STIB-MIVB"
+  },
+  {
+   "id": "504",
+   "bookedOn": "2026-06-16",
+   "amount": -173.09,
+   "category": "baby_kids",
+   "counterparty": "Dreambaby"
+  },
+  {
+   "id": "505",
+   "bookedOn": "2026-06-18",
+   "amount": -27.36,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "506",
+   "bookedOn": "2026-06-18",
+   "amount": -26.51,
+   "category": "restaurants",
+   "counterparty": "Le Pain Quotidien"
+  },
+  {
+   "id": "507",
+   "bookedOn": "2026-06-19",
+   "amount": -31.87,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "508",
+   "bookedOn": "2026-06-19",
+   "amount": -28.3,
+   "category": "health",
+   "counterparty": "Huisartsenpraktijk"
+  },
+  {
+   "id": "509",
+   "bookedOn": "2026-06-20",
+   "amount": -21.07,
+   "category": "telecom",
+   "counterparty": "BASE"
+  },
+  {
+   "id": "510",
+   "bookedOn": "2026-06-22",
+   "amount": -46.83,
+   "category": "groceries",
+   "counterparty": "Aldi"
+  },
+  {
+   "id": "511",
+   "bookedOn": "2026-06-23",
+   "amount": -51.78,
+   "category": "shopping",
+   "counterparty": "Primark"
+  },
+  {
+   "id": "512",
+   "bookedOn": "2026-06-25",
+   "amount": -29.39,
+   "category": "restaurants",
+   "counterparty": "Le Pain Quotidien"
+  },
+  {
+   "id": "513",
+   "bookedOn": "2026-06-26",
+   "amount": 2623.17,
+   "category": "salary",
+   "counterparty": "Kempen Studio"
+  },
+  {
+   "id": "514",
+   "bookedOn": "2026-06-26",
+   "amount": -36.77,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "515",
+   "bookedOn": "2026-06-27",
+   "amount": -16.65,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "516",
+   "bookedOn": "2026-06-27",
+   "amount": -113.23,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "517",
+   "bookedOn": "2026-06-27",
+   "amount": -26.83,
+   "category": "restaurants",
+   "counterparty": "Pizza Hut"
+  },
+  {
+   "id": "518",
+   "bookedOn": "2026-06-27",
+   "amount": -384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "519",
+   "bookedOn": "2026-06-27",
+   "amount": 384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "520",
+   "bookedOn": "2026-06-28",
+   "amount": -40.38,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "521",
+   "bookedOn": "2026-06-30",
+   "amount": -64.53,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "522",
+   "bookedOn": "2026-07-02",
+   "amount": -40.49,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "523",
+   "bookedOn": "2026-07-02",
+   "amount": -112.18,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "524",
+   "bookedOn": "2026-07-03",
+   "amount": -163.58,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "525",
+   "bookedOn": "2026-07-04",
+   "amount": -21.91,
+   "category": "restaurants",
+   "counterparty": "Pizza Hut"
+  },
+  {
+   "id": "526",
+   "bookedOn": "2026-07-05",
+   "amount": -40.11,
+   "category": "health",
+   "counterparty": "Huisartsenpraktijk"
+  },
+  {
+   "id": "527",
+   "bookedOn": "2026-07-06",
+   "amount": -45.63,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "528",
+   "bookedOn": "2026-07-08",
+   "amount": -100.51,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "529",
+   "bookedOn": "2026-07-08",
+   "amount": -57.6,
+   "category": "fuel",
+   "counterparty": "Shell"
+  },
+  {
+   "id": "530",
+   "bookedOn": "2026-07-09",
+   "amount": -14.06,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "531",
+   "bookedOn": "2026-07-09",
+   "amount": -18.88,
+   "category": "shopping",
+   "counterparty": "Hema"
+  },
+  {
+   "id": "532",
+   "bookedOn": "2026-07-10",
+   "amount": -1106.03,
+   "category": "mortgage_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "533",
+   "bookedOn": "2026-07-10",
+   "amount": -572.37,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "534",
+   "bookedOn": "2026-07-10",
+   "amount": -66.01,
+   "category": "shopping",
+   "counterparty": "H&M"
+  },
+  {
+   "id": "535",
+   "bookedOn": "2026-07-11",
+   "amount": -21.96,
+   "category": "shopping",
+   "counterparty": "H&M"
+  },
+  {
+   "id": "536",
+   "bookedOn": "2026-07-12",
+   "amount": -150,
+   "category": "investment",
+   "counterparty": "KBC Asset Management"
+  },
+  {
+   "id": "537",
+   "bookedOn": "2026-07-12",
+   "amount": -38.18,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "538",
+   "bookedOn": "2026-07-13",
+   "amount": -61.82,
+   "category": "fuel",
+   "counterparty": "Q8"
+  },
+  {
+   "id": "539",
+   "bookedOn": "2026-07-13",
+   "amount": -127.32,
+   "category": "furniture",
+   "counterparty": "JYSK"
+  },
+  {
+   "id": "540",
+   "bookedOn": "2026-07-14",
+   "amount": -33.52,
+   "category": "shopping",
+   "counterparty": "Bol.com"
+  },
+  {
+   "id": "541",
+   "bookedOn": "2026-07-15",
+   "amount": -139.38,
+   "category": "energy_utilities",
+   "counterparty": "TotalEnergies Power & Gas"
+  },
+  {
+   "id": "542",
+   "bookedOn": "2026-07-15",
+   "amount": -6.92,
+   "category": "public_transport",
+   "counterparty": "De Lijn"
+  },
+  {
+   "id": "543",
+   "bookedOn": "2026-07-17",
+   "amount": -104.19,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "544",
+   "bookedOn": "2026-07-17",
+   "amount": -173.33,
+   "category": "health",
+   "counterparty": "Tandarts"
+  },
+  {
+   "id": "545",
+   "bookedOn": "2026-07-19",
+   "amount": -14.5,
+   "category": "subscriptions",
+   "counterparty": "Spotify"
+  },
+  {
+   "id": "546",
+   "bookedOn": "2026-07-20",
+   "amount": -38.7,
+   "category": "telecom",
+   "counterparty": "BASE"
+  },
+  {
+   "id": "547",
+   "bookedOn": "2026-07-21",
+   "amount": -26.43,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "548",
+   "bookedOn": "2026-07-21",
+   "amount": -203.63,
+   "category": "home_improvement",
+   "counterparty": "Hubo"
+  },
+  {
+   "id": "549",
+   "bookedOn": "2026-07-22",
+   "amount": -85.81,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "550",
+   "bookedOn": "2026-07-24",
+   "amount": -20.2,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "551",
+   "bookedOn": "2026-07-26",
+   "amount": 2736.53,
+   "category": "salary",
+   "counterparty": "Kempen Studio"
+  },
+  {
+   "id": "552",
+   "bookedOn": "2026-07-26",
+   "amount": -37.58,
+   "category": "restaurants",
+   "counterparty": "Ellis Gourmet Burger"
+  },
+  {
+   "id": "553",
+   "bookedOn": "2026-07-26",
+   "amount": -552.02,
+   "category": "baby_kids",
+   "counterparty": "Baby-Dump"
+  },
+  {
+   "id": "554",
+   "bookedOn": "2026-07-27",
+   "amount": -88.92,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "555",
+   "bookedOn": "2026-07-27",
+   "amount": -384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "556",
+   "bookedOn": "2026-07-27",
+   "amount": 384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "557",
+   "bookedOn": "2026-07-28",
+   "amount": -17.62,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "558",
+   "bookedOn": "2026-07-28",
+   "amount": -62.74,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "559",
+   "bookedOn": "2026-07-28",
+   "amount": -34.15,
+   "category": "restaurants",
+   "counterparty": "Pizza Hut"
+  },
+  {
+   "id": "560",
+   "bookedOn": "2026-07-28",
+   "amount": -193.74,
+   "category": "home_improvement",
+   "counterparty": "Gamma"
+  },
+  {
+   "id": "561",
+   "bookedOn": "2026-07-29",
+   "amount": -34.33,
+   "category": "restaurants",
+   "counterparty": "Ellis Gourmet Burger"
+  },
+  {
+   "id": "562",
+   "bookedOn": "2026-07-29",
+   "amount": -68.13,
+   "category": "baby_kids",
+   "counterparty": "Kruidvat"
+  },
+  {
+   "id": "563",
+   "bookedOn": "2026-07-30",
+   "amount": -128.51,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "564",
+   "bookedOn": "2026-07-30",
+   "amount": -61.94,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "565",
+   "bookedOn": "2026-07-30",
+   "amount": -127.29,
+   "category": "shopping",
+   "counterparty": "Coolblue"
+  },
+  {
+   "id": "566",
+   "bookedOn": "2026-08-02",
+   "amount": -61.69,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "567",
+   "bookedOn": "2026-08-03",
+   "amount": -14.5,
+   "category": "subscriptions",
+   "counterparty": "Spotify"
+  },
+  {
+   "id": "568",
+   "bookedOn": "2026-08-03",
+   "amount": -163.58,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "569",
+   "bookedOn": "2026-08-05",
+   "amount": -103.39,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "570",
+   "bookedOn": "2026-08-08",
+   "amount": -137.8,
+   "category": "shopping",
+   "counterparty": "Zalando"
+  },
+  {
+   "id": "571",
+   "bookedOn": "2026-08-09",
+   "amount": -14.63,
+   "category": "shopping",
+   "counterparty": "Primark"
+  },
+  {
+   "id": "572",
+   "bookedOn": "2026-08-10",
+   "amount": -1106.03,
+   "category": "mortgage_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "573",
+   "bookedOn": "2026-08-10",
+   "amount": -572.37,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "574",
+   "bookedOn": "2026-08-10",
+   "amount": -13.7,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "575",
+   "bookedOn": "2026-08-10",
+   "amount": -61.6,
+   "category": "baby_kids",
+   "counterparty": "Fun"
+  },
+  {
+   "id": "576",
+   "bookedOn": "2026-08-11",
+   "amount": -13.42,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "577",
+   "bookedOn": "2026-08-11",
+   "amount": -103.28,
+   "category": "other",
+   "counterparty": "Payconiq transfer"
+  },
+  {
+   "id": "578",
+   "bookedOn": "2026-08-12",
+   "amount": -50,
+   "category": "investment",
+   "counterparty": "KBC Asset Management"
+  },
+  {
+   "id": "579",
+   "bookedOn": "2026-08-12",
+   "amount": -78.29,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "580",
+   "bookedOn": "2026-08-13",
+   "amount": -69.92,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "581",
+   "bookedOn": "2026-08-13",
+   "amount": -69.63,
+   "category": "fuel",
+   "counterparty": "Shell"
+  },
+  {
+   "id": "582",
+   "bookedOn": "2026-08-14",
+   "amount": -27.18,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "583",
+   "bookedOn": "2026-08-15",
+   "amount": -159.19,
+   "category": "energy_utilities",
+   "counterparty": "TotalEnergies Power & Gas"
+  },
+  {
+   "id": "584",
+   "bookedOn": "2026-08-19",
+   "amount": -69.47,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "585",
+   "bookedOn": "2026-08-20",
+   "amount": -20.01,
+   "category": "telecom",
+   "counterparty": "BASE"
+  },
+  {
+   "id": "586",
+   "bookedOn": "2026-08-20",
+   "amount": -207.55,
+   "category": "shopping",
+   "counterparty": "Coolblue"
+  },
+  {
+   "id": "587",
+   "bookedOn": "2026-08-21",
+   "amount": -47,
+   "category": "groceries",
+   "counterparty": "Carrefour"
+  },
+  {
+   "id": "588",
+   "bookedOn": "2026-08-21",
+   "amount": -185.56,
+   "category": "travel",
+   "counterparty": "Ryanair"
+  },
+  {
+   "id": "589",
+   "bookedOn": "2026-08-21",
+   "amount": -26.36,
+   "category": "home_improvement",
+   "counterparty": "Brico"
+  },
+  {
+   "id": "590",
+   "bookedOn": "2026-08-23",
+   "amount": -31.62,
+   "category": "shopping",
+   "counterparty": "H&M"
+  },
+  {
+   "id": "591",
+   "bookedOn": "2026-08-24",
+   "amount": -29.47,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "592",
+   "bookedOn": "2026-08-24",
+   "amount": -9.17,
+   "category": "restaurants",
+   "counterparty": "Panos"
+  },
+  {
+   "id": "593",
+   "bookedOn": "2026-08-25",
+   "amount": -63.73,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "594",
+   "bookedOn": "2026-08-25",
+   "amount": -94.01,
+   "category": "baby_kids",
+   "counterparty": "Fun"
+  },
+  {
+   "id": "595",
+   "bookedOn": "2026-08-26",
+   "amount": 2736.29,
+   "category": "salary",
+   "counterparty": "Kempen Studio"
+  },
+  {
+   "id": "596",
+   "bookedOn": "2026-08-27",
+   "amount": -384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "597",
+   "bookedOn": "2026-08-27",
+   "amount": 384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "598",
+   "bookedOn": "2026-08-29",
+   "amount": -58.73,
+   "category": "groceries",
+   "counterparty": "Colruyt"
+  },
+  {
+   "id": "599",
+   "bookedOn": "2026-08-30",
+   "amount": -297.75,
+   "category": "health",
+   "counterparty": "AZ Ziekenhuis"
+  },
+  {
+   "id": "600",
+   "bookedOn": "2026-08-31",
+   "amount": -9.41,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "601",
+   "bookedOn": "2026-08-31",
+   "amount": -40,
+   "category": "cash_withdrawal",
+   "counterparty": "KBC ATM"
+  },
+  {
+   "id": "602",
+   "bookedOn": "2026-09-01",
+   "amount": -315.06,
+   "category": "car_maintenance",
+   "counterparty": "Carglass"
+  },
+  {
+   "id": "603",
+   "bookedOn": "2026-09-01",
+   "amount": -19.43,
+   "category": "public_transport",
+   "counterparty": "STIB-MIVB"
+  },
+  {
+   "id": "604",
+   "bookedOn": "2026-09-03",
+   "amount": -14.5,
+   "category": "subscriptions",
+   "counterparty": "Spotify"
+  },
+  {
+   "id": "605",
+   "bookedOn": "2026-09-03",
+   "amount": -163.58,
+   "category": "insurance_premium",
+   "counterparty": "KBC Verzekeringen"
+  },
+  {
+   "id": "606",
+   "bookedOn": "2026-09-04",
+   "amount": -89.61,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "607",
+   "bookedOn": "2026-09-05",
+   "amount": -402.17,
+   "category": "childcare_school",
+   "counterparty": "Kinderopvang Kribbebijter"
+  },
+  {
+   "id": "608",
+   "bookedOn": "2026-09-07",
+   "amount": -74.79,
+   "category": "fuel",
+   "counterparty": "Esso"
+  },
+  {
+   "id": "609",
+   "bookedOn": "2026-09-07",
+   "amount": -113.6,
+   "category": "other",
+   "counterparty": "Payconiq transfer"
+  },
+  {
+   "id": "610",
+   "bookedOn": "2026-09-10",
+   "amount": -1106.03,
+   "category": "mortgage_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "611",
+   "bookedOn": "2026-09-10",
+   "amount": -572.37,
+   "category": "loan_payment",
+   "counterparty": "KBC Bank"
+  },
+  {
+   "id": "612",
+   "bookedOn": "2026-09-10",
+   "amount": -18.04,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "613",
+   "bookedOn": "2026-09-10",
+   "amount": -953.76,
+   "category": "health",
+   "counterparty": "AZ Ziekenhuis"
+  },
+  {
+   "id": "614",
+   "bookedOn": "2026-09-11",
+   "amount": -17.35,
+   "category": "public_transport",
+   "counterparty": "De Lijn"
+  },
+  {
+   "id": "615",
+   "bookedOn": "2026-09-11",
+   "amount": -24.39,
+   "category": "restaurants",
+   "counterparty": "Ellis Gourmet Burger"
+  },
+  {
+   "id": "616",
+   "bookedOn": "2026-09-11",
+   "amount": -20.56,
+   "category": "restaurants",
+   "counterparty": "Deliveroo"
+  },
+  {
+   "id": "617",
+   "bookedOn": "2026-09-11",
+   "amount": -12.84,
+   "category": "baby_kids",
+   "counterparty": "Kruidvat"
+  },
+  {
+   "id": "618",
+   "bookedOn": "2026-09-11",
+   "amount": -41.04,
+   "category": "baby_kids",
+   "counterparty": "Kruidvat"
+  },
+  {
+   "id": "619",
+   "bookedOn": "2026-09-12",
+   "amount": -150,
+   "category": "investment",
+   "counterparty": "KBC Asset Management"
+  },
+  {
+   "id": "620",
+   "bookedOn": "2026-09-12",
+   "amount": -46.71,
+   "category": "groceries",
+   "counterparty": "Aldi"
+  },
+  {
+   "id": "621",
+   "bookedOn": "2026-09-12",
+   "amount": -75.13,
+   "category": "baby_kids",
+   "counterparty": "Kruidvat"
+  },
+  {
+   "id": "622",
+   "bookedOn": "2026-09-13",
+   "amount": -22.73,
+   "category": "restaurants",
+   "counterparty": "Le Pain Quotidien"
+  },
+  {
+   "id": "623",
+   "bookedOn": "2026-09-13",
+   "amount": -177.54,
+   "category": "furniture",
+   "counterparty": "Casa"
+  },
+  {
+   "id": "624",
+   "bookedOn": "2026-09-14",
+   "amount": -389.06,
+   "category": "furniture",
+   "counterparty": "JYSK"
+  },
+  {
+   "id": "625",
+   "bookedOn": "2026-09-15",
+   "amount": -155.7,
+   "category": "energy_utilities",
+   "counterparty": "TotalEnergies Power & Gas"
+  },
+  {
+   "id": "626",
+   "bookedOn": "2026-09-15",
+   "amount": -78.84,
+   "category": "groceries",
+   "counterparty": "Delhaize"
+  },
+  {
+   "id": "627",
+   "bookedOn": "2026-09-17",
+   "amount": -27.7,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "628",
+   "bookedOn": "2026-09-20",
+   "amount": -30.16,
+   "category": "telecom",
+   "counterparty": "BASE"
+  },
+  {
+   "id": "629",
+   "bookedOn": "2026-09-21",
+   "amount": -47.74,
+   "category": "groceries",
+   "counterparty": "Aldi"
+  },
+  {
+   "id": "630",
+   "bookedOn": "2026-09-21",
+   "amount": -65.98,
+   "category": "fuel",
+   "counterparty": "TotalEnergies"
+  },
+  {
+   "id": "631",
+   "bookedOn": "2026-09-24",
+   "amount": -17.45,
+   "category": "groceries",
+   "counterparty": "Okay"
+  },
+  {
+   "id": "632",
+   "bookedOn": "2026-09-24",
+   "amount": -37.59,
+   "category": "restaurants",
+   "counterparty": "Takeaway.com"
+  },
+  {
+   "id": "633",
+   "bookedOn": "2026-09-24",
+   "amount": -39.21,
+   "category": "restaurants",
+   "counterparty": "Ellis Gourmet Burger"
+  },
+  {
+   "id": "634",
+   "bookedOn": "2026-09-26",
+   "amount": 2768.46,
+   "category": "salary",
+   "counterparty": "Kempen Studio"
+  },
+  {
+   "id": "635",
+   "bookedOn": "2026-09-27",
+   "amount": -270,
+   "category": "home_improvement",
+   "counterparty": "Brico"
+  },
+  {
+   "id": "636",
+   "bookedOn": "2026-09-27",
+   "amount": -384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own savings account"
+  },
+  {
+   "id": "637",
+   "bookedOn": "2026-09-27",
+   "amount": 384.87,
+   "category": "savings_transfer",
+   "counterparty": "Own current account"
+  },
+  {
+   "id": "638",
+   "bookedOn": "2026-09-29",
+   "amount": -24.87,
+   "category": "groceries",
+   "counterparty": "Lidl"
+  },
+  {
+   "id": "639",
+   "bookedOn": "2026-09-29",
+   "amount": -11.36,
+   "category": "shopping",
+   "counterparty": "Action"
+  },
+  {
+   "id": "640",
+   "bookedOn": "2026-09-29",
+   "amount": -42.22,
+   "category": "baby_kids",
+   "counterparty": "Kruidvat"
+  },
+  {
+   "id": "641",
+   "bookedOn": "2026-09-30",
+   "amount": -59.14,
+   "category": "groceries",
+   "counterparty": "Albert Heijn"
+  },
+  {
+   "id": "642",
+   "bookedOn": "2026-09-30",
+   "amount": -37.55,
+   "category": "restaurants",
+   "counterparty": "Pizza Hut"
+  },
+  {
+   "id": "643",
+   "bookedOn": "2026-09-30",
+   "amount": -11.87,
+   "category": "restaurants",
+   "counterparty": "Panos"
+  },
+  {
+   "id": "644",
+   "bookedOn": "2026-09-30",
+   "amount": -12.44,
+   "category": "shopping",
+   "counterparty": "Primark"
+  }
+ ],
+ "appEvents": [
+  {
+   "id": "274",
+   "occurredAt": "2026-04-04T10:03:53+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "275",
+   "occurredAt": "2026-04-04T16:23:22+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "276",
+   "occurredAt": "2026-04-04T18:21:08+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "277",
+   "occurredAt": "2026-04-08T20:12:02+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 26,
+   "detail": {}
+  },
+  {
+   "id": "278",
+   "occurredAt": "2026-04-10T05:40:24+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "279",
+   "occurredAt": "2026-04-10T06:03:05+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "280",
+   "occurredAt": "2026-04-10T07:35:17+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 31,
+   "detail": {}
+  },
+  {
+   "id": "281",
+   "occurredAt": "2026-04-10T09:35:44+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "282",
+   "occurredAt": "2026-04-10T10:23:17+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "283",
+   "occurredAt": "2026-04-10T12:58:56+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "284",
+   "occurredAt": "2026-04-10T14:00:30+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 152,
+   "detail": {}
+  },
+  {
+   "id": "285",
+   "occurredAt": "2026-04-10T14:09:10+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 127,
+   "detail": {}
+  },
+  {
+   "id": "286",
+   "occurredAt": "2026-04-11T19:47:44+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 56,
+   "detail": {}
+  },
+  {
+   "id": "287",
+   "occurredAt": "2026-04-11T21:51:10+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "288",
+   "occurredAt": "2026-04-16T12:05:22+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "289",
+   "occurredAt": "2026-04-16T12:17:42+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "290",
+   "occurredAt": "2026-04-17T15:31:59+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "291",
+   "occurredAt": "2026-04-17T16:11:56+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "292",
+   "occurredAt": "2026-04-19T13:50:57+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 201,
+   "detail": {}
+  },
+  {
+   "id": "293",
+   "occurredAt": "2026-04-19T16:51:58+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 39,
+   "detail": {}
+  },
+  {
+   "id": "294",
+   "occurredAt": "2026-04-19T21:21:08+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "295",
+   "occurredAt": "2026-04-21T00:41:30+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 204,
+   "detail": {}
+  },
+  {
+   "id": "296",
+   "occurredAt": "2026-04-21T09:56:56+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "297",
+   "occurredAt": "2026-04-21T13:16:16+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "298",
+   "occurredAt": "2026-04-24T19:52:41+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "299",
+   "occurredAt": "2026-04-24T21:15:50+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "300",
+   "occurredAt": "2026-05-02T07:54:02+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 153,
+   "detail": {}
+  },
+  {
+   "id": "301",
+   "occurredAt": "2026-05-04T21:05:22+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "302",
+   "occurredAt": "2026-05-05T05:00:20+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "303",
+   "occurredAt": "2026-05-05T08:36:09+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "304",
+   "occurredAt": "2026-05-05T14:26:56+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "305",
+   "occurredAt": "2026-05-08T12:16:40+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 42,
+   "detail": {}
+  },
+  {
+   "id": "306",
+   "occurredAt": "2026-05-08T17:00:43+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 226,
+   "detail": {}
+  },
+  {
+   "id": "307",
+   "occurredAt": "2026-05-08T18:20:25+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "308",
+   "occurredAt": "2026-05-11T18:59:52+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "309",
+   "occurredAt": "2026-05-12T02:34:00+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "310",
+   "occurredAt": "2026-05-12T19:40:56+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "311",
+   "occurredAt": "2026-05-12T20:36:28+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 155,
+   "detail": {}
+  },
+  {
+   "id": "312",
+   "occurredAt": "2026-05-13T10:48:33+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 56,
+   "detail": {}
+  },
+  {
+   "id": "313",
+   "occurredAt": "2026-05-13T16:13:23+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 155,
+   "detail": {}
+  },
+  {
+   "id": "314",
+   "occurredAt": "2026-05-19T19:17:53+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 152,
+   "detail": {}
+  },
+  {
+   "id": "315",
+   "occurredAt": "2026-05-20T19:04:41+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 159,
+   "detail": {}
+  },
+  {
+   "id": "316",
+   "occurredAt": "2026-05-21T23:19:06+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "317",
+   "occurredAt": "2026-05-22T09:01:53+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 127,
+   "detail": {}
+  },
+  {
+   "id": "318",
+   "occurredAt": "2026-05-22T10:16:41+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "319",
+   "occurredAt": "2026-05-22T13:58:32+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "320",
+   "occurredAt": "2026-05-23T01:28:58+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 158,
+   "detail": {}
+  },
+  {
+   "id": "321",
+   "occurredAt": "2026-05-23T08:46:25+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "322",
+   "occurredAt": "2026-05-23T13:45:57+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "323",
+   "occurredAt": "2026-05-23T18:31:33+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "324",
+   "occurredAt": "2026-05-23T21:39:54+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 31,
+   "detail": {}
+  },
+  {
+   "id": "325",
+   "occurredAt": "2026-05-24T13:55:04+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 86,
+   "detail": {}
+  },
+  {
+   "id": "326",
+   "occurredAt": "2026-05-24T20:48:18+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 14,
+   "detail": {}
+  },
+  {
+   "id": "327",
+   "occurredAt": "2026-05-28T08:02:03+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 157,
+   "detail": {}
+  },
+  {
+   "id": "328",
+   "occurredAt": "2026-05-30T05:30:49+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "329",
+   "occurredAt": "2026-05-31T12:44:32+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 204,
+   "detail": {}
+  },
+  {
+   "id": "330",
+   "occurredAt": "2026-06-02T20:12:22+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 75,
+   "detail": {}
+  },
+  {
+   "id": "331",
+   "occurredAt": "2026-06-07T07:21:15+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 159,
+   "detail": {}
+  },
+  {
+   "id": "332",
+   "occurredAt": "2026-06-10T06:53:35+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": null,
+   "detail": {
+    "question": "Is my baby covered by my hospitalisation insurance?"
+   }
+  },
+  {
+   "id": "333",
+   "occurredAt": "2026-06-12T09:01:52+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "334",
+   "occurredAt": "2026-06-12T14:46:45+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 204,
+   "detail": {}
+  },
+  {
+   "id": "335",
+   "occurredAt": "2026-06-12T22:30:19+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "336",
+   "occurredAt": "2026-06-21T12:35:18+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "337",
+   "occurredAt": "2026-06-21T14:18:02+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "338",
+   "occurredAt": "2026-06-21T14:51:50+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 204,
+   "detail": {}
+  },
+  {
+   "id": "339",
+   "occurredAt": "2026-06-22T08:30:34+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 79,
+   "detail": {}
+  },
+  {
+   "id": "340",
+   "occurredAt": "2026-06-24T15:42:52+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "341",
+   "occurredAt": "2026-06-25T17:58:13+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 155,
+   "detail": {}
+  },
+  {
+   "id": "342",
+   "occurredAt": "2026-06-25T19:44:39+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "343",
+   "occurredAt": "2026-06-26T07:47:18+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "344",
+   "occurredAt": "2026-06-26T14:01:51+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "345",
+   "occurredAt": "2026-06-28T20:42:29+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": null,
+   "detail": {
+    "question": "Is my baby covered by my hospitalisation insurance?"
+   }
+  },
+  {
+   "id": "346",
+   "occurredAt": "2026-06-28T21:16:20+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 152,
+   "detail": {}
+  },
+  {
+   "id": "347",
+   "occurredAt": "2026-07-05T11:29:16+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 56,
+   "detail": {}
+  },
+  {
+   "id": "348",
+   "occurredAt": "2026-07-05T17:27:44+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "349",
+   "occurredAt": "2026-07-07T07:15:18+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "350",
+   "occurredAt": "2026-07-09T19:10:28+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 210,
+   "detail": {}
+  },
+  {
+   "id": "351",
+   "occurredAt": "2026-07-10T09:42:18+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "352",
+   "occurredAt": "2026-07-10T16:53:14+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "353",
+   "occurredAt": "2026-07-10T21:37:30+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "354",
+   "occurredAt": "2026-07-11T14:54:21+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 127,
+   "detail": {}
+  },
+  {
+   "id": "355",
+   "occurredAt": "2026-07-11T17:39:05+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "356",
+   "occurredAt": "2026-07-12T15:47:14+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": null,
+   "detail": {
+    "question": "How do I add my child to my family insurance?"
+   }
+  },
+  {
+   "id": "357",
+   "occurredAt": "2026-07-13T04:31:01+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "358",
+   "occurredAt": "2026-07-13T18:20:50+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "359",
+   "occurredAt": "2026-07-14T03:36:06+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 226,
+   "detail": {}
+  },
+  {
+   "id": "360",
+   "occurredAt": "2026-07-14T07:05:14+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "361",
+   "occurredAt": "2026-07-14T19:50:54+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 152,
+   "detail": {}
+  },
+  {
+   "id": "362",
+   "occurredAt": "2026-07-17T08:51:16+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 161,
+   "detail": {}
+  },
+  {
+   "id": "363",
+   "occurredAt": "2026-07-18T11:21:25+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 43,
+   "detail": {}
+  },
+  {
+   "id": "364",
+   "occurredAt": "2026-07-18T16:13:07+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 204,
+   "detail": {}
+  },
+  {
+   "id": "365",
+   "occurredAt": "2026-07-18T19:55:00+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 153,
+   "detail": {}
+  },
+  {
+   "id": "366",
+   "occurredAt": "2026-07-21T22:14:54+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 157,
+   "detail": {}
+  },
+  {
+   "id": "367",
+   "occurredAt": "2026-07-22T17:55:55+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 161,
+   "detail": {}
+  },
+  {
+   "id": "368",
+   "occurredAt": "2026-07-23T10:13:37+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 163,
+   "detail": {}
+  },
+  {
+   "id": "369",
+   "occurredAt": "2026-07-25T16:16:17+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 159,
+   "detail": {}
+  },
+  {
+   "id": "370",
+   "occurredAt": "2026-07-26T09:44:44+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "371",
+   "occurredAt": "2026-07-26T14:55:34+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 86,
+   "detail": {}
+  },
+  {
+   "id": "372",
+   "occurredAt": "2026-07-31T07:22:26+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 204,
+   "detail": {}
+  },
+  {
+   "id": "373",
+   "occurredAt": "2026-07-31T16:56:38+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "374",
+   "occurredAt": "2026-08-01T09:43:55+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "375",
+   "occurredAt": "2026-08-01T12:03:31+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 43,
+   "detail": {}
+  },
+  {
+   "id": "376",
+   "occurredAt": "2026-08-07T15:29:30+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "377",
+   "occurredAt": "2026-08-10T16:57:16+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 56,
+   "detail": {}
+  },
+  {
+   "id": "378",
+   "occurredAt": "2026-08-10T18:25:15+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "379",
+   "occurredAt": "2026-08-10T23:23:07+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 74,
+   "detail": {}
+  },
+  {
+   "id": "380",
+   "occurredAt": "2026-08-12T00:55:46+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 127,
+   "detail": {}
+  },
+  {
+   "id": "381",
+   "occurredAt": "2026-08-12T18:45:56+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "382",
+   "occurredAt": "2026-08-12T22:46:55+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 218,
+   "detail": {}
+  },
+  {
+   "id": "383",
+   "occurredAt": "2026-08-14T12:46:06+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": 224,
+   "detail": {
+    "question": "Transfer 50 euros to my savings account"
+   }
+  },
+  {
+   "id": "384",
+   "occurredAt": "2026-08-15T15:34:05+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 157,
+   "detail": {}
+  },
+  {
+   "id": "385",
+   "occurredAt": "2026-08-16T21:40:06+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": null,
+   "detail": {
+    "question": "Is my baby covered by my hospitalisation insurance?"
+   }
+  },
+  {
+   "id": "386",
+   "occurredAt": "2026-08-21T10:41:48+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 75,
+   "detail": {}
+  },
+  {
+   "id": "387",
+   "occurredAt": "2026-08-22T19:13:36+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 211,
+   "detail": {}
+  },
+  {
+   "id": "388",
+   "occurredAt": "2026-08-23T08:41:59+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "389",
+   "occurredAt": "2026-08-23T09:47:09+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 56,
+   "detail": {}
+  },
+  {
+   "id": "390",
+   "occurredAt": "2026-08-26T07:19:35+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 161,
+   "detail": {}
+  },
+  {
+   "id": "391",
+   "occurredAt": "2026-08-26T07:48:12+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 148,
+   "detail": {}
+  },
+  {
+   "id": "392",
+   "occurredAt": "2026-08-28T19:05:54+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 157,
+   "detail": {}
+  },
+  {
+   "id": "393",
+   "occurredAt": "2026-09-01T13:29:13+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 222,
+   "detail": {}
+  },
+  {
+   "id": "394",
+   "occurredAt": "2026-09-01T23:35:31+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": null,
+   "detail": {
+    "question": "How do I add my child to my family insurance?"
+   }
+  },
+  {
+   "id": "395",
+   "occurredAt": "2026-09-03T08:27:42+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "396",
+   "occurredAt": "2026-09-04T23:56:42+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 157,
+   "detail": {}
+  },
+  {
+   "id": "397",
+   "occurredAt": "2026-09-07T08:20:53+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 158,
+   "detail": {}
+  },
+  {
+   "id": "398",
+   "occurredAt": "2026-09-21T17:16:37+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 31,
+   "detail": {}
+  },
+  {
+   "id": "399",
+   "occurredAt": "2026-09-21T21:39:14+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 147,
+   "detail": {}
+  },
+  {
+   "id": "400",
+   "occurredAt": "2026-09-27T09:31:41+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 65,
+   "detail": {}
+  },
+  {
+   "id": "401",
+   "occurredAt": "2026-09-27T15:53:18+00:00",
+   "channel": "kbc_mobile",
+   "eventType": "page_view",
+   "sourceRow": 224,
+   "detail": {}
+  },
+  {
+   "id": "402",
+   "occurredAt": "2026-09-27T22:47:11+00:00",
+   "channel": "kbc_touch",
+   "eventType": "page_view",
+   "sourceRow": 152,
+   "detail": {}
+  },
+  {
+   "id": "403",
+   "occurredAt": "2026-09-29T19:21:02+00:00",
+   "channel": "kate",
+   "eventType": "kate_question",
+   "sourceRow": null,
+   "detail": {
+    "question": "How do I add my child to my family insurance?"
+   }
+  }
+ ],
+ "injectedEvents": []
+}

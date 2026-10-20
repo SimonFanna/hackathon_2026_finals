@@ -1,0 +1,121 @@
+// T7 — the demo checks (backend/TASKS.md §6), offline: snapshot facts + rules, in-memory state.
+// Until T1 lands, signals come from T3's persona fixtures (and the injected income drop is read the T1 way).
+import { describe, expect, it } from "vitest";
+import { memoryRepo } from "./data/repo";
+import * as F from "./fixtures/t3-inputs";
+import { type Deps, runPipeline } from "./pipeline";
+import { chooseScenarioFor, consentFor, createGoalFor, injectFor, resetFor, stepActionFor } from "./service";
+import { type Engine, engine } from "./stages";
+import type { Signal } from "./types";
+
+const FIXTURE_SIGNALS: Record<number, Signal[]> = { 1: F.sofieSignals, 2: F.lucasSignals, 5: F.elsSignals, 6: F.thomasSignals };
+
+const t1Sim: Engine = {
+  ...engine,
+  extractSignals: (events) => {
+    const customerId = events[0]?.customerId ?? 0;
+    const base = FIXTURE_SIGNALS[customerId] ?? [];
+    const benefits = events.find((e) => e.kind === "tx:benefits" && e.id.startsWith("inj:"));
+    if (!benefits) return base;
+    const amount = Number(benefits.detail.amount);
+    return [
+      ...base,
+      { code: "INCOME_DROP", customerId, strength: 0.9, at: benefits.at, count: 1, value: amount, evidence: [benefits.id], isDisruption: true },
+      { code: "BENEFITS_INFLOW", customerId, strength: 0.9, at: benefits.at, count: 1, value: amount, evidence: [benefits.id], isDisruption: true },
+    ];
+  },
+  buildContext: (facts, signals) => {
+    const ctx = engine.buildContext(facts, signals);
+    const benefits = facts.injectedEvents.find((e) => e.kind === "tx:benefits");
+    return benefits ? { ...ctx, monthlyIncome: Number(benefits.detail.amount), cashflowPressure: "high" } : ctx;
+  },
+};
+
+const deps = (): Deps => ({ db: null, repo: memoryRepo(), engine: t1Sim });
+
+describe("pipeline, offline", () => {
+  it("runs for every demo persona from the snapshot", async () => {
+    const d = deps();
+    for (const slug of ["sofie", "lucas", "nadia", "pieter", "els", "thomas"] as const) {
+      const r = await runPipeline(slug, d);
+      expect(r.source).toEqual({ facts: "snapshot", rules: "snapshot", state: "memory" });
+      expect(r.events).toBeGreaterThan(100);
+      expect(r.decisions.length).toBeGreaterThan(0);
+      expect(Object.keys(r.timings)).toContain("moments");
+    }
+  });
+
+  it("1. Sofie: HOME_BUYING with evidence, BUY_HOME at ASK or SUGGEST, a proactive Kate message", async () => {
+    const r = await runPipeline("sofie", deps());
+    const home = r.moments.find((m) => m.type === "HOME_BUYING");
+    expect(home?.evidence.length).toBeGreaterThan(0);
+    const buy = r.decisions.find((d) => d.intent === "BUY_HOME");
+    expect(["ASK", "SUGGEST"]).toContain(buy?.level);
+    expect(r.kate?.kind).toBe("proactive");
+    expect(r.kate?.text).toContain("Sofie");
+  });
+
+  it("1b. Sofie says yes: a BUY_AND_PREPARE_HOME plan, ≥ 10 steps, ≥ 3 partners, dependency order, held products covered, partner steps need consent", async () => {
+    const d = deps();
+    const { goal, plan } = await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: ["affordability"] }, d);
+    expect(goal.type).toBe("BUY_AND_PREPARE_HOME");
+    const steps = plan.steps.filter((s) => s.display !== "HIDDEN");
+    expect(steps.length).toBeGreaterThanOrEqual(10);
+    expect(new Set(steps.filter((s) => s.provider.isPartner).map((s) => s.provider.provider)).size).toBeGreaterThanOrEqual(3);
+    const order = new Map(plan.steps.map((s) => [s.id, s.order]));
+    for (const s of plan.steps) for (const dep of s.dependsOn) expect(order.get(dep)!).toBeLessThan(s.order);
+    const r = await runPipeline("sofie", d);
+    const held = new Set(r.context.heldSourceRows);
+    for (const s of r.plans[0].steps) {
+      if (held.has(s.provider.sourceRow)) expect(s.display).toBe("ALREADY_COVERED");
+      else if (s.provider.isPartner && s.display !== "HIDDEN" && s.display !== "WAIT") expect(s.display).toBe("SHOW_PARTNER");
+    }
+    const partnerStep = plan.steps.find((s) => s.provider.isPartner && s.dataRequested.length > 0)!;
+    await stepActionFor(goal.id, partnerStep.id, "accept", d); // data is shared only on accepted steps
+    const c = await consentFor(goal.id, { stepId: partnerStep.id, partner: partnerStep.provider.provider, field: partnerStep.dataRequested[0], granted: true }, d);
+    expect(c.sharedData.find((x) => x.partner === partnerStep.provider.provider)?.fields).toContain(partnerStep.dataRequested[0]);
+  });
+
+  it("2. Sofie income drop: INCOME_DROP, plan at risk, 2 scenarios, commercial steps WAIT; choosing one gives a new plan version", async () => {
+    const d = deps();
+    const { goal, plan } = await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: ["affordability"] }, d);
+    await injectFor("sofie", { preset: "income_drop" }, d);
+    const r = await runPipeline("sofie", d);
+    expect(r.disruptions.map((x) => x.code)).toContain("INCOME_DROP");
+    expect(r.plans[0].atRisk).toBe(true);
+    expect(r.scenarios.length).toBeGreaterThanOrEqual(2);
+    expect(new Set(r.scenarios.slice(0, 2).map((s) => s.monthlyPayment)).size).toBe(2);
+    expect(r.plans[0].steps.some((s) => s.display === "WAIT")).toBe(true);
+    expect(r.kate?.kind).toBe("scenario_choice");
+    const chosen = await chooseScenarioFor(goal.id, r.scenarios[0].id, d);
+    expect(chosen.plan.version).toBeGreaterThan(plan.version);
+    expect(chosen.outcome.goalId).toBe(goal.id);
+  });
+
+  it("3. Lucas: STARTING_BUSINESS → a START_BUSINESS plan built by the same code", async () => {
+    const d = deps();
+    const r = await runPipeline("lucas", d);
+    expect(r.moments.some((m) => m.type === "STARTING_BUSINESS")).toBe(true);
+    const { plan } = await createGoalFor("lucas", { type: "START_BUSINESS", constraints: {}, priorities: ["speed"] }, d);
+    expect(plan.steps.map((s) => s.capability)).toContain("open_business_account");
+  });
+
+  it("4. Els and Thomas: no proactive message, with a why-not explanation", async () => {
+    for (const slug of ["els", "thomas"] as const) {
+      const r = await runPipeline(slug, deps());
+      expect(r.decisions.every((x) => x.level === "NO_ACTION" || x.level === "WAIT")).toBe(true);
+      expect(r.decisions.some((x) => x.explanation.length > 0)).toBe(true);
+      expect(r.kate).toBeNull();
+    }
+  });
+
+  it("reset wipes the persona's runtime state", async () => {
+    const d = deps();
+    await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, d);
+    await injectFor("sofie", { preset: "income_drop" }, d);
+    await resetFor("sofie", d);
+    const r = await runPipeline("sofie", d);
+    expect(r.goals).toEqual([]);
+    expect(r.disruptions).toEqual([]);
+  });
+});
