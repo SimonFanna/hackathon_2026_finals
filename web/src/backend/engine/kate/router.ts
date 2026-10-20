@@ -24,6 +24,8 @@ const INJECTION = [
 ];
 const APPROVAL = /\b(approve|approval|guarantee|promise|grant)\b.*\b(loan|mortgage|credit)\b|\b(loan|mortgage|credit)\b.*\b(approved|guaranteed)\b/i;
 
+export const MAX_WHAT_IF_EUR = 10_000_000;
+
 /** "€280k", "280,000", "280.000 euros", "280000" → 280000. Ignores numbers followed by "%" or "year". */
 export function parseAmount(q: string): number | undefined {
   const m = q.match(/€?\s*(\d{1,3}(?:[.,\s]\d{3})+|\d+(?:[.,]\d+)?)\s*(k|thousand|000)?\b(?!\s*(%|percent|years?|y\b|months?))/i);
@@ -32,7 +34,8 @@ export function parseAmount(q: string): number | undefined {
   const grouped = /^\d{1,3}([.,\s]\d{3})+$/.test(raw);
   let n = grouped ? Number(raw.replace(/[.,\s]/g, "")) : Number(raw.replace(",", "."));
   if (m[2]) n *= 1000;
-  return Number.isFinite(n) && n >= 1000 ? Math.round(n) : undefined;
+  // Above €10M it is not a real what-if (and an unbounded budget made the T6 search hang: REVIEW P0 #1).
+  return Number.isFinite(n) && n >= 1000 && n <= MAX_WHAT_IF_EUR ? Math.round(n) : undefined;
 }
 
 function parsePct(q: string): number | undefined {

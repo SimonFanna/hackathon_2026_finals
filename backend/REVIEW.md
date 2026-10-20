@@ -8,10 +8,10 @@
 
 | P0 | Status |
 |---|---|
-| #1 Kate what-if hangs the server | ❌ **Open: still reproduces.** The server stops answering every route. Mathias |
-| #2 Scenario A can't be chosen | ✅ T7 route (choose A → 200, re-verified over HTTP) · ❌ Kate's `REPLY_ACTION`, Mathias |
+| #1 Kate what-if hangs the server | ✅ 13:35 (kepa): `parseAmount` ignores amounts > €10M, `simulate` throws `RangeError` > €10M, the binary search uses `Math.floor` + a 64-step cap. Re-verified over HTTP: the €9T question → 200 in 10 ms, other routes still answer; a €280k what-if still gives 3 scenarios |
+| #2 Scenario A can't be chosen | ✅ T7 route (choose A → 200, re-verified over HTTP) · ✅ 13:35 Kate's `REPLY_ACTION` accepts `[\w:.+-]{1,160}` (test with a real T6 id) |
 | #3 Double "income drop" click | ✅ Memory repo replaces by id (re-verified: still INCOME_DROP + 5 scenarios) · ⏳ T1 de-duplication in `toEvents`, Simon |
-| #4 Kate repeats her reason | ❌ Open: Simon (T2 merge) + Mathias (`evidenceWords`) |
+| #4 Kate repeats her reason | ✅ 13:35 `evidenceWords` keeps one reason per label (regression test) · T2 can still merge `sig_X`/`cnt_X` later, Simon |
 | #5 Nadia / Pieter plan → 500 | ✅ `POST /api/goals` → 400 "no plan template for WELCOME_BABY yet" (re-verified) · ❌ T3 still offers the plan, Mathias |
 | #6 Kate on a frozen fixture | ❌ Open: Mathias |
 | #7 Anonymous writes | ✅ Same-origin check (cross-site → 403, re-verified), 30 writes/min/client, event numbers bounded (re-verified), `x-demo-token` on reset + events if `DEMO_TOKEN` is set (**not set on Vercel yet: Simon's call**) · `GET /pipeline` still persists derived rows (idempotent; reset clears them) |
