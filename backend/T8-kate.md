@@ -27,6 +27,13 @@ export async function answerPlanQuestion(q: string, input: { ctx: PersistentCont
 ```
 
 ### Proactive message
+
+> **T3 is on `main` (7237795).**
+> - `decide()` returns one `Decision` per intent, speakers first. Act on `decisions.find(d => d.level === "ASK" || d.level === "SUGGEST")`.
+> - `Decision` also carries the optional `confidence`, `moment` and `goalType`, and `reason` is a `DecisionReason` (`engine/decision.ts`).
+> - Ready-made inputs in `fixtures/t3-sofie-decision.ts`: `sofieT3`, `lucasT3`, `thomasT3`, `elsT3`, `sofieIncomeDropT3`, `proactive()`.
+> - On T1's real Sofie fixture, `BUY_HOME` comes out as **SUGGEST (0.88)**, so the hero message uses `kateSuggest`.
+
 - Render `intent.kateAsk` (ASK) or `intent.kateSuggest` (SUGGEST) with `{firstName}` and `{evidence}` (the top 2 contributions, in friendly words).
 - Actions: `yes` / `not_now` / `no`. Each reply posts feedback (T7 route); `yes` opens `goalSetup`.
 - Tone: warm, short, never pushy. Use the customer's language (`ctx.language`) if time allows; English first.
