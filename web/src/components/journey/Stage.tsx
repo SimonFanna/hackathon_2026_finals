@@ -142,10 +142,12 @@ export function Stage() {
   const [bePlan, setBePlan] = useState<OutcomePlan | null>(null);
   const [beScenarios, setBeScenarios] = useState<Record<string, string> | null>(null);
   const keepGoal = useRef<string | null>(null); // the "Your own" player just created this slug's goal: don't wipe it
+  const pendingReset = useRef<Promise<boolean> | null>(null); // startJourney waits for it instead of resetting again
   useEffect(() => {
     let live = true;
     // A previous run leaves a goal in progress, and the engine then rightly stays quiet: each demo run starts fresh.
     const fresh = keepGoal.current === slug ? Promise.resolve(true) : resetPersona(slug);
+    pendingReset.current = fresh;
     if (keepGoal.current !== slug) keepGoal.current = null;
     fresh
       .then(() => fetchIntent(slug))
@@ -343,7 +345,9 @@ export function Stage() {
 
   const confirm = async () => {
     if (!intent) return;
-    const live = intent !== localIntent && beIntent?.goalType ? await startJourney(slug, beIntent.goalType) : null;
+    const reset = pendingReset.current ?? undefined; // one reset per run: the one the stage already started, if any
+    pendingReset.current = null;
+    const live = intent !== localIntent && beIntent?.goalType ? await startJourney(slug, beIntent.goalType, reset) : null;
     if (live) {
       // Start from the local shape (every step and consent field present), then apply the backend's decisions.
       const base = initState(live.journey);

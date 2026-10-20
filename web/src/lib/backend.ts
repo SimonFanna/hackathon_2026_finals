@@ -272,9 +272,14 @@ export interface BackendJourney {
   plan: OutcomePlan;
 }
 
-/** Fresh start for the persona (reset), then the goal + its plan. */
-export async function startJourney(slug: Slug, goalType: string): Promise<BackendJourney | null> {
-  if (!(await post(`/customers/${slug}/reset`))) return null;
+/**
+ * Fresh start for the persona (reset), then the goal + its plan. When the stage already started a reset for
+ * this persona, pass its promise: the journey waits for it instead of resetting again (a late reset would
+ * delete the new goal).
+ */
+export async function startJourney(slug: Slug, goalType: string, pendingReset?: Promise<boolean>): Promise<BackendJourney | null> {
+  const fresh = pendingReset ? await pendingReset : await post(`/customers/${slug}/reset`);
+  if (!fresh) return null;
   const a = await post<GoalAnswer>("/goals", { slug, type: goalType });
   if (!a) return null;
   return safe(() => {
@@ -319,16 +324,14 @@ function stepChanges(before: ApiPlan, after: ApiPlan): StepChange[] {
 }
 
 function toHit(preset: Preset, r: PipelineLike): BackendHit | null {
-  const impact = r.impacts[0];
-  const plan = r.plans.find((p) => p.goalId === impact?.goalId);
+  const impact = r.impacts[r.impacts.length - 1]; // the latest one
+  const plan = r.plans.filter((p) => p.goalId === impact?.goalId).sort((a, b) => b.version - a.version)[0]; // latest version
   if (!impact || !plan) return null;
   const d = r.disruptions.find((x) => x.code === impact.disruption);
-  // Only the scenarios of the latest plan version (Kate's current choice, else the ids carrying ":v<version>:"):
-  // a replayed surprise can leave older versions' scenarios in the pipeline, and choosing one of those is a 404.
-  const current = new Set(r.kate?.kind === "scenario_choice" ? (r.kate.refs?.scenarioIds ?? []) : []);
-  const scenarios = r.scenarios.filter(
-    (s) => s.goalId === impact.goalId && (current.size > 0 ? current.has(s.id) : s.id.includes(`:v${plan.version}:`)),
-  );
+  // Only the scenarios built on the latest plan version (their ids carry ":v<version>:"): a replayed or
+  // de-duplicated surprise leaves older versions' scenarios (and Kate's older refs) in the pipeline, and
+  // choosing one of those is a 404. No current scenario → no backend options → the UI plays its local story.
+  const scenarios = r.scenarios.filter((s) => s.goalId === impact.goalId && s.id.includes(`:v${plan.version}:`));
   const kate = r.kate?.kind === "scenario_choice" ? r.kate.text : "";
   const [title, ...rest] = kate.split(/(?<=[.!?])\s+/);
 
