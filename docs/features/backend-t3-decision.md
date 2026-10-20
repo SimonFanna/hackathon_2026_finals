@@ -1,5 +1,5 @@
 # Feature — Backend T3: moments, intents & decision gate
-> Owner: Mathias (T3 agent) · Status: done on own fixtures (integration with T1/T2 pending) · Last update: 11:35
+> Owner: Mathias (T3 agent) · Status: done on own fixtures (integration with T1/T2 pending) · Last update: 11:45
 
 ## Goal
 Pipeline stages ③ (active moments) ④ (intents) ⑤ (decision gate). From T1's signals and context, decide **what is happening** (moments with a confidence), **what the customer probably wants** (intents) and **whether Kate should speak** (`NO_ACTION · WAIT · ASK · SUGGEST`). Every intent gets a decision with a plain-English **why / why not**. Spec: `backend/T3-moments-intents-decision.md`.
@@ -16,6 +16,7 @@ All in `web/src/backend/` and pure (no network, no clock: `asOf` is passed in).
 | `engine/explain.ts` | `explainMoment`, `explainNoAction`, `describeSignal` ("You ran 4 home-loan simulations (up to €476k)"), `formatEur`. |
 | `fixtures/t3-rules.ts` | Moment rules, 7 intents (thresholds + Kate texts), intent rules. **Mirrors the migration seed** (a test checks the two stay in sync). |
 | `fixtures/t3-inputs.ts` | Hand-estimated signals + context for the 6 demo personas (real Supabase rows, T1's strength formula). Replace with `t1-personas.json` after T7's snapshot. |
+| `engine/t3-integration.test.ts` | T3 on T1's real Sofie fixture, rules path + ML path (`weights.json` through a stand-in for T2's `predict`). |
 | `fixtures/t3-sofie-decision.ts` | T3 output for T8: `sofieT3`, `lucasT3`, `thomasT3`, `elsT3`, `sofieIncomeDropT3`, `proactive(o)`. |
 | `supabase/migrations/20261020121000_intents.sql` | `moment_rules`, `intents`, `intent_rules` + seed. **Applied.** Config RLS (read anon/authenticated, writes revoked). |
 
@@ -43,6 +44,7 @@ All in `web/src/backend/` and pure (no network, no clock: `asOf` is passed in).
 | Persona | Moments | Decision |
 |---|---|---|
 | Sofie | HOME_BUYING 0.84, NEW_PARENT 0.25 | **BUY_HOME ASK**: "You ran 4 home-loan simulations (up to €476k) / You looked up property values (3 times) / You asked Kate about home loans…". RENOVATE_HOME WAIT (one at a time). |
+| Sofie on **T1's fixture** (`t1-sofie.ts`) | HOME_BUYING 0.88 (rules) / 0.95 (ML, `weights.json` hand-v0) | **BUY_HOME SUGGEST** on both paths. Kate uses `kateSuggest` ("It looks like you're getting ready to buy a home…"). Raise `suggest_threshold` above 0.9 if the pitch wants the ASK line. |
 | Sofie + income drop | CASHFLOW_PRESSURE 0.99 | BUY_HOME and RENOVATE_HOME **WAIT cashflow_pressure** ("Your income dropped") |
 | Lucas | STARTING_BUSINESS 0.93 | **START_BUSINESS SUGGEST** |
 | Thomas | HOME_BUYING 0.24 | **BUY_HOME NO_ACTION**: "saw 3 home searches + a budget check; what would make it clearer: a home-loan simulation" |
@@ -56,7 +58,7 @@ All in `web/src/backend/` and pure (no network, no clock: `asOf` is passed in).
 - **T2 is injected** (`model?` parameter) instead of imported, so T3 never breaks if T2 is missing or has no weights. T7's pipeline passes `{ features, predict }`.
 - **Commercial flag** on intents (`is_commercial`): `REDUCE_ENERGY_COST` and `PREPARE_FOR_BABY` are protective / cost-saving, so they can still be raised under cashflow pressure.
 - **Context scores** in moment rules (added to the logit, each with a label) let the rules fallback use context (tenant, debt ratio) and stay explainable, like the ML contributions.
-- Thresholds: ask 0.5 and suggest 0.85 for all intents. Sofie lands at ASK, which matches the hero Kate line ("Are you planning to buy a home?").
+- Thresholds: ask 0.5 and suggest 0.85 for all intents. On T3's estimates Sofie lands at ASK, and on T1's real fixture at SUGGEST (her extra `HOME_LOAN_VIEW` and `SAVING_FOR_DOWN_PAYMENT` signals). Both satisfy the acceptance criteria.
 
 ## Known limits / improvement ideas
 - Signal strengths in `t3-inputs.ts` are **my estimates** of T1's output. Re-run the tests on `t1-personas.json` and retune `bias` if needed: Thomas sits just above the 0.2 moment floor, and Sofie between ask (0.5) and suggest (0.85).

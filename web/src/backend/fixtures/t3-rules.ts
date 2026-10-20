@@ -8,7 +8,7 @@ export const t3MomentRules: MomentRule[] = [
     moment: "HOME_BUYING", label: "buying a home", bias: -2.1, expiryDays: 180, context: null, requiresSignal: true,
     weights: {
       MORTGAGE_SIMULATION: 6, HOME_LOAN_APPLICATION: 6, NOTARY_PAYMENT: 6, HOME_LOAN_KATE_QUESTION: 4,
-      HOUSING_BUDGET_VIEW: 3, PROPERTY_VALUATION_VIEW: 3, HOME_SEARCH_IN_APP: 3, SAVING_FOR_DOWN_PAYMENT: 2, RENOVATION_VIEW: 1.5,
+      HOUSING_BUDGET_VIEW: 3, PROPERTY_VALUATION_VIEW: 3, HOME_SEARCH_IN_APP: 3, SAVING_FOR_DOWN_PAYMENT: 2, HOME_LOAN_VIEW: 2, RENOVATION_VIEW: 1.5,
     },
     contextScores: [{ condition: { field: "ctx.housing", op: "neq", value: "owner" }, score: 0.2, label: "You don't own a home yet" }],
   },
@@ -17,21 +17,21 @@ export const t3MomentRules: MomentRule[] = [
     context: { field: "ctx.employment", op: "neq", value: "retired" },
     weights: {
       FREELANCE_INCOME: 4, START_IT_VIEW: 4, BUSINESS_KATE_QUESTION: 4, BUSINESS_ACCOUNT_VIEW: 3,
-      ACCOUNTING_TOOL_PAYMENT: 3, SALARY_STOPPED: 2, EQUIPMENT_PURCHASE: 1.5,
+      ACCOUNTING_TOOL_PAYMENT: 3, BUSINESS_TOOLS_VIEW: 2, SALARY_STOPPED: 2, BUSINESS_PROTECTION_VIEW: 1.5, EQUIPMENT_PURCHASE: 1.5,
     },
   },
   {
     moment: "NEW_PARENT", label: "welcoming a baby", bias: -2, expiryDays: 365, context: null, requiresSignal: true,
-    weights: { CHILD_BORN: 5, BABY_SPENDING: 2.5, CHILDCARE_PAYMENT: 2 },
+    weights: { CHILD_BORN: 5, FAMILY_KATE_QUESTION: 3, BABY_SPENDING: 2.5, CHILDCARE_PAYMENT: 2, FAMILY_PROTECTION_VIEW: 2 },
   },
   {
     moment: "EV_PURCHASE", label: "switching to an electric car", bias: -2, expiryDays: 120, context: null, requiresSignal: true,
-    weights: { EV_LOAN_SIMULATION: 5, EV_PAGE_VIEW: 3, CAR_LOAN_ENDING: 2, EV_CHARGING: 1 },
+    weights: { EV_LOAN_SIMULATION: 5, EV_KATE_QUESTION: 3, EV_PAGE_VIEW: 3, CAR_LOAN_ENDING: 2, EV_CHARGING: 1 },
   },
   {
     moment: "RETIREMENT_PREP", label: "preparing for retirement", bias: -2, expiryDays: 365, requiresSignal: true,
     context: { field: "ctx.age", op: "gte", value: 45 },
-    weights: { PENSION_VIEW: 3, LUMP_SUM_INVESTMENT: 2 },
+    weights: { RETIREMENT_KATE_QUESTION: 3, PENSION_VIEW: 3, LUMP_SUM_INVESTMENT: 2, ESTATE_PLANNING_VIEW: 1.5 },
   },
   {
     moment: "CASHFLOW_PRESSURE", label: "a tighter budget", bias: -2, expiryDays: 90, context: null, requiresSignal: false,
