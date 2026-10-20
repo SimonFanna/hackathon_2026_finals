@@ -1,6 +1,6 @@
 # T8 — Kate (proactive messages, goal set-up, plan Q&A, scenario choice)
 
-> Owner: **Mathias** · Status: todo · Last update: 11:00 · Customer-facing voice of the engine (stages ⑤ → ⑥, ⑨, ⑪)
+> Owner: **Mathias** · Status: done on T3/T5/T6 outputs, API on an interim loader until T7 · Last update: 11:40 · Doc: `docs/features/backend-t8-kate.md` · Customer-facing voice of the engine (stages ⑤ → ⑥, ⑨, ⑪)
 > Read first: `backend/TASKS.md`, `backend/backend.md` §5.
 
 ## Goal
@@ -62,7 +62,7 @@ Then an optional "do you already have a property in mind?" (build year / EPC). T
    - "What do you share with Setle?"
    - "Can I do the solar panels later?"
 
-**Provider:** decide when you start the task. Gemini (Google Cloud credits) or Claude both work; load the matching skill/docs first. The key goes in a server-only env var (`KATE_LLM_API_KEY`), never `NEXT_PUBLIC_`, never committed. Add the variable name to `web/.env.example`.
+**Provider (decided 11:20):** OpenAI `gpt-5.6-luna` (cheapest Luna), `reasoning_effort: "none"`, key in `KATE_LLM_API_KEY`. Earlier note: Gemini (Google Cloud credits) or Claude both work; load the matching skill/docs first. The key goes in a server-only env var (`KATE_LLM_API_KEY`), never `NEXT_PUBLIC_`, never committed. Add the variable name to `web/.env.example`.
 
 **Safety:**
 - Treat the customer's question as untrusted.
@@ -91,13 +91,13 @@ Inputs: `fixtures/t3-sofie-decision.ts` (12:30), `fixtures/t5-sofie-plan.ts` (12
 
 ## Steps
 
-- [ ] `messages.ts`: `kateForDecision`, `goalSetup`, `kateForScenarios`, `kateWhy` + tests (offline)
-- [ ] Question router (what-if / why / share / general) + tests
-- [ ] Deterministic fallback answers for the 4 demo questions + tests
-- [ ] LLM provider chosen + `qa.ts` with timeout and fallback
-- [ ] `/api/kate/ask` + `/api/kate/reply` (zod, rate limit)
+- [x] `messages.ts`: `kateForDecision`, `goalSetup`, `kateForScenarios`, `kateWhy` + tests (offline)
+- [x] Question router (what-if / why / share / general) + tests
+- [x] Deterministic fallback answers for the 4 demo questions + tests
+- [x] LLM provider chosen + `qa.ts` with timeout and fallback
+- [x] `/api/kate/ask` + `/api/kate/reply` (zod, rate limit)
 - [ ] Hand the UI owner (kepa) the message/action shapes
-- [ ] Doc: status + `SOLUTION.md` log
+- [x] Doc: status + `SOLUTION.md` log
 
 ## Acceptance
 

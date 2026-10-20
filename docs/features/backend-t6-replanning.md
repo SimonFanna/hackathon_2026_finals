@@ -89,3 +89,6 @@ Active goals are ordered: dependencies first, then deadline, then creation date.
 - [x] `arbitrate` + tests (2 goals that don't fit, dependsOn, paused goals)
 - [x] Fixture for T8 (`fixtures/t6-sofie-scenarios.ts`)
 - [ ] Integration in `runPipeline` (T7) on the real snapshot
+
+## Integration notes for T7
+On every new fact batch: `detectDisruptions(signals, ctxBefore, ctxAfter, rules, asOf, events)` → for each active goal, `assessImpact(d, goal, plan, ctxAfter)` → if `impact.broken.length`: `replan(goal, plan, ctxAfter, impact, rules, asOf, d)` → Kate `kateForScenarios(impact, scenarios, ctxAfter, disruptionType, goal, d)`. **Pass `d` to both.** Customer picks → `chooseScenario(goal, scenario)` → store the new plan version (keep the old one) → `arbitrate(allGoals, plans, ctxAfter)` if the customer has more than one goal.
