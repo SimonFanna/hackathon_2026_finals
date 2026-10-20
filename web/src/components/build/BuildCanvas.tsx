@@ -147,7 +147,8 @@ export default function BuildCanvas(props: BuildCanvasProps) {
         box.union(m.geometry.boundingBox!.clone().applyMatrix4(m.matrixWorld));
       }
       const centre = box.isEmpty() ? new THREE.Vector3(0, 0.5, 0) : box.getCenter(new THREE.Vector3());
-      return { group, meshes, original, centre, bottom: box.isEmpty() ? 0 : box.min.y, mode: "ghost", t0: 0, landed: true, sag: 0, sagFrom: 0, repairT0: -1 };
+      // mode starts as "built" (the meshes carry their real materials); setMode(…, "ghost") below swaps them.
+      return { group, meshes, original, centre, bottom: box.isEmpty() ? 0 : box.min.y, mode: "built", t0: 0, landed: true, sag: 0, sagFrom: 0, repairT0: -1 };
     });
     const phaseCount = BUILD_PHASES[persona] ?? parts.length;
     const partsOfStep = (id: string): Part[] => {
@@ -435,7 +436,7 @@ export default function BuildCanvas(props: BuildCanvasProps) {
       // A hit: red flicker and a jolt on the damaged pieces, the whole scene shudders.
       const hk = hitT0 >= 0 ? clamp01((now - hitT0) / (HIT_S * 1000)) : 1;
       if (hitT0 >= 0) {
-        const flash = hk < 0.5 && Math.floor((now - hitT0) / 70) % 2 === 0;
+        const flash = hk < 0.6 && Math.floor((now - hitT0) / 80) % 2 === 0;
         for (const part of hitParts) {
           for (const m of part.meshes) {
             const orig = part.original.get(m)!;
