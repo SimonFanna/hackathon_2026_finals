@@ -5,15 +5,18 @@ import { AnimatePresence, LayoutGroup, motion, useAnimate, useReducedMotion } fr
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   advance, buildJourney, decide, detectIntents, getPersona, hit, initState, isComplete, resolve, scoreboard, setConsent, startRun,
-  type Journey, type JourneyState, type OutcomeModel, type PendingHit, type Persona, type Run, type Scoreboard,
+  type Journey, type JourneyState, type OutcomeModel, type PendingHit, type Persona, type Resolution, type Run, type Scoreboard,
 } from "@/engine";
 import { CharacterSelect3D } from "../picker/CharacterSelect3D";
+import { ChapterScreen } from "./ChapterScreen";
 import { providerName } from "./copy";
+import { buildDemoSequence, type DemoPage } from "./demoSequence";
 import { EngineHud, type AdaptStep, type Phase } from "./EngineHud";
+import { EventPage } from "./EventPage";
 import { Finale } from "./Finale";
 import { HomeScreen } from "./HomeScreen";
 import { DeclinedScreen, IntentScreen } from "./IntentScreen";
-import { EventScreen, LiveScreen, OptionsScreen, rankOptions } from "./OutcomeScreens";
+import { LiveScreen, rankOptions } from "./OutcomeScreens";
 import { PathScreen } from "./PathScreen";
 import { FRAME_H, Phone } from "./Phone";
 import { PlanScreen } from "./PlanScreen";
@@ -22,7 +25,8 @@ import { ConsentSheet, EstimateSheet, WhySheet } from "./Sheets";
 import { StepScreen, type ConsentMode } from "./StepScreen";
 import { useViewport } from "./useViewport";
 
-type Screen = "select" | "home" | "intent" | "declined" | "path" | "step" | "plan" | "live" | "event" | "options" | "finale";
+/** After the plan (Demo V2): "chapter" and "event" are the pages of `buildDemoSequence`, then "finale". */
+type Screen = "select" | "home" | "intent" | "declined" | "path" | "step" | "plan" | "chapter" | "event" | "finale";
 type SheetName = null | "why" | "consent" | "estimate";
 type Move = "forward" | "accept" | "skip" | "back";
 /** "real" = the persona's signals; "weak" = only the weakest one, so the engine deliberately does nothing. */
@@ -46,6 +50,29 @@ function autoPlay(model: OutcomeModel, accepted: ReadonlySet<string>): Run {
     run = resolve(run, model, p, p.options.find((o) => o.recommended)!.id);
   }
   return advance(run, Math.max(model.horizon, run.plan.values.finish));
+}
+
+/**
+ * The engine on page `i` of the sequence: every surprise before it replayed (keeping the customer's earlier picks,
+ * Kate's otherwise), and, on an event page, that surprise hitting the plan. Deterministic, so ← and deep links agree.
+ */
+function runForPage(
+  model: OutcomeModel, pages: DemoPage[], i: number, accepted: ReadonlySet<string>, history: Resolution[],
+): { run: Run; pending: PendingHit | null } {
+  let run = startRun(model);
+  for (const pg of pages.slice(0, i)) {
+    if (pg.kind !== "event") continue;
+    const ph = hit(run, model, accepted);
+    if (!ph) break;
+    const past = history[run.next]?.optionId;
+    const opt = ph.options.find((o) => o.id === past && o.available) ?? ph.options.find((o) => o.recommended)!;
+    run = resolve(run, model, ph, opt.id);
+  }
+  if (pages[i]?.kind === "event") {
+    const pending = hit(run, model, accepted);
+    if (pending) return { run: advance(run, pending.disruption.month), pending };
+  }
+  return { run, pending: null };
 }
 
 const EMPTY: Scoreboard = {
@@ -82,7 +109,9 @@ export function Stage() {
   const [presenter, setPresenter] = useState(false);
   const [move, setMove] = useState<Move>("forward");
   const [run, setRun] = useState<Run | null>(null);
+  const [page, setPage] = useState(0); // index into `pages` while on a chapter or event page
   const [pending, setPending] = useState<PendingHit | null>(null);
+  const [adaptStep, setAdaptStep] = useState<AdaptStep>("replan");
   const [selected, setSelected] = useState<string | null>(null);
   const [lastChanged, setLastChanged] = useState<string[]>([]);
   const [shock, setShock] = useState(0);
@@ -106,6 +135,7 @@ export function Stage() {
     [state],
   );
   const finishLine = run ? Math.max(model.horizon, run.plan.values.finish) : model.horizon;
+  const pages = useMemo(() => buildDemoSequence(persona, accepted), [persona, accepted]);
 
   // Kate's notification arrives shortly after the home screen settles, unless the engine chose NO_ACTION.
   useEffect(() => {
@@ -114,7 +144,15 @@ export function Stage() {
     return () => clearTimeout(t);
   }, [screen, speaks]);
 
-  // Pitch backups: ?player=house|business, and ?demo=intent | step[&n=6] | live | event[&n=2] | options[&n=2] | finale | weak.
+  // On an event page the HUD shows "Options scored" first, then hands over to the customer.
+  useEffect(() => {
+    if (screen !== "event") return;
+    const t = setTimeout(() => setAdaptStep("decide"), 1100);
+    return () => clearTimeout(t);
+  }, [screen, page]);
+
+  // Pitch backups: ?player=house|business, and ?demo=intent | step[&n=6] | live | event[&n=2] | finale | weak.
+  // ?demo=event&n=N lands on page N of the post-plan sequence (chapters and surprises interleaved); live = page 1.
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
     const player = p.get("player");
@@ -138,30 +176,22 @@ export function Stage() {
       }
       const all = acceptAll(journey);
       const ids = new Set(journey.steps.map((s) => s.id));
-      if (demo === "live") {
-        setState(all);
-        setRun(startRun(ps.outcome));
-        return setScreen("live");
-      }
       if (demo === "finale") {
         setState(all);
         setRun(autoPlay(ps.outcome, ids));
         return setScreen("finale");
       }
-      if (demo === "event" || demo === "options") {
-        // Kate's picks for the surprises before n, then surprise n hits.
-        const n = Math.min(Math.max(Number(p.get("n") ?? 1) || 1, 1), ps.outcome.disruptions.length);
-        let r = startRun(ps.outcome);
-        for (let i = 1; i < n; i++) {
-          const ph = hit(r, ps.outcome, ids)!;
-          r = resolve(r, ps.outcome, ph, ph.options.find((o) => o.recommended)!.id);
-        }
-        const ph = hit(r, ps.outcome, ids)!;
+      if (demo === "live" || demo === "event" || demo === "options") {
+        // Kate's picks for every surprise before page n; page n is shown as the customer would reach it.
+        const seq = buildDemoSequence(ps, ids);
+        const n = demo === "live" ? 1 : Math.min(Math.max(Number(p.get("n") ?? 1) || 1, 1), seq.length);
+        const at = runForPage(ps.outcome, seq, n - 1, ids, []);
         setState(all);
-        setRun(advance(r, ph.disruption.month));
-        setPending(ph);
-        setSelected(ph.options.find((o) => o.recommended)?.id ?? null);
-        return setScreen(demo);
+        setRun(at.run);
+        setPage(n - 1);
+        setPending(at.pending);
+        setSelected(at.pending?.options.find((o) => o.recommended)?.id ?? null);
+        return setScreen(seq[n - 1].kind);
       }
     }, 0);
     return () => clearTimeout(t);
@@ -270,42 +300,49 @@ export function Stage() {
     go("plan");
   };
 
-  const startPlan = () => {
-    setRun(startRun(model));
-    setLastChanged([]);
-    go("live");
-  };
-
-  /** Time moves on until the next surprise hits the plan (or the finish line). */
-  const fastForward = () => {
-    if (!run) return;
-    if (isComplete(run, model)) {
-      if (run.month < finishLine) {
-        setRun(advance(run, finishLine));
-        setLastChanged([]);
-      } else go("finale");
+  /** Shows page `i` of the post-plan sequence with the engine replayed up to it; past the last page, the finale. */
+  const showPage = (i: number, m: Move, history: Resolution[], from: Run) => {
+    if (i >= pages.length) {
+      setRun(advance(from, finishLine));
+      setPending(null);
+      go("finale", m);
       return;
     }
-    const p = hit(run, model, accepted);
-    if (!p) return;
-    setPending(p);
-    setSelected(p.options.find((o) => o.recommended)?.id ?? null);
-    setRun(advance(run, p.disruption.month));
-    setLastChanged([]);
-    go("event");
-    setShock((n) => n + 1);
-    if (!reduce && phoneScope.current) animatePhone(phoneScope.current, { x: [0, -10, 10, -7, 7, -3, 0] }, { duration: 0.45 });
+    const at = runForPage(model, pages, i, accepted, history);
+    setRun(at.run);
+    setPage(i);
+    setPending(at.pending);
+    setSelected(at.pending?.options.find((o) => o.recommended)?.id ?? null);
+    setAdaptStep("replan");
+    go(pages[i].kind, m);
+    if (at.pending && m !== "back") {
+      setShock((n) => n + 1);
+      if (!reduce && phoneScope.current) animatePhone(phoneScope.current, { x: [0, -10, 10, -7, 7, -3, 0] }, { duration: 0.45 });
+    }
   };
 
+  const openPage = (i: number, m: Move = "forward") => {
+    if (!run) return;
+    setLastChanged([]);
+    showPage(i, m, run.history, run);
+  };
+
+  const startPlan = () => {
+    const r = startRun(model);
+    setRun(r);
+    setLastChanged([]);
+    showPage(0, "forward", [], r);
+  };
+
+  /** The customer picks an option on an event page: the plan moves on with it, then the next page. */
   const choose = () => {
     if (!run || !pending || !selected) return;
     const opt = pending.options.find((o) => o.id === selected);
     if (!opt?.available) return;
-    setRun(resolve(run, model, pending, selected));
+    const next = resolve(run, model, pending, selected);
     setLastChanged(opt.changes?.map((c) => c.stepId) ?? []);
-    setPending(null);
     showToast(opt.recommended ? `Plan updated: ${opt.label}.` : `Your call: ${opt.label}.`);
-    go("live", "accept");
+    showPage(page + 1, "accept", next.history, next);
   };
 
   const back = () => {
@@ -319,9 +356,10 @@ export function Stage() {
     else if (screen === "plan") {
       setIndex(steps.length - 1);
       go("step", "back");
-    } else if (screen === "options") go("event", "back");
-    else if (screen === "live" && run && run.history.length === 0 && run.month === 0) go("plan", "back");
-    else if (screen === "finale") go("live", "back");
+    } else if (screen === "chapter" || screen === "event") {
+      if (page > 0) openPage(page - 1, "back");
+      else go("plan", "back");
+    } else if (screen === "finale") openPage(pages.length - 1, "back");
     else if (screen === "home") toPlayers();
   };
 
@@ -348,7 +386,7 @@ export function Stage() {
     if (k === "w" && presenter) return reset(signalSet === "weak" ? "real" : "weak");
     if (sheet) return;
     if (k === "f" && (screen === "path" || screen === "step")) return fillPlan();
-    if (screen === "options" && pending && /^[1-9]$/.test(k)) {
+    if (screen === "event" && pending && /^[1-9]$/.test(k)) {
       const o = rankOptions(pending.options)[Number(k) - 1];
       if (o?.available) setSelected(o.id);
       return;
@@ -367,9 +405,8 @@ export function Stage() {
       else if (screen === "path") go("step");
       else if (screen === "step") primary();
       else if (screen === "plan") startPlan();
-      else if (screen === "live") fastForward();
-      else if (screen === "event") go("options");
-      else if (screen === "options") choose();
+      else if (screen === "chapter") openPage(page + 1);
+      else if (screen === "event") choose();
     }
   };
   useEffect(() => {
@@ -399,7 +436,7 @@ export function Stage() {
             : { opacity: 0, x: m === "back" ? 24 : -24, transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] as const } },
   };
 
-  const screenKey = screen === "step" ? `step-${index}` : screen === "event" || screen === "options" ? `${screen}-${pending?.disruption.id}` : screen;
+  const screenKey = screen === "step" ? `step-${index}` : screen === "chapter" || screen === "event" ? `${screen}-${page}` : screen;
   const showAppFinale = finale && !stageFinale;
 
   const phase: Phase =
@@ -407,13 +444,15 @@ export function Stage() {
       ? "detect"
       : screen === "path" || screen === "step" || screen === "plan"
         ? "plan"
-        : screen === "event" || screen === "options"
+        : screen === "event"
           ? "adapt"
           : run && isComplete(run, model) && run.month >= finishLine
             ? "outcome"
             : "execute";
-  const adaptStep: AdaptStep | null = screen === "event" ? "replan" : screen === "options" ? "decide" : null;
   const eventIndex = run?.next ?? 0;
+  const current = pages[page];
+  const chapterIndex = pages.slice(0, page + 1).filter((x) => x.kind === "chapter").length;
+  const chapterCount = pages.filter((x) => x.kind === "chapter").length;
 
   const phoneContent = (
     <div className="relative min-h-0 flex-1">
@@ -450,23 +489,25 @@ export function Stage() {
           {screen === "plan" && state && (
             <PlanScreen state={state} onImpact={startPlan} onBack={back} onAdvisor={() => showToast("A KBC advisor will call you back. Nothing is booked in this demo.")} />
           )}
-          {(screen === "live" || (stageFinale && run)) && state && run && (
+          {screen === "chapter" && state && run && current?.kind === "chapter" && (
+            <ChapterScreen persona={persona} state={state} run={run} chapter={current.chapter} position={chapterIndex} count={chapterCount} onNext={() => openPage(page + 1)} />
+          )}
+          {screen === "event" && run && pending && (
+            <EventPage persona={persona} run={run} pending={pending} index={eventIndex} selected={selected} onSelect={setSelected} onChoose={choose} />
+          )}
+          {stageFinale && state && run && (
             <LiveScreen
               persona={persona}
               state={state}
               run={run}
               lastChanged={lastChanged}
               finishLine={finishLine}
-              final={stageFinale}
-              onNext={fastForward}
+              final
+              onNext={() => {}}
               onAdvisor={() => showToast("A KBC advisor will call you back. Nothing is booked in this demo.")}
             />
           )}
           {stageFinale && !run && state && <PlanScreen state={state} final onImpact={() => {}} onBack={back} onAdvisor={() => {}} />}
-          {screen === "event" && pending && <EventScreen persona={persona} pending={pending} index={eventIndex} onOptions={() => go("options")} />}
-          {screen === "options" && pending && (
-            <OptionsScreen persona={persona} pending={pending} selected={selected} onSelect={setSelected} onChoose={choose} onBack={back} />
-          )}
           {showAppFinale && (
             <Finale variant="app" persona={persona} run={run} board={board} onEstimate={() => setSheet("estimate")} onRestart={() => reset()} onPlayers={toPlayers} />
           )}
@@ -565,7 +606,7 @@ export function Stage() {
             </div>
           </motion.div>
           <AnimatePresence mode="popLayout">
-            {showHud && <EngineHud key="hud" persona={persona} run={run} pending={pending} phase={phase} adaptStep={adaptStep} />}
+            {showHud && <EngineHud key="hud" persona={persona} run={run} pending={pending} phase={phase} adaptStep={screen === "event" ? adaptStep : null} />}
             {stageFinale && (
               <motion.div key="finale" layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.2 } }}>
                 <Finale persona={persona} run={run} board={board} onEstimate={() => setSheet("estimate")} onRestart={() => reset()} onPlayers={toPlayers} />
