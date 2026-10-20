@@ -27,12 +27,13 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 - On stage ≥1100 px: **left of the phone**, the player's own diorama from the picker (`web/src/components/picker/dioramas.ts`): Lina's coffee bar, Thomas's house. It **builds piece by piece** as steps are accepted (scaffold → piece appears with a small dust/spark; skipped step → that piece stays as a ghost outline). A disruption hits → a short red flash/crack on the affected part; the customer's choice → it repairs. The finale → fully lit.
 - Reuse the picker's three.js setup (same materials, lights, perf budget ≥ 50 fps on Iris Xe, `?q=low` and no-WebGL → hidden). Mount one canvas only, after the picker has unmounted.
 - Layout: the presenter panel (key P) moves to an overlay so the left column is the 3D build. No third crowded column: phone centre, build left, HUD right.
-- "diagno exyro": idea only. **No code copied from the qualifier repo** (eligibility rule).
+- **Reference: the Exyro diagnostic intro** (`/home/kepa/Exyro/Diagnostic-Exyro/`: `src/three/building.js` builds the meshes, `src/intro/scene.js` is the timeline: floors drop in one by one with `springOut`, windows light up, the building turns to face the viewer, then the camera walks in). The user confirmed with the organisers (13:40) that **reusing this code is allowed**: adapt its build timeline/easing to our dioramas (one piece per accepted step), with KBC colours instead of the Exyro palette, and credit the source in a comment.
 
 ### P5 · Optional: "Your own" player, backend-driven · only if P1–P4 are done and verified
 - A third carousel card: pick one of the 6 Supabase demo customers. Simon's adapter `web/src/lib/backend.ts` (`fetchIntent`, `startJourney`, …) detects the moment and builds the plan; only BUY_HOME and START_BUSINESS have plan templates (others → Kate explains "no plan yet" / NO_ACTION for Els/Thomas). Coordinate with Simon; don't edit `web/src/backend/`.
 
 ## Rules
+- No "pain story" before the demo (user, 13:40): don't bring it back.
 - Victor's files (`Stage.tsx`, journey screens, `personas.ts`, `CharacterSelect.tsx`): small, explicit diffs; put "Victor FYI" in those commit messages.
 - Commit small on `kepa`, `git pull --no-rebase origin main` before pushing, never checkout/switch in the shared working tree. The coordinator merges into `main`.
 - Each item: verify in a browser on a prod build (GPU flags: `--use-angle=vulkan --enable-features=Vulkan --ignore-gpu-blocklist`); `npm run lint`, `npm test`, `npm run build` green; screenshot in `docs/screenshots/demo-v2/`; tick below.
