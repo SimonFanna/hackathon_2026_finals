@@ -138,3 +138,14 @@ describe("buildPlan: Lucas, same code", () => {
     expect(p.summary!.homeLoan).toBe(0);
   });
 });
+
+describe("fixture t5-sofie-plan", () => {
+  it("matches the acceptance criteria", async () => {
+    const f = await import("../fixtures/t5-sofie-plan");
+    expect(f.sofiePlan.atRisk).toBe(false);
+    expect(f.sofiePlan.steps.find((s) => s.capability === "insure_property")!.display).toBe("ALREADY_COVERED");
+    expect(f.sofieOutcome.partners.leads).toBe(0);
+    expect(checkConstraints(f.sofiePlan, f.sofieGoal, f.sofieCtxIncomeDrop).some((c) => !c.ok)).toBe(true);
+    expect(f.lucasPlan.steps.length).toBe(9);
+  });
+});
