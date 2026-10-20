@@ -1,51 +1,13 @@
-import type { Chapter, JourneyStep, Signal } from "@/engine";
+import type { ConstraintCheck, ConstraintDef, DisruptionKind, JourneyStep, Strategy } from "@/engine";
+import { eur } from "./format";
 
-// UI copy in Kate's voice: short, "you", reassuring, no emoji. Data (steps, signals, figures) comes from @/engine.
+// UI copy in Kate's voice: short, "you", reassuring, no emoji. Persona copy (quests, Kate's lines) lives with the data in @/engine.
 
-export const chapterLabel: Record<Chapter, string> = {
-  find: "Find the house",
-  finance: "Finance it",
-  renovate: "Renovate",
-  protect: "Protect it",
-};
-
-export const chapterOrder: Chapter[] = ["find", "finance", "renovate", "protect"];
-
-export const intentCopy = {
-  notification: "Looks like you're house hunting. Want a hand with the plan?",
-  question: "Are you planning to buy a home?",
-  unsure: "Kate isn't sure yet, so she's asking first.",
-  sure: "Here's a plan for your new home.",
-  declined: "Got it. Kate won't bring this up again. Nothing was shared.",
-};
-
-/** Kate's opening line, built from the customer's own signals (Supabase app events). */
-export function kateLineFor(signals: Signal[]): string {
-  const has = (t: Signal["type"]) => signals.some((s) => s.type === t);
-  const amount = signals.find((s) => s.type === "mortgage_simulation")?.amountEur;
-  const parts = [
-    has("property_search") && "checked property valuations",
-    amount ? `simulated a €${Math.round(amount / 1000)}k home loan` : has("mortgage_simulation") && "simulated a home loan",
-    has("renovation_research") && "looked into renovation",
-  ].filter(Boolean) as string[];
-  if (parts.length === 0) return "Kate noticed some activity around housing.";
-  const list = parts.length === 1 ? parts[0] : `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}`;
-  return `You ${list}.`;
-}
-
-/** Purpose line of the consent block ("why"), per step. */
-const purposeByStep: Record<string, string> = {
-  search: "So Immoscoop can keep your saved houses and alerts in one place.",
-  valuation: "So an Immoscoop estate agent can value the house before you make an offer.",
-  epc: "So De Immowinkel can check the certificate and which works the house needs.",
-  grants: "So Setle can estimate the works and every grant you can claim.",
-  insulation: "So Impact us today can prepare an insulation quote.",
-  heating: "So Impact us today can prepare a heat pump quote.",
-};
+export const declinedCopy = "Got it. Kate won't bring this up again. Nothing was shared.";
+export const unsureCopy = "Kate isn't sure yet, so she's asking first.";
 
 export function purposeFor(step: JourneyStep): string {
-  const name = step.provider.kind === "partner" ? step.provider.name : "KBC";
-  return purposeByStep[step.id] ?? `So ${name} can prepare this step for you.`;
+  return step.purpose ?? `So ${providerName(step)} can prepare this step for you.`;
 }
 
 export function providerName(step: JourneyStep): string {
@@ -60,4 +22,50 @@ export function outcomeLine(step: JourneyStep): { text: string; green: boolean }
     return { text: `About €${o.customerEurPerYear.toLocaleString("en-GB")} a year and ${o.kwhPerYear.toLocaleString("en-GB")} kWh less`, green: true };
   if (o.customerEurPerYear) return { text: `About €${o.customerEurPerYear.toLocaleString("en-GB")} saved a year`, green: true };
   return null;
+}
+
+export function formatValue(def: ConstraintDef, n: number): string {
+  if (def.unit === "month") return `Month ${Math.round(n)}`;
+  if (def.unit === "eurMonth") return `${eur(n)}/mo`;
+  return eur(n);
+}
+
+/** "limit €400,000" / "min €10,000" / "by month 13" */
+export function formatLimit(def: ConstraintDef, n: number): string {
+  if (def.unit === "month") return `by month ${Math.round(n)}`;
+  return `${def.kind === "min" ? "min" : "max"} ${formatValue(def, n)}`;
+}
+
+/** One line on what broke: "Monthly repayments €1,910/mo, max €1,900/mo". */
+export function brokenLine(def: ConstraintDef, c: ConstraintCheck): string {
+  return `${def.label}: ${formatValue(def, c.value)}, ${formatLimit(def, c.limit)}`;
+}
+
+export const kindLabel: Record<DisruptionKind, string> = {
+  cost: "Cost overrun",
+  delay: "Partner delay",
+  income: "Income shock",
+  rate: "Market change",
+  cashflow: "Cash crunch",
+  health: "Health",
+};
+
+export const strategyLabel: Record<Strategy, string> = {
+  keep: "Keep",
+  defer: "Defer",
+  substitute: "Substitute",
+  refinance: "Refinance",
+  rebalance: "Rebalance",
+  reorder: "Reorder",
+  protect: "Protection",
+  bridge: "Bridge",
+};
+
+export function healthTone(h: number): "good" | "risk" | "bad" {
+  return h >= 80 ? "good" : h >= 50 ? "risk" : "bad";
+}
+
+export function healthWord(h: number): string {
+  const t = healthTone(h);
+  return t === "good" ? "On track" : t === "risk" ? "At risk" : "Off track";
 }

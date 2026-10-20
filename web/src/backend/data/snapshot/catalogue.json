@@ -1,0 +1,1605 @@
+[
+ {
+  "sourceRow": 2,
+  "ecosystem": "Housing",
+  "name": "Home loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 3,
+  "ecosystem": "Housing",
+  "name": "Bridging loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 4,
+  "ecosystem": "Housing",
+  "name": "Renovation loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 5,
+  "ecosystem": "Housing",
+  "name": "Home furnishing loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 6,
+  "ecosystem": "Housing",
+  "name": "Garden or terrace loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 7,
+  "ecosystem": "Housing",
+  "name": "Rental guarantee",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 8,
+  "ecosystem": "Housing",
+  "name": "Home insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 9,
+  "ecosystem": "Housing",
+  "name": "Home assistance insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 10,
+  "ecosystem": "Housing",
+  "name": "Outstanding balance insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 11,
+  "ecosystem": "Housing",
+  "name": "MyHome",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 12,
+  "ecosystem": "Housing",
+  "name": "Estimate renovation costs and grants",
+  "partner": "Setle",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 13,
+  "ecosystem": "Housing",
+  "name": "Quote for new windows",
+  "partner": "Impact us today",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 14,
+  "ecosystem": "Housing",
+  "name": "Certificates and inspections",
+  "partner": "De Immowinkel",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 15,
+  "ecosystem": "Housing",
+  "name": "Search for a home",
+  "partner": "Immoscoop",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 16,
+  "ecosystem": "Housing",
+  "name": "Property valuation by an estate agent",
+  "partner": "Immoscoop",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 17,
+  "ecosystem": "Housing",
+  "name": "Indicative online property valuation",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 18,
+  "ecosystem": "Housing",
+  "name": "Calculate housing budget",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 19,
+  "ecosystem": "Housing",
+  "name": "Renovation loan for co-owners' associations",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 20,
+  "ecosystem": "Housing",
+  "name": "Home Insurance API",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 21,
+  "ecosystem": "Housing",
+  "name": "Home Insurance Widget",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 22,
+  "ecosystem": "Housing",
+  "name": "Home Loan API",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 23,
+  "ecosystem": "Housing",
+  "name": "Home Loan Widget",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 24,
+  "ecosystem": "Housing",
+  "name": "Home Loans",
+  "partner": null,
+  "viaPartnerHub": true
+ },
+ {
+  "sourceRow": 25,
+  "ecosystem": "Mobility",
+  "name": "Petrol or diesel car loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 26,
+  "ecosystem": "Mobility",
+  "name": "Plug-in hybrid car loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 27,
+  "ecosystem": "Mobility",
+  "name": "Electric car loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 28,
+  "ecosystem": "Mobility",
+  "name": "Bicycle, scooter or motorcycle loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 29,
+  "ecosystem": "Mobility",
+  "name": "Camper, caravan, trailer or boat loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 30,
+  "ecosystem": "Mobility",
+  "name": "Car Loan Plus",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 31,
+  "ecosystem": "Mobility",
+  "name": "Car insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 32,
+  "ecosystem": "Mobility",
+  "name": "Electric car insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 33,
+  "ecosystem": "Mobility",
+  "name": "Bicycle insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 34,
+  "ecosystem": "Mobility",
+  "name": "Moped insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 35,
+  "ecosystem": "Mobility",
+  "name": "Motorcycle insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 36,
+  "ecosystem": "Mobility",
+  "name": "MyMobility",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 37,
+  "ecosystem": "Mobility",
+  "name": "Calculate monthly car costs",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 38,
+  "ecosystem": "Mobility",
+  "name": "VAB vignettes and toll badge",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 39,
+  "ecosystem": "Mobility",
+  "name": "Pay for parking",
+  "partner": "4411",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 40,
+  "ecosystem": "Mobility",
+  "name": "Parking with number plate recognition",
+  "partner": "Q-Park",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 41,
+  "ecosystem": "Mobility",
+  "name": "Car sharing",
+  "partner": "Cambio",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 42,
+  "ecosystem": "Mobility",
+  "name": "Bus and tram tickets",
+  "partner": "De Lijn",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 43,
+  "ecosystem": "Mobility",
+  "name": "Train tickets",
+  "partner": "NMBS",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 44,
+  "ecosystem": "Mobility",
+  "name": "Top up BRUPASS 10",
+  "partner": "MIVB",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 45,
+  "ecosystem": "Mobility",
+  "name": "Shared bicycles",
+  "partner": "Mobit",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 46,
+  "ecosystem": "Mobility",
+  "name": "Shared bicycles",
+  "partner": "Blue-bike",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 47,
+  "ecosystem": "Mobility",
+  "name": "Shared bicycles",
+  "partner": "Velo Antwerpen",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 48,
+  "ecosystem": "Mobility",
+  "name": "Manage a leased vehicle",
+  "partner": "MoveSmart and VAB",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 49,
+  "ecosystem": "Mobility",
+  "name": "Prepare for the driving test and book driving lessons",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 50,
+  "ecosystem": "Mobility",
+  "name": "Pay for fuel",
+  "partner": "Q8",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 51,
+  "ecosystem": "Mobility",
+  "name": "Manage business mobility costs",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 52,
+  "ecosystem": "Mobility",
+  "name": "VAB fuel and charging cards",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 53,
+  "ecosystem": "Mobility",
+  "name": "KBC Employee Mobility",
+  "partner": "MoveSmart integration",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 54,
+  "ecosystem": "Mobility",
+  "name": "Car Insurance API",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 55,
+  "ecosystem": "Mobility",
+  "name": "Car Insurance Widget",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 56,
+  "ecosystem": "Pensions",
+  "name": "Pension savings fund",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 57,
+  "ecosystem": "Pensions",
+  "name": "Pension savings insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 58,
+  "ecosystem": "Pensions",
+  "name": "Supplementary pension for the self-employed",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 59,
+  "ecosystem": "Pensions",
+  "name": "Social supplementary pension for the self-employed",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 60,
+  "ecosystem": "Pensions",
+  "name": "Individual pension commitment",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 61,
+  "ecosystem": "Pensions",
+  "name": "Pension agreement for the self-employed",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 62,
+  "ecosystem": "Pensions",
+  "name": "Pension plans for medical professionals",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 63,
+  "ecosystem": "Pensions",
+  "name": "KBC Team Benefit Plan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 64,
+  "ecosystem": "Pensions",
+  "name": "KBC Pension Fund Solutions",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 65,
+  "ecosystem": "Investing",
+  "name": "KBC investment plan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 66,
+  "ecosystem": "Investing",
+  "name": "Invest spare change",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 67,
+  "ecosystem": "Investing",
+  "name": "Investment funds",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 68,
+  "ecosystem": "Investing",
+  "name": "Thematic investing",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 69,
+  "ecosystem": "Investing",
+  "name": "Responsible investing",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 70,
+  "ecosystem": "Investing",
+  "name": "Managed investing",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 71,
+  "ecosystem": "Investing",
+  "name": "Self-directed investing",
+  "partner": "Bolero",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 72,
+  "ecosystem": "Investing",
+  "name": "Branch 23 investment insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 73,
+  "ecosystem": "Investing",
+  "name": "Portfolio management",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 74,
+  "ecosystem": "Savings",
+  "name": "Savings accounts",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 75,
+  "ecosystem": "Savings",
+  "name": "Save for someone else",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 76,
+  "ecosystem": "Savings",
+  "name": "Branch 21 savings insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 77,
+  "ecosystem": "Savings",
+  "name": "Business term account",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 78,
+  "ecosystem": "Savings",
+  "name": "KBC Term Deposit PRO",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 79,
+  "ecosystem": "Business",
+  "name": "KBC Business PRO Account",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 80,
+  "ecosystem": "Business",
+  "name": "KBC Business Debit Card",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 81,
+  "ecosystem": "Business",
+  "name": "KBC Business Credit Card",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 82,
+  "ecosystem": "Business",
+  "name": "KBC Mastercard Business Essential",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 83,
+  "ecosystem": "Business",
+  "name": "KBC Mastercard Business Extra",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 84,
+  "ecosystem": "Business",
+  "name": "KBC Business Prepaid Card",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 85,
+  "ecosystem": "Business",
+  "name": "Business multi-currency",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 86,
+  "ecosystem": "Business",
+  "name": "E-invoicing",
+  "partner": "Billit",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 87,
+  "ecosystem": "Business",
+  "name": "Collect unpaid invoices",
+  "partner": "Go Solid",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 88,
+  "ecosystem": "Business",
+  "name": "Send an expense claim to your accountant",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 89,
+  "ecosystem": "Business",
+  "name": "Payment terminals",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 90,
+  "ecosystem": "Business",
+  "name": "KBC payment button",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 91,
+  "ecosystem": "Business",
+  "name": "KBC Paypage",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 92,
+  "ecosystem": "Business",
+  "name": "Electronic invoicing",
+  "partner": "Soluz.io",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 93,
+  "ecosystem": "Business",
+  "name": "KBC Invoicing Services",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 94,
+  "ecosystem": "Business",
+  "name": "Machine-to-machine payment solutions",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 95,
+  "ecosystem": "Business",
+  "name": "Cash pooling",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 96,
+  "ecosystem": "Business",
+  "name": "Business cash services",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 97,
+  "ecosystem": "Business",
+  "name": "Factoring and accounts receivable management",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 98,
+  "ecosystem": "Business",
+  "name": "ComFin Touch",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 99,
+  "ecosystem": "Business",
+  "name": "Investment loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 100,
+  "ecosystem": "Business",
+  "name": "Business Budget Facility",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 101,
+  "ecosystem": "Business",
+  "name": "Current account advance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 102,
+  "ecosystem": "Business",
+  "name": "Straight Loans",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 103,
+  "ecosystem": "Business",
+  "name": "Financing advance tax payments",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 104,
+  "ecosystem": "Business",
+  "name": "Cash budget credit facility",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 105,
+  "ecosystem": "Business",
+  "name": "Roll-Over Line of Credit",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 106,
+  "ecosystem": "Business",
+  "name": "B2B Asset Financing",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 107,
+  "ecosystem": "Business",
+  "name": "Start it @KBC",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 108,
+  "ecosystem": "Business",
+  "name": "KBC Innovation Banking",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 109,
+  "ecosystem": "Business",
+  "name": "Boostpack",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 110,
+  "ecosystem": "Business",
+  "name": "Tax and legal advice for SMEs",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 111,
+  "ecosystem": "Business",
+  "name": "Business transfer advice",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 112,
+  "ecosystem": "Business",
+  "name": "Business valuation advice",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 113,
+  "ecosystem": "Business",
+  "name": "Business property advice",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 114,
+  "ecosystem": "Business",
+  "name": "Acquisition advice",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 115,
+  "ecosystem": "Business",
+  "name": "Strategic advice through a relationship manager",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 116,
+  "ecosystem": "Business",
+  "name": "Working capital forecasts",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 117,
+  "ecosystem": "Business",
+  "name": "Working capital sector comparison",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 118,
+  "ecosystem": "Business",
+  "name": "Digital signatures and powers of attorney",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 119,
+  "ecosystem": "Business",
+  "name": "Multi-bank account overview",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 120,
+  "ecosystem": "Business",
+  "name": "B2B Asset Financing",
+  "partner": null,
+  "viaPartnerHub": true
+ },
+ {
+  "sourceRow": 121,
+  "ecosystem": "Business",
+  "name": "Business Account",
+  "partner": null,
+  "viaPartnerHub": true
+ },
+ {
+  "sourceRow": 122,
+  "ecosystem": "Business",
+  "name": "Bancontact Pro In Store",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 123,
+  "ecosystem": "Business",
+  "name": "Bancontact Pro Online",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 124,
+  "ecosystem": "Business",
+  "name": "Joyn for merchants",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 125,
+  "ecosystem": "Travel",
+  "name": "Airport Fast Lane and Lounge Pass",
+  "partner": "Brussels Airport",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 126,
+  "ecosystem": "Travel",
+  "name": "Travel eSIM",
+  "partner": "Firsty",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 127,
+  "ecosystem": "Travel",
+  "name": "Travel insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 128,
+  "ecosystem": "Energy and sustainability",
+  "name": "Energy loan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 129,
+  "ecosystem": "Energy and sustainability",
+  "name": "Calculate solar panels and request a quote",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 130,
+  "ecosystem": "Energy and sustainability",
+  "name": "Calculate a home battery and request a quote",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 131,
+  "ecosystem": "Energy and sustainability",
+  "name": "Insulation quote",
+  "partner": "Impact us today",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 132,
+  "ecosystem": "Energy and sustainability",
+  "name": "Heating quote",
+  "partner": "Impact us today",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 133,
+  "ecosystem": "Energy and sustainability",
+  "name": "Air-conditioning quote",
+  "partner": "Impact us today",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 134,
+  "ecosystem": "Energy and sustainability",
+  "name": "Group purchase of electricity and gas",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 135,
+  "ecosystem": "Energy and sustainability",
+  "name": "Energy consumption and saving tips",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 136,
+  "ecosystem": "Energy and sustainability",
+  "name": "ecoWise",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 137,
+  "ecosystem": "Energy and sustainability",
+  "name": "Sustainability advice",
+  "partner": "Encon",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 138,
+  "ecosystem": "Energy and sustainability",
+  "name": "Water resilience",
+  "partner": "Sweco",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 139,
+  "ecosystem": "Energy and sustainability",
+  "name": "Kube ESG",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 140,
+  "ecosystem": "Energy and sustainability",
+  "name": "Business CO2 insights and sector comparison",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 141,
+  "ecosystem": "Everyday banking and payments",
+  "name": "KBC Basic Account",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 142,
+  "ecosystem": "Everyday banking and payments",
+  "name": "KBC Plus Account",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 143,
+  "ecosystem": "Everyday banking and payments",
+  "name": "Joint account",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 144,
+  "ecosystem": "Everyday banking and payments",
+  "name": "KBC Budget Facility",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 145,
+  "ecosystem": "Everyday banking and payments",
+  "name": "KBC Basic Banking Service",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 146,
+  "ecosystem": "Everyday banking and payments",
+  "name": "KBC Universal Banking Service",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 147,
+  "ecosystem": "Everyday banking and payments",
+  "name": "Debit cards",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 148,
+  "ecosystem": "Everyday banking and payments",
+  "name": "Credit cards",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 149,
+  "ecosystem": "Everyday banking and payments",
+  "name": "Cash services",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 150,
+  "ecosystem": "Everyday banking and payments",
+  "name": "Instalment repayment of credit card balance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 151,
+  "ecosystem": "Everyday banking and payments",
+  "name": "Loans for personal expenses, studies or holidays",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 152,
+  "ecosystem": "Everyday banking and payments",
+  "name": "Apple Pay",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 153,
+  "ecosystem": "Everyday banking and payments",
+  "name": "Wero",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 154,
+  "ecosystem": "Everyday banking and payments",
+  "name": "PayPal account overview",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 155,
+  "ecosystem": "Everyday banking and payments",
+  "name": "Split group expenses",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 156,
+  "ecosystem": "Everyday banking and payments",
+  "name": "Kate Wallet",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 157,
+  "ecosystem": "Family and protection",
+  "name": "Family insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 158,
+  "ecosystem": "Family and protection",
+  "name": "Accident insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 159,
+  "ecosystem": "Family and protection",
+  "name": "Life insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 160,
+  "ecosystem": "Family and protection",
+  "name": "Funeral insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 161,
+  "ecosystem": "Family and protection",
+  "name": "Service vouchers",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 162,
+  "ecosystem": "Family and protection",
+  "name": "Accident insurance for assisting family members",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 163,
+  "ecosystem": "Health and wellbeing",
+  "name": "Hospitalisation insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 164,
+  "ecosystem": "Health and wellbeing",
+  "name": "View medical records",
+  "partner": "Helena",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 165,
+  "ecosystem": "Health and wellbeing",
+  "name": "KBC Hospital Care",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 166,
+  "ecosystem": "Health and wellbeing",
+  "name": "Leadlife Plus",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 167,
+  "ecosystem": "Wealth and estate planning",
+  "name": "Private banker advice",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 168,
+  "ecosystem": "Wealth and estate planning",
+  "name": "Private Plan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 169,
+  "ecosystem": "Wealth and estate planning",
+  "name": "Inheritance Planning Service",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 170,
+  "ecosystem": "Wealth and estate planning",
+  "name": "Real Estate Service",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 171,
+  "ecosystem": "Work and employees",
+  "name": "Find flexible workers",
+  "partner": "NOWJOBS",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 172,
+  "ecosystem": "Work and employees",
+  "name": "Human Capital Solutions",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 173,
+  "ecosystem": "Work and employees",
+  "name": "KBC Employee Care",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 174,
+  "ecosystem": "Work and employees",
+  "name": "KBC Team Protect Plan",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 175,
+  "ecosystem": "Work and employees",
+  "name": "Occupational accident insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 176,
+  "ecosystem": "Work and employees",
+  "name": "Share option and warrant plans",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 177,
+  "ecosystem": "International business",
+  "name": "Documentary collection for imports",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 178,
+  "ecosystem": "International business",
+  "name": "Documentary collection for exports",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 179,
+  "ecosystem": "International business",
+  "name": "Documentary credit for imports",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 180,
+  "ecosystem": "International business",
+  "name": "Documentary credit for exports",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 181,
+  "ecosystem": "International business",
+  "name": "International bank guarantees",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 182,
+  "ecosystem": "International business",
+  "name": "KBC Flexims",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 183,
+  "ecosystem": "International business",
+  "name": "Avalised bill of exchange",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 184,
+  "ecosystem": "International business",
+  "name": "Import forfaiting",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 185,
+  "ecosystem": "International business",
+  "name": "Hedge foreign exchange and interest rate risk",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 186,
+  "ecosystem": "International business",
+  "name": "Go&Deal Pro",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 187,
+  "ecosystem": "Business protection",
+  "name": "Business liability insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 188,
+  "ecosystem": "Business protection",
+  "name": "Professional liability insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 189,
+  "ecosystem": "Business protection",
+  "name": "Medical professional liability insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 190,
+  "ecosystem": "Business protection",
+  "name": "Directors' liability insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 191,
+  "ecosystem": "Business protection",
+  "name": "Business legal assistance insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 192,
+  "ecosystem": "Business protection",
+  "name": "Ten-year liability insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 193,
+  "ecosystem": "Business protection",
+  "name": "Office and building insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 194,
+  "ecosystem": "Business protection",
+  "name": "Industrial property insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 195,
+  "ecosystem": "Business protection",
+  "name": "Guaranteed income insurance for the self-employed",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 196,
+  "ecosystem": "Business protection",
+  "name": "Outstanding balance insurance for entrepreneurs",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 197,
+  "ecosystem": "Agriculture and horticulture",
+  "name": "Agroflex Credit",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 198,
+  "ecosystem": "Agriculture and horticulture",
+  "name": "Agriculture and horticulture insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 199,
+  "ecosystem": "Agriculture and horticulture",
+  "name": "Greenhouse horticulture insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 200,
+  "ecosystem": "Administration and documents",
+  "name": "Registered email",
+  "partner": "IPEX",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 201,
+  "ecosystem": "Administration and documents",
+  "name": "Digital vault",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 202,
+  "ecosystem": "Administration and documents",
+  "name": "eBox",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 203,
+  "ecosystem": "Administration and documents",
+  "name": "Cera share administration",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 204,
+  "ecosystem": "Shopping and everyday services",
+  "name": "Joyn loyalty points",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 205,
+  "ecosystem": "Shopping and everyday services",
+  "name": "Digital loyalty cards",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 206,
+  "ecosystem": "Shopping and everyday services",
+  "name": "Top up Orange Tempo",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 207,
+  "ecosystem": "Shopping and everyday services",
+  "name": "Top up Proximus Pay&Go",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 208,
+  "ecosystem": "Shopping and everyday services",
+  "name": "Top up BASE",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 209,
+  "ecosystem": "Shopping and everyday services",
+  "name": "Donate to Kom op tegen Kanker",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 210,
+  "ecosystem": "Shopping and everyday services",
+  "name": "Financial news",
+  "partner": "De Tijd, VRT NWS and KBC",
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 211,
+  "ecosystem": "Shopping and everyday services",
+  "name": "Kate Coins",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 212,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "KBC Mobile",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 213,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "KBC Touch",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 214,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "KBC Business Dashboard",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 215,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "KBC Business app",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 216,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "KBC Reach",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 217,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "KBC Reach app",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 218,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "Kate",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 219,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "KBC Partner Hub",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 220,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "KBC Developer Portal",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 221,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "Search for documents via Kate",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 222,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "Query income and expenses via Kate",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 223,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "Manage cards via Kate",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 224,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "Make transfers via Kate",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 225,
+  "ecosystem": "Digital platforms and assistance",
+  "name": "Report a claim via Kate",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 226,
+  "ecosystem": "Security",
+  "name": "Online fraud insurance",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 227,
+  "ecosystem": "General integrations",
+  "name": "Instalment Loan",
+  "partner": null,
+  "viaPartnerHub": true
+ },
+ {
+  "sourceRow": 228,
+  "ecosystem": "General integrations",
+  "name": "PSD2 Account Information Services",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 229,
+  "ecosystem": "General integrations",
+  "name": "PSD2 Payment Initiation Services",
+  "partner": null,
+  "viaPartnerHub": false
+ },
+ {
+  "sourceRow": 230,
+  "ecosystem": "General integrations",
+  "name": "Application status webhooks",
+  "partner": null,
+  "viaPartnerHub": false
+ }
+]

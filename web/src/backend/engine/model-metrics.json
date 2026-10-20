@@ -1,0 +1,77 @@
+[
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "auc": 0.9946,
+  "ap": 0.9762,
+  "nPos": 141,
+  "nNeg": 1859,
+  "topFeatures": [
+   "cnt_HOME_LOAN_KATE_QUESTION",
+   "is_tenant",
+   "cnt_SAVING_FOR_DOWN_PAYMENT",
+   "sig_SAVING_FOR_DOWN_PAYMENT",
+   "cnt_HOUSING_BUDGET_VIEW"
+  ]
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "auc": 0.9961,
+  "ap": 0.9827,
+  "nPos": 102,
+  "nNeg": 1898,
+  "topFeatures": [
+   "sig_EQUIPMENT_PURCHASE",
+   "cnt_EQUIPMENT_PURCHASE",
+   "age_25_34",
+   "emp_employee",
+   "sig_ACCOUNTING_TOOL_PAYMENT"
+  ]
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "auc": 0.9961,
+  "ap": 0.9506,
+  "nPos": 67,
+  "nNeg": 1933,
+  "topFeatures": [
+   "sig_BABY_SPENDING",
+   "cnt_BABY_SPENDING",
+   "sig_CHILD_BORN",
+   "cnt_FAMILY_KATE_QUESTION",
+   "household_couple"
+  ]
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "auc": 0.9904,
+  "ap": 0.9327,
+  "nPos": 122,
+  "nNeg": 1878,
+  "topFeatures": [
+   "cnt_EV_PAGE_VIEW",
+   "cnt_CAR_LOAN_ENDING",
+   "sig_CAR_LOAN_ENDING",
+   "children",
+   "age_45_54"
+  ]
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "auc": 0.9905,
+  "ap": 0.9332,
+  "nPos": 71,
+  "nNeg": 1929,
+  "topFeatures": [
+   "age_55_64",
+   "cnt_LUMP_SUM_INVESTMENT",
+   "sig_LUMP_SUM_INVESTMENT",
+   "cnt_PENSION_VIEW",
+   "cnt_ESTATE_PLANNING_VIEW"
+  ]
+ }
+]

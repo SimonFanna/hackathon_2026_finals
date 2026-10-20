@@ -2,11 +2,11 @@
 
 import { CheckCircle } from "@phosphor-icons/react";
 import type { JourneyState } from "@/engine";
-import { chapterLabel, chapterOrder, providerName } from "./copy";
+import { providerName } from "./copy";
 import { KateLine } from "./Kate";
 import { BackButton, PrimaryButton, ScreenLayout, TextButton } from "./ui";
 
-/** S5: the plan Sofie built, plus an honest privacy recap. */
+/** S5: the plan the customer built, plus an honest privacy recap. */
 export function PlanScreen({ state, onImpact, onBack, onAdvisor, final }: { state: JourneyState; onImpact: () => void; onBack: () => void; onAdvisor: () => void; final?: boolean }) {
   const steps = state.journey.steps;
   const accepted = steps.filter((s) => state.decisions[s.id] === "accepted");
@@ -27,7 +27,7 @@ export function PlanScreen({ state, onImpact, onBack, onAdvisor, final }: { stat
       top={<BackButton onClick={onBack} />}
       actions={
         <>
-          {!final && <PrimaryButton onClick={onImpact}>See the impact</PrimaryButton>}
+          {!final && <PrimaryButton onClick={onImpact}>Start my plan</PrimaryButton>}
           <TextButton onClick={onAdvisor}>Talk it through with a KBC advisor</TextButton>
         </>
       }
@@ -41,12 +41,12 @@ export function PlanScreen({ state, onImpact, onBack, onAdvisor, final }: { stat
         )}
 
         <div className="mt-5 space-y-5">
-          {chapterOrder.map((c) => {
-            const items = accepted.filter((s) => s.chapter === c);
+          {state.journey.chapters.map((c) => {
+            const items = accepted.filter((s) => s.chapter === c.id);
             if (items.length === 0) return null;
             return (
-              <section key={c}>
-                <h2 className="text-[15px] font-bold text-night-300">{chapterLabel[c]}</h2>
+              <section key={c.id}>
+                <h2 className="text-[15px] font-bold text-night-300">{c.label}</h2>
                 <ul className="mt-2 space-y-2">
                   {items.map((s) => (
                     <li key={s.id} className="flex items-start gap-3 rounded-[8px] bg-white px-4 py-3 shadow-card">

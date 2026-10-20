@@ -2,14 +2,14 @@
 
 import { ArrowsLeftRight, House, ListBullets, SquaresFour } from "@phosphor-icons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import type { Customer } from "@/engine";
-import { intentCopy } from "./copy";
+import type { Persona } from "@/engine";
 import { KateMark } from "./Kate";
 import { KbcLogo } from "./KbcLogo";
 
 /** S1: a normal KBC Mobile home screen, and Kate's notification sliding in from the top. */
-export function HomeScreen({ customer, showNotification, onOpen }: { customer: Customer; showNotification: boolean; onOpen: () => void }) {
+export function HomeScreen({ persona, showNotification, onOpen }: { persona: Persona; showNotification: boolean; onOpen: () => void }) {
   const reduce = useReducedMotion();
+  const { customer, copy, home } = persona;
   return (
     <div className="relative flex h-full flex-col">
       <AnimatePresence>
@@ -29,7 +29,7 @@ export function HomeScreen({ customer, showNotification, onOpen }: { customer: C
                 <span>Kate · KBC Mobile</span>
                 <span>now</span>
               </span>
-              <span className="mt-0.5 block text-[15px] font-semibold leading-5 text-night">{intentCopy.notification}</span>
+              <span className="mt-0.5 block text-[15px] font-semibold leading-5 text-night">{copy.notification}</span>
             </span>
           </motion.button>
         )}
@@ -48,15 +48,12 @@ export function HomeScreen({ customer, showNotification, onOpen }: { customer: C
         </div>
 
         <div className="mt-6 space-y-3">
-          <Account name="Current account" iban="BE68 •••• •••• 4721" amount="€4,218.40" />
-          <Account name="Savings account" iban="BE21 •••• •••• 0934" amount="€38,900.00" />
+          {home.accounts.map((a) => <Account key={a.name} {...a} />)}
         </div>
 
         <p className="mt-6 text-[15px] font-bold text-night-300">Recent</p>
         <ul className="mt-2 divide-y divide-night-100/60 rounded-[8px] bg-white px-4 shadow-card">
-          <Txn label="Salary" date="Today" amount="+€3,240.00" />
-          <Txn label="Delhaize Gent" date="Yesterday" amount="−€42.80" />
-          <Txn label="Transfer to savings" date="14 Oct" amount="−€1,500.00" />
+          {home.transactions.map((t) => <Txn key={t.label} {...t} />)}
         </ul>
       </div>
 

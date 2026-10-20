@@ -6,7 +6,7 @@ import { eur, naturalList, num, shortDate } from "./format";
 import { Sheet, Switch } from "./Sheet";
 import { PrimaryButton } from "./ui";
 
-export function WhySheet({ open, signals, onClose }: { open: boolean; signals: Signal[]; onClose: () => void }) {
+export function WhySheet({ open, signals, note, onClose }: { open: boolean; signals: Signal[]; note: string; onClose: () => void }) {
   return (
     <Sheet open={open} title="Why am I seeing this?" onClose={onClose}>
       <p className="text-[16px] leading-[23px] text-night-300">Kate noticed these moments in the last few weeks:</p>
@@ -19,7 +19,7 @@ export function WhySheet({ open, signals, onClose }: { open: boolean; signals: S
         ))}
       </ul>
       <p className="mt-4 text-[15px] leading-[21px] text-night-300">
-        Kate only looks at this because you search on Immoscoop inside KBC Mobile and turned on extra convenience. Nothing has been shared with anyone yet.
+        {note}
       </p>
       <div className="mt-5"><PrimaryButton onClick={onClose}>Got it</PrimaryButton></div>
     </Sheet>

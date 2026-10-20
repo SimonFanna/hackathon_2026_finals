@@ -1,9 +1,11 @@
-"""Turn resources/KBC_Ecosystems.xlsx into an idempotent SQL seed.
+"""Turn resources/KBC_Ecosystems.xlsx into an idempotent SQL seed and a JSON copy.
 
 Usage: python3 scripts/import_catalog.py [xlsx] [out.sql]
 Defaults: resources/KBC_Ecosystems.xlsx -> supabase/seed/catalog.sql
+          and web/src/backend/data/snapshot/catalogue.json (offline copy for the backend).
 """
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -74,6 +76,14 @@ def build_sql(rows: list[tuple[int, str, str]]) -> str:
     return "\n".join(out) + "\n"
 
 
+def build_json(rows: list[tuple[int, str, str]]) -> str:
+    items = []
+    for row, eco, label in rows:
+        name, partner, hub = split_label(label)
+        items.append({"sourceRow": row, "ecosystem": eco, "name": name, "partner": partner, "viaPartnerHub": hub})
+    return json.dumps(items, indent=1, ensure_ascii=False) + "\n"
+
+
 def main() -> None:
     xlsx = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "resources" / "KBC_Ecosystems.xlsx"
     dest = Path(sys.argv[2]) if len(sys.argv) > 2 else ROOT / "supabase" / "seed" / "catalog.sql"
@@ -81,6 +91,10 @@ def main() -> None:
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(build_sql(rows))
     print(f"{len(rows)} rows -> {dest}")
+    json_dest = ROOT / "web" / "src" / "backend" / "data" / "snapshot" / "catalogue.json"
+    json_dest.parent.mkdir(parents=True, exist_ok=True)
+    json_dest.write_text(build_json(rows))
+    print(f"{len(rows)} rows -> {json_dest}")
 
 
 if __name__ == "__main__":

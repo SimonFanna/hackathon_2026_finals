@@ -1,0 +1,112 @@
+"""T2 · Train one explainable logistic regression per life moment.
+
+    python3 scripts/ml/train.py            # after export_facts.py and export_features.ts
+
+Inputs: scripts/ml/out/features.csv (TS feature export), scripts/ml/out/labels.csv (ground truth).
+Outputs:
+- web/src/backend/engine/weights.json       ModelWeight[] (offline fallback, committed)
+- web/src/backend/engine/model-metrics.json AUC / AP per moment (committed, for the tech slide)
+- supabase/seed/model_weights.sql           rows for model_weights + model_metrics (re-runnable)
+
+Method: features standardised, L2 logistic regression with balanced class weights, 5-fold stratified CV
+for the reported AUC / AP (out-of-fold, never on training rows). The final model is refit on all rows,
+then the weights are mapped back to the RAW feature scale (so serving needs no scaler) and the intercept
+is prior-corrected for the balanced weighting, so `confidence` is a calibrated probability at the
+training prevalence. Honest caveat: on synthetic data the model mostly re-learns the generator; the value
+shown is the pipeline, the explainability and the feedback loop (Kate's yes/no answers become new labels).
+"""
+
+from __future__ import annotations
+
+import csv
+import json
+import math
+from datetime import date
+from pathlib import Path
+
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import average_precision_score, roc_auc_score
+from sklearn.model_selection import StratifiedKFold
+
+ROOT = Path(__file__).resolve().parents[2]
+OUT = ROOT / "scripts" / "ml" / "out"
+WEIGHTS = ROOT / "web" / "src" / "backend" / "engine" / "weights.json"
+METRICS = ROOT / "web" / "src" / "backend" / "engine" / "model-metrics.json"
+SEED_SQL = ROOT / "supabase" / "seed" / "model_weights.sql"
+
+# ml.customer_truth.life_moment → MomentCode (vocabulary.ts ML_LIFE_MOMENT_TO_MOMENT)
+MOMENTS = {"buy_house": "HOME_BUYING", "start_business": "STARTING_BUSINESS", "new_parent": "NEW_PARENT",
+           "buy_ev": "EV_PURCHASE", "prepare_retirement": "RETIREMENT_PREP"}
+MODEL_VERSION = f"lr-{date.today().isoformat()}"
+C_REG = 0.05         # L2 strength: AUC peaks around 0.05 and the weights stay readable
+MIN_WEIGHT = 1e-3    # drop negligible weights from the exported model
+
+
+def load():
+    with open(OUT / "features.csv", encoding="utf-8") as f:
+        r = csv.reader(f)
+        header = next(r)
+        rows = [list(map(float, row)) for row in r]
+    data = np.array(rows)
+    ids, X, names = data[:, 0].astype(int), data[:, 1:], header[1:]
+    with open(OUT / "labels.csv", encoding="utf-8") as f:
+        truth = {int(r["customer_id"]): r["life_moment"] for r in csv.DictReader(f)}
+    return ids, X, names, [truth[i] for i in ids]
+
+
+def fit(Xs: np.ndarray, y: np.ndarray) -> LogisticRegression:
+    return LogisticRegression(C=C_REG, class_weight="balanced", max_iter=5000).fit(Xs, y)
+
+
+def main() -> None:
+    ids, X, names, life = load()
+    keep = X.std(axis=0) > 0                       # features never seen in training carry no weight
+    Xk, kept = X[:, keep], [n for n, k in zip(names, keep) if k]
+    mean, sd = Xk.mean(axis=0), Xk.std(axis=0)
+    Xs = (Xk - mean) / sd
+
+    weights, metrics = [], []
+    for truth_code, moment in MOMENTS.items():
+        y = np.array([1 if m == truth_code else 0 for m in life])
+        oof = np.zeros(len(y))
+        for tr, te in StratifiedKFold(n_splits=5, shuffle=True, random_state=20261020).split(Xs, y):
+            oof[te] = fit(Xs[tr], y[tr]).predict_proba(Xs[te])[:, 1]
+        auc, ap = roc_auc_score(y, oof), average_precision_score(y, oof)
+
+        model = fit(Xs, y)
+        w_raw = model.coef_[0] / sd                                        # back to the raw feature scale
+        prior = y.mean()
+        bias = model.intercept_[0] - float(np.sum(model.coef_[0] * mean / sd)) + math.log(prior / (1 - prior))
+        weights.append({"modelVersion": MODEL_VERSION, "moment": moment, "feature": "__bias__", "weight": round(bias, 4)})
+        for name, w in sorted(zip(kept, w_raw), key=lambda t: -abs(t[1])):
+            if abs(w) >= MIN_WEIGHT:
+                weights.append({"modelVersion": MODEL_VERSION, "moment": moment, "feature": name, "weight": round(float(w), 4)})
+        top = sorted(zip(kept, model.coef_[0]), key=lambda t: -t[1])[:5]
+        metrics.append({"modelVersion": MODEL_VERSION, "moment": moment, "auc": round(auc, 4), "ap": round(ap, 4),
+                        "nPos": int(y.sum()), "nNeg": int(len(y) - y.sum()), "topFeatures": [n for n, _ in top]})
+        print(f"{moment:<18} n+={int(y.sum()):>4}  AUC {auc:.3f}  AP {ap:.3f}  top: {', '.join(n for n, _ in top)}")
+
+    WEIGHTS.write_text(json.dumps(weights, indent=1) + "\n", encoding="utf-8")
+    METRICS.write_text(json.dumps(metrics, indent=1) + "\n", encoding="utf-8")
+
+    trained_at = date.today().isoformat()
+    by_moment = {m["moment"]: m for m in metrics}
+    lines = ["-- Generated by scripts/ml/train.py — T2 model weights + metrics. Re-runnable.", "begin;",
+             f"delete from public.model_weights where model_version = '{MODEL_VERSION}';",
+             f"delete from public.model_metrics where model_version = '{MODEL_VERSION}';",
+             "insert into public.model_weights (model_version, moment, feature, weight, trained_at, auc, ap) values"]
+    lines.append(",\n".join(
+        f"  ('{w['modelVersion']}', '{w['moment']}', '{w['feature']}', {w['weight']}, '{trained_at}', "
+        f"{by_moment[w['moment']]['auc']}, {by_moment[w['moment']]['ap']})" for w in weights) + ";")
+    lines.append("insert into public.model_metrics (model_version, moment, auc, ap, n_pos, n_neg) values")
+    lines.append(",\n".join(f"  ('{m['modelVersion']}', '{m['moment']}', {m['auc']}, {m['ap']}, {m['nPos']}, {m['nNeg']})"
+                            for m in metrics) + ";")
+    lines.append("commit;")
+    SEED_SQL.parent.mkdir(parents=True, exist_ok=True)
+    SEED_SQL.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"wrote {WEIGHTS.relative_to(ROOT)} ({len(weights)} weights), {METRICS.relative_to(ROOT)}, {SEED_SQL.relative_to(ROOT)}")
+
+
+if __name__ == "__main__":
+    main()

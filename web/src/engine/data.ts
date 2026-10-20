@@ -13,7 +13,7 @@ export const { customer: demoCustomer, signals: demoSignals } = mapBankProfile(s
 export const BUY_HOUSE_ASK_THRESHOLD = 0.4;
 export const BUY_HOUSE_THRESHOLD = 0.75;
 
-export const buyHouseSignalWeights: Record<SignalType, number> = {
+export const buyHouseSignalWeights: Partial<Record<SignalType, number>> = {
   property_search: 0.35,
   mortgage_simulation: 0.4,
   savings_transfer: 0.15,
@@ -29,6 +29,7 @@ export const buyHouseSteps: JourneyStep[] = [
   {
     id: "search", chapter: "find", order: 1, title: "Find the right house",
     why: "You are already searching; keep your saved houses in one place.",
+    purpose: "So Immoscoop can keep your saved houses and alerts in one place.",
     ecosystem: "Housing", catalogueItem: "Search for a home - Immoscoop", provider: partner("Immoscoop"),
     dataShared: ["search criteria", "budget range"],
     outcome: { partnerValueEur: 40 },
@@ -36,6 +37,7 @@ export const buyHouseSteps: JourneyStep[] = [
   {
     id: "valuation", chapter: "find", order: 2, title: "Know what the house is worth",
     why: "An estate-agent valuation before you make an offer avoids overpaying.",
+    purpose: "So an Immoscoop estate agent can value the house before you make an offer.",
     ecosystem: "Housing", catalogueItem: "Property valuation by an estate agent - Immoscoop", provider: partner("Immoscoop"),
     dataShared: ["property address"],
     outcome: { customerEurOneOff: 5000, partnerValueEur: 150 },
@@ -57,6 +59,7 @@ export const buyHouseSteps: JourneyStep[] = [
   {
     id: "epc", chapter: "renovate", order: 5, title: "Find out what the house needs",
     why: "The house has EPC label E. An inspection shows which renovation works it needs before you commit.",
+    purpose: "So De Immowinkel can check the certificate and which works the house needs.",
     ecosystem: "Housing", catalogueItem: "Certificates and inspections - De Immowinkel", provider: partner("De Immowinkel"),
     dataShared: ["property address"],
     outcome: { partnerValueEur: 120 },
@@ -64,6 +67,7 @@ export const buyHouseSteps: JourneyStep[] = [
   {
     id: "grants", chapter: "renovate", order: 6, title: "Estimate renovation costs and grants",
     why: "See what the renovation costs and which grants you are entitled to.",
+    purpose: "So Setle can estimate the works and every grant you can claim.",
     ecosystem: "Housing", catalogueItem: "Estimate renovation costs and grants - Setle", provider: partner("Setle"),
     dataShared: ["property address", "EPC label", "household income bracket"],
     outcome: { customerEurOneOff: 8000, partnerValueEur: 100 },
@@ -71,6 +75,7 @@ export const buyHouseSteps: JourneyStep[] = [
   {
     id: "insulation", chapter: "renovate", order: 7, title: "Insulate roof and walls",
     why: "Insulation is the biggest step towards a better EPC label.",
+    purpose: "So Impact us today can prepare an insulation quote.",
     ecosystem: "Energy and sustainability", catalogueItem: "Insulation quote - Impact us today", provider: partner("Impact us today"),
     dataShared: ["property address", "EPC label"],
     outcome: { customerEurPerYear: 900, kwhPerYear: 6000, co2KgPerYear: 1200, partnerValueEur: 300 },
@@ -78,6 +83,7 @@ export const buyHouseSteps: JourneyStep[] = [
   {
     id: "heating", chapter: "renovate", order: 8, title: "Replace the old boiler with a heat pump",
     why: "A 1975 gas boiler is inefficient and expensive.",
+    purpose: "So Impact us today can prepare a heat pump quote.",
     ecosystem: "Energy and sustainability", catalogueItem: "Heating quote - Impact us today", provider: partner("Impact us today"),
     dataShared: ["property address", "current heating type"],
     outcome: { customerEurPerYear: 700, kwhPerYear: 8000, co2KgPerYear: 2000, partnerValueEur: 400 },

@@ -1,0 +1,2350 @@
+{
+ "signalRules": [
+  {
+   "code": "ACCOUNTING_TOOL_PAYMENT",
+   "label": "pays for an accounting tool",
+   "match": {
+    "kind": "tx:accounting_software"
+   },
+   "strength": 0.35,
+   "windowDays": 120,
+   "halfLifeDays": 45,
+   "isDisruption": false
+  },
+  {
+   "code": "BABY_SPENDING",
+   "label": "shops in baby stores",
+   "match": {
+    "kind": "tx:baby_kids"
+   },
+   "strength": 0.4,
+   "windowDays": 120,
+   "halfLifeDays": 45,
+   "isDisruption": false
+  },
+  {
+   "code": "BENEFITS_INFLOW",
+   "label": "started receiving a benefit (not child benefit)",
+   "match": {
+    "kind": "tx:benefits",
+    "detail": {
+     "not": {
+      "op": "in",
+      "field": "detail.counterparty",
+      "value": [
+       "Fons",
+       "Infino",
+       "KidsLife",
+       "MyFamily",
+       "Parentia",
+       "FAMIWAL",
+       "Famiris"
+      ]
+     }
+    }
+   },
+   "strength": 0.9,
+   "windowDays": 45,
+   "halfLifeDays": 30,
+   "isDisruption": true
+  },
+  {
+   "code": "BUSINESS_ACCOUNT_VIEW",
+   "label": "looked at a business account",
+   "match": {
+    "kind": "page_view|simulation",
+    "sourceRows": [
+     79,
+     80,
+     121
+    ]
+   },
+   "strength": 0.3,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "BUSINESS_KATE_QUESTION",
+   "label": "asked Kate about starting a business",
+   "match": {
+    "kind": "kate_question",
+    "textAny": [
+     "business account",
+     "vat",
+     "invoice",
+     "self-employed",
+     "freelanc"
+    ]
+   },
+   "strength": 0.3,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "BUSINESS_PROTECTION_VIEW",
+   "label": "looked at insurance and pension for the self-employed",
+   "match": {
+    "kind": "page_view",
+    "sourceRows": [
+     58,
+     59,
+     61,
+     187,
+     188,
+     195
+    ]
+   },
+   "strength": 0.2,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "BUSINESS_TOOLS_VIEW",
+   "label": "looked at invoicing and payment tools",
+   "match": {
+    "kind": "page_view",
+    "sourceRows": [
+     86,
+     89,
+     92,
+     93,
+     122,
+     123,
+     214,
+     215
+    ]
+   },
+   "strength": 0.2,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "CAR_LOAN_ENDING",
+   "label": "a car loan ends within 6 months",
+   "match": {
+    "kind": "profile:loan",
+    "detail": {
+     "all": [
+      {
+       "op": "eq",
+       "field": "detail.loanKind",
+       "value": "car"
+      },
+      {
+       "op": "lte",
+       "field": "detail.monthsLeft",
+       "value": 6
+      }
+     ]
+    }
+   },
+   "strength": 0.35,
+   "windowDays": 3650,
+   "halfLifeDays": 3650,
+   "isDisruption": false
+  },
+  {
+   "code": "CHILD_BORN",
+   "label": "a child was born recently",
+   "match": {
+    "kind": "profile:child",
+    "detail": {
+     "op": "lte",
+     "field": "detail.ageMonths",
+     "value": 6
+    }
+   },
+   "strength": 0.7,
+   "windowDays": 270,
+   "halfLifeDays": 120,
+   "isDisruption": false
+  },
+  {
+   "code": "CHILDCARE_PAYMENT",
+   "label": "pays for childcare",
+   "match": {
+    "kind": "tx:childcare_school",
+    "detail": {
+     "op": "gte",
+     "field": "detail.outflow",
+     "value": 250
+    }
+   },
+   "strength": 0.3,
+   "windowDays": 120,
+   "halfLifeDays": 45,
+   "isDisruption": false
+  },
+  {
+   "code": "COST_OVERRUN",
+   "label": "a partner quote came in above the estimate",
+   "match": {
+    "kind": "partner:quote_received",
+    "detail": {
+     "op": "gt",
+     "field": "detail.overrunPct",
+     "value": 10
+    }
+   },
+   "strength": 0.9,
+   "windowDays": 60,
+   "halfLifeDays": 60,
+   "isDisruption": true
+  },
+  {
+   "code": "EQUIPMENT_PURCHASE",
+   "label": "bought professional equipment",
+   "match": {
+    "kind": "tx:electronics|tx:business_supplies",
+    "detail": {
+     "any": [
+      {
+       "op": "eq",
+       "field": "detail.category",
+       "value": "business_supplies"
+      },
+      {
+       "op": "gte",
+       "field": "detail.outflow",
+       "value": 800
+      }
+     ]
+    }
+   },
+   "strength": 0.15,
+   "windowDays": 120,
+   "halfLifeDays": 45,
+   "isDisruption": false
+  },
+  {
+   "code": "ESTATE_PLANNING_VIEW",
+   "label": "looked at wealth and estate planning",
+   "match": {
+    "kind": "page_view",
+    "sourceRows": [
+     70,
+     167,
+     168,
+     169,
+     170
+    ]
+   },
+   "strength": 0.2,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "EV_CHARGING",
+   "label": "already charges an electric car",
+   "match": {
+    "kind": "tx:ev_charging"
+   },
+   "strength": 0.2,
+   "windowDays": 120,
+   "halfLifeDays": 45,
+   "isDisruption": false
+  },
+  {
+   "code": "EV_KATE_QUESTION",
+   "label": "asked Kate about electric cars",
+   "match": {
+    "kind": "kate_question",
+    "textAny": [
+     "electric car",
+     "charge my car"
+    ]
+   },
+   "strength": 0.3,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "EV_LOAN_SIMULATION",
+   "label": "simulated an electric-car loan",
+   "match": {
+    "kind": "simulation",
+    "sourceRows": [
+     26,
+     27,
+     37
+    ]
+   },
+   "strength": 0.45,
+   "windowDays": 120,
+   "halfLifeDays": 45,
+   "isDisruption": false
+  },
+  {
+   "code": "EV_PAGE_VIEW",
+   "label": "looked at electric cars",
+   "match": {
+    "kind": "page_view",
+    "sourceRows": [
+     26,
+     27,
+     32,
+     37,
+     52
+    ]
+   },
+   "strength": 0.25,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "FAMILY_KATE_QUESTION",
+   "label": "asked Kate about a child",
+   "match": {
+    "kind": "kate_question",
+    "textAny": [
+     "for my child",
+     "add my child",
+     "baby",
+     "family insurance"
+    ]
+   },
+   "strength": 0.3,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "FAMILY_PROTECTION_VIEW",
+   "label": "looked at family protection or saving for a child",
+   "match": {
+    "kind": "page_view",
+    "sourceRows": [
+     75,
+     157,
+     158,
+     159,
+     161,
+     163
+    ]
+   },
+   "strength": 0.2,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "FREELANCE_INCOME",
+   "label": "receives invoice payments from several clients",
+   "match": {
+    "kind": "pattern:freelance"
+   },
+   "strength": 0.4,
+   "windowDays": 120,
+   "halfLifeDays": 45,
+   "isDisruption": false
+  },
+  {
+   "code": "HOME_LOAN_APPLICATION",
+   "label": "started a home-loan application",
+   "match": {
+    "kind": "application_started|application_completed",
+    "sourceRows": [
+     2
+    ]
+   },
+   "strength": 0.8,
+   "windowDays": 120,
+   "halfLifeDays": 60,
+   "isDisruption": false
+  },
+  {
+   "code": "HOME_LOAN_KATE_QUESTION",
+   "label": "asked Kate about buying a home",
+   "match": {
+    "kind": "kate_question",
+    "textAny": [
+     "home loan",
+     "mortgage",
+     "house",
+     "notary",
+     "registration fee",
+     "first home"
+    ]
+   },
+   "strength": 0.3,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "HOME_LOAN_VIEW",
+   "label": "read about home loans",
+   "match": {
+    "kind": "page_view",
+    "sourceRows": [
+     2,
+     3,
+     10
+    ]
+   },
+   "strength": 0.15,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "HOME_SEARCH_IN_APP",
+   "label": "searched for homes with Immoscoop inside KBC Mobile",
+   "match": {
+    "kind": "page_view|search",
+    "sourceRows": [
+     15
+    ]
+   },
+   "strength": 0.2,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "HOUSING_BUDGET_VIEW",
+   "label": "calculated a housing budget",
+   "match": {
+    "kind": "page_view|simulation",
+    "sourceRows": [
+     18
+    ]
+   },
+   "strength": 0.25,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "INCOME_DROP",
+   "label": "income dropped after a regular salary stopped",
+   "match": {
+    "kind": "pattern:income_drop"
+   },
+   "strength": 0.9,
+   "windowDays": 150,
+   "halfLifeDays": 60,
+   "isDisruption": true
+  },
+  {
+   "code": "LARGE_UNEXPECTED_EXPENSE",
+   "label": "had a large unexpected expense",
+   "match": {
+    "kind": "tx:health|tx:car_maintenance|tx:other",
+    "detail": {
+     "op": "gt",
+     "field": "detail.incomeMultiple",
+     "value": 2
+    }
+   },
+   "strength": 0.7,
+   "windowDays": 60,
+   "halfLifeDays": 30,
+   "isDisruption": true
+  },
+  {
+   "code": "LUMP_SUM_INVESTMENT",
+   "label": "made a large one-off investment",
+   "match": {
+    "kind": "tx:investment",
+    "detail": {
+     "op": "gte",
+     "field": "detail.outflow",
+     "value": 1000
+    }
+   },
+   "strength": 0.35,
+   "windowDays": 120,
+   "halfLifeDays": 45,
+   "isDisruption": false
+  },
+  {
+   "code": "MORTGAGE_SIMULATION",
+   "label": "ran home-loan simulations in KBC Mobile",
+   "match": {
+    "kind": "simulation",
+    "sourceRows": [
+     2
+    ]
+   },
+   "strength": 0.45,
+   "windowDays": 120,
+   "halfLifeDays": 45,
+   "isDisruption": false
+  },
+  {
+   "code": "NOTARY_PAYMENT",
+   "label": "made a payment to a notary",
+   "match": {
+    "kind": "tx:notary"
+   },
+   "strength": 0.6,
+   "windowDays": 120,
+   "halfLifeDays": 60,
+   "isDisruption": false
+  },
+  {
+   "code": "PARTNER_DELAY",
+   "label": "a partner is running late",
+   "match": {
+    "kind": "partner:delayed"
+   },
+   "strength": 0.9,
+   "windowDays": 60,
+   "halfLifeDays": 60,
+   "isDisruption": true
+  },
+  {
+   "code": "PENSION_VIEW",
+   "label": "looked at pension savings",
+   "match": {
+    "kind": "page_view|simulation",
+    "sourceRows": [
+     56,
+     57,
+     60
+    ]
+   },
+   "strength": 0.25,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "PROPERTY_VALUATION_VIEW",
+   "label": "looked at property valuations",
+   "match": {
+    "kind": "page_view|simulation",
+    "sourceRows": [
+     16,
+     17
+    ]
+   },
+   "strength": 0.25,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "RATE_CHANGE",
+   "label": "the loan rate changed",
+   "match": {
+    "kind": "simulation|profile:rate_change",
+    "detail": {
+     "op": "exists",
+     "field": "detail.rateDeltaPct"
+    }
+   },
+   "strength": 0.9,
+   "windowDays": 60,
+   "halfLifeDays": 60,
+   "isDisruption": true
+  },
+  {
+   "code": "RENOVATION_VIEW",
+   "label": "looked at renovation costs, grants or quotes",
+   "match": {
+    "kind": "page_view|simulation",
+    "sourceRows": [
+     4,
+     12,
+     13,
+     131,
+     132
+    ]
+   },
+   "strength": 0.15,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "RETIREMENT_KATE_QUESTION",
+   "label": "asked Kate about retirement",
+   "match": {
+    "kind": "kate_question",
+    "textAny": [
+     "retire",
+     "pension",
+     "pass on my savings"
+    ]
+   },
+   "strength": 0.3,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  },
+  {
+   "code": "SALARY_STOPPED",
+   "label": "a regular salary stopped arriving",
+   "match": {
+    "kind": "pattern:salary_missing"
+   },
+   "strength": 0.4,
+   "windowDays": 150,
+   "halfLifeDays": 60,
+   "isDisruption": false
+  },
+  {
+   "code": "SAVING_FOR_DOWN_PAYMENT",
+   "label": "is putting more money aside each month",
+   "match": {
+    "kind": "pattern:saving_growth",
+    "detail": {
+     "all": [
+      {
+       "op": "lt",
+       "field": "detail.amount",
+       "value": 0
+      },
+      {
+       "op": "eq",
+       "field": "detail.counterparty",
+       "value": "Own savings account"
+      }
+     ]
+    }
+   },
+   "strength": 0.2,
+   "windowDays": 180,
+   "halfLifeDays": 60,
+   "isDisruption": false
+  },
+  {
+   "code": "START_IT_VIEW",
+   "label": "looked at starter support (Start it @KBC, Boostpack, tax and legal advice)",
+   "match": {
+    "kind": "page_view",
+    "sourceRows": [
+     107,
+     109,
+     110
+    ]
+   },
+   "strength": 0.3,
+   "windowDays": 90,
+   "halfLifeDays": 30,
+   "isDisruption": false
+  }
+ ],
+ "modelWeights": [
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "__bias__",
+   "weight": -4
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "sig_MORTGAGE_SIMULATION",
+   "weight": 8
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "sig_HOME_LOAN_APPLICATION",
+   "weight": 8
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "sig_NOTARY_PAYMENT",
+   "weight": 8
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "sig_HOUSING_BUDGET_VIEW",
+   "weight": 6
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "sig_PROPERTY_VALUATION_VIEW",
+   "weight": 5
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "sig_HOME_LOAN_KATE_QUESTION",
+   "weight": 5
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "sig_SAVING_FOR_DOWN_PAYMENT",
+   "weight": 5
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "sig_HOME_LOAN_VIEW",
+   "weight": 3
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "sig_HOME_SEARCH_IN_APP",
+   "weight": 3
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "sig_RENOVATION_VIEW",
+   "weight": 3
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "is_tenant",
+   "weight": 1
+  },
+  {
+   "modelVersion": "hand-v0",
+   "moment": "HOME_BUYING",
+   "feature": "is_owner",
+   "weight": -1.5
+  }
+ ],
+ "momentRules": [
+  {
+   "moment": "CASHFLOW_PRESSURE",
+   "label": "a tighter budget",
+   "weights": {
+    "INCOME_DROP": 5,
+    "SALARY_STOPPED": 1.5,
+    "BENEFITS_INFLOW": 0.5,
+    "LARGE_UNEXPECTED_EXPENSE": 3
+   },
+   "bias": -2,
+   "context": null,
+   "contextScores": [
+    {
+     "label": "Your fixed costs take a large share of your income",
+     "score": 3.5,
+     "condition": {
+      "field": "ctx.cashflowPressure",
+      "value": "high"
+     }
+    },
+    {
+     "label": "Your fixed costs are rising compared to your income",
+     "score": 1.5,
+     "condition": {
+      "field": "ctx.cashflowPressure",
+      "value": "medium"
+     }
+    }
+   ],
+   "requiresSignal": false,
+   "expiryDays": 90
+  },
+  {
+   "moment": "EV_PURCHASE",
+   "label": "switching to an electric car",
+   "weights": {
+    "EV_CHARGING": 1,
+    "EV_PAGE_VIEW": 3,
+    "CAR_LOAN_ENDING": 2,
+    "EV_KATE_QUESTION": 3,
+    "EV_LOAN_SIMULATION": 5
+   },
+   "bias": -2,
+   "context": null,
+   "contextScores": [],
+   "requiresSignal": true,
+   "expiryDays": 120
+  },
+  {
+   "moment": "HOME_BUYING",
+   "label": "buying a home",
+   "weights": {
+    "HOME_LOAN_VIEW": 2,
+    "NOTARY_PAYMENT": 6,
+    "RENOVATION_VIEW": 1.5,
+    "HOME_SEARCH_IN_APP": 3,
+    "HOUSING_BUDGET_VIEW": 3,
+    "MORTGAGE_SIMULATION": 6,
+    "HOME_LOAN_APPLICATION": 6,
+    "HOME_LOAN_KATE_QUESTION": 4,
+    "PROPERTY_VALUATION_VIEW": 3,
+    "SAVING_FOR_DOWN_PAYMENT": 2
+   },
+   "bias": -2.1,
+   "context": null,
+   "contextScores": [
+    {
+     "label": "You don't own a home yet",
+     "score": 0.2,
+     "condition": {
+      "op": "neq",
+      "field": "ctx.housing",
+      "value": "owner"
+     }
+    }
+   ],
+   "requiresSignal": true,
+   "expiryDays": 180
+  },
+  {
+   "moment": "NEW_PARENT",
+   "label": "welcoming a baby",
+   "weights": {
+    "CHILD_BORN": 5,
+    "BABY_SPENDING": 2.5,
+    "CHILDCARE_PAYMENT": 2,
+    "FAMILY_KATE_QUESTION": 3,
+    "FAMILY_PROTECTION_VIEW": 2
+   },
+   "bias": -2,
+   "context": null,
+   "contextScores": [],
+   "requiresSignal": true,
+   "expiryDays": 365
+  },
+  {
+   "moment": "RETIREMENT_PREP",
+   "label": "preparing for retirement",
+   "weights": {
+    "PENSION_VIEW": 3,
+    "LUMP_SUM_INVESTMENT": 2,
+    "ESTATE_PLANNING_VIEW": 1.5,
+    "RETIREMENT_KATE_QUESTION": 3
+   },
+   "bias": -2,
+   "context": {
+    "op": "gte",
+    "field": "ctx.age",
+    "value": 45
+   },
+   "contextScores": [],
+   "requiresSignal": true,
+   "expiryDays": 365
+  },
+  {
+   "moment": "STARTING_BUSINESS",
+   "label": "starting your own business",
+   "weights": {
+    "START_IT_VIEW": 4,
+    "SALARY_STOPPED": 2,
+    "FREELANCE_INCOME": 4,
+    "EQUIPMENT_PURCHASE": 1.5,
+    "BUSINESS_TOOLS_VIEW": 2,
+    "BUSINESS_ACCOUNT_VIEW": 3,
+    "BUSINESS_KATE_QUESTION": 4,
+    "ACCOUNTING_TOOL_PAYMENT": 3,
+    "BUSINESS_PROTECTION_VIEW": 1.5
+   },
+   "bias": -2,
+   "context": {
+    "op": "neq",
+    "field": "ctx.employment",
+    "value": "retired"
+   },
+   "contextScores": [],
+   "requiresSignal": true,
+   "expiryDays": 180
+  }
+ ],
+ "intents": [
+  {
+   "code": "BUY_HOME",
+   "label": "Buy a home",
+   "goalType": "BUY_AND_PREPARE_HOME",
+   "askThreshold": 0.5,
+   "suggestThreshold": 0.85,
+   "kateAsk": "Hi {firstName} 👋 I noticed you've been looking at home loans lately. Are you planning to buy a home? I can put together your complete plan, from budget to keys.",
+   "kateSuggest": "Hi {firstName} 👋 It looks like you're getting ready to buy a home ({evidence}). Shall I build your complete plan, from budget and loan to inspection, renovation and insurance?",
+   "commercial": true
+  },
+  {
+   "code": "PREPARE_FOR_BABY",
+   "label": "Prepare for a baby",
+   "goalType": "WELCOME_BABY",
+   "askThreshold": 0.5,
+   "suggestThreshold": 0.85,
+   "kateAsk": "Hi {firstName} 👋 Congratulations if there's a little one on the way or just arrived! Would you like a checklist for insurance, savings and child benefits?",
+   "kateSuggest": "Hi {firstName} 👋 I can make sure your little one is covered: insurance, child benefits and a savings plan, in one go.",
+   "commercial": false
+  },
+  {
+   "code": "PREPARE_RETIREMENT",
+   "label": "Prepare for retirement",
+   "goalType": "PREPARE_RETIREMENT",
+   "askThreshold": 0.5,
+   "suggestThreshold": 0.85,
+   "kateAsk": "Hi {firstName} 👋 You've been looking at pension savings. Would you like to see where you stand for your retirement?",
+   "kateSuggest": "Hi {firstName} 👋 I can build your retirement plan: pension savings, tax benefits and investments, at your pace.",
+   "commercial": true
+  },
+  {
+   "code": "REDUCE_ENERGY_COST",
+   "label": "Lower energy costs",
+   "goalType": null,
+   "askThreshold": 0.5,
+   "suggestThreshold": 0.85,
+   "kateAsk": "Hi {firstName} 👋 Would you like to see how much you could save on energy with insulation, a heat pump or solar panels?",
+   "kateSuggest": "Hi {firstName} 👋 I can show you the energy upgrades with the best payback for your home, including grants.",
+   "commercial": false
+  },
+  {
+   "code": "RENOVATE_HOME",
+   "label": "Renovate a home",
+   "goalType": null,
+   "askThreshold": 0.5,
+   "suggestThreshold": 0.85,
+   "kateAsk": "Hi {firstName} 👋 You've been checking renovation costs and grants. Are you planning to renovate? I can tell you which grants apply and who can quote.",
+   "kateSuggest": "Hi {firstName} 👋 Want me to line up the renovation: costs, grants, quotes and financing in one plan?",
+   "commercial": true
+  },
+  {
+   "code": "START_BUSINESS",
+   "label": "Start a business",
+   "goalType": "START_BUSINESS",
+   "askThreshold": 0.5,
+   "suggestThreshold": 0.85,
+   "kateAsk": "Hi {firstName} 👋 I see you've been exploring Start it @KBC and business topics. Are you thinking of starting your own business? I can set up everything you need, step by step.",
+   "kateSuggest": "Hi {firstName} 👋 It looks like you're launching as a freelancer ({evidence}). Shall I prepare your start-up plan: business account, invoicing, payments, accountant and protection?",
+   "commercial": true
+  },
+  {
+   "code": "SWITCH_TO_EV",
+   "label": "Switch to an electric car",
+   "goalType": "SWITCH_TO_EV",
+   "askThreshold": 0.5,
+   "suggestThreshold": 0.85,
+   "kateAsk": "Hi {firstName} 👋 You've been looking at electric cars. Are you thinking of switching? I can plan the loan, insurance and a home charger together.",
+   "kateSuggest": "Hi {firstName} 👋 Shall I put your EV switch in one plan: loan, insurance, charger and energy contract?",
+   "commercial": true
+  }
+ ],
+ "intentRules": [
+  {
+   "moment": "HOME_BUYING",
+   "intent": "BUY_HOME",
+   "weight": 1,
+   "condition": null
+  },
+  {
+   "moment": "HOME_BUYING",
+   "intent": "RENOVATE_HOME",
+   "weight": 0.5,
+   "condition": null
+  },
+  {
+   "moment": "HOME_BUYING",
+   "intent": "RENOVATE_HOME",
+   "weight": 0.7,
+   "condition": {
+    "op": "contains",
+    "field": "moment.evidence",
+    "value": "RENOVATION_VIEW"
+   }
+  },
+  {
+   "moment": "HOME_BUYING",
+   "intent": "REDUCE_ENERGY_COST",
+   "weight": 0.4,
+   "condition": null
+  },
+  {
+   "moment": "STARTING_BUSINESS",
+   "intent": "START_BUSINESS",
+   "weight": 1,
+   "condition": null
+  },
+  {
+   "moment": "NEW_PARENT",
+   "intent": "PREPARE_FOR_BABY",
+   "weight": 1,
+   "condition": null
+  },
+  {
+   "moment": "EV_PURCHASE",
+   "intent": "SWITCH_TO_EV",
+   "weight": 1,
+   "condition": null
+  },
+  {
+   "moment": "RETIREMENT_PREP",
+   "intent": "PREPARE_RETIREMENT",
+   "weight": 1,
+   "condition": null
+  }
+ ],
+ "capabilities": [
+  {
+   "code": "accept_payments",
+   "label": "Accept payments",
+   "ecosystem": "Business",
+   "whatItSolves": "Let customers pay online or on the spot.",
+   "requiredData": [
+    "company_name",
+    "vat_number"
+   ],
+   "output": "Payment acceptance"
+  },
+  {
+   "code": "bridge_finance",
+   "label": "Bridging loan",
+   "ecosystem": "Housing",
+   "whatItSolves": "Buy the new home before the current one is sold.",
+   "requiredData": [
+    "current_home_value",
+    "outstanding_mortgage"
+   ],
+   "output": "Bridging loan offer"
+  },
+  {
+   "code": "build_pension",
+   "label": "Supplementary pension",
+   "ecosystem": "Pensions",
+   "whatItSolves": "Top up the low self-employed state pension.",
+   "requiredData": [
+    "monthly_income",
+    "date_of_birth"
+   ],
+   "output": "Supplementary pension plan"
+  },
+  {
+   "code": "connect_accountant",
+   "label": "Connect your accountant",
+   "ecosystem": "Business",
+   "whatItSolves": "Share expenses with the accountant as they happen.",
+   "requiredData": [
+    "accountant_email"
+   ],
+   "output": "Expenses shared with the accountant"
+  },
+  {
+   "code": "estimate_budget",
+   "label": "Calculate your housing budget",
+   "ecosystem": "Housing",
+   "whatItSolves": "How much home can I afford, all costs included?",
+   "requiredData": [
+    "monthly_income",
+    "own_funds"
+   ],
+   "output": "All-in purchase budget"
+  },
+  {
+   "code": "estimate_renovation",
+   "label": "Estimate renovation costs",
+   "ecosystem": "Housing",
+   "whatItSolves": "What will the works cost?",
+   "requiredData": [
+    "property_type",
+    "postal_code",
+    "build_year",
+    "epc"
+   ],
+   "output": "Renovation cost estimate"
+  },
+  {
+   "code": "evaluate_solar",
+   "label": "Solar panels and battery",
+   "ecosystem": "Energy and sustainability",
+   "whatItSolves": "Produce and store own electricity.",
+   "requiredData": [
+    "property_address"
+   ],
+   "output": "Solar or battery quote"
+  },
+  {
+   "code": "finance_property",
+   "label": "Home loan",
+   "ecosystem": "Housing",
+   "whatItSolves": "Finance the purchase.",
+   "requiredData": [
+    "monthly_income",
+    "own_funds",
+    "purchase_price"
+   ],
+   "output": "Home loan offer"
+  },
+  {
+   "code": "finance_renovation",
+   "label": "Energy or renovation loan",
+   "ecosystem": "Energy and sustainability",
+   "whatItSolves": "Finance the works left after grants.",
+   "requiredData": [
+    "renovation_quotes",
+    "grants"
+   ],
+   "output": "Energy or renovation loan offer"
+  },
+  {
+   "code": "find_property",
+   "label": "Search for a home",
+   "ecosystem": "Housing",
+   "whatItSolves": "Find homes that fit the budget, renovation included.",
+   "requiredData": [
+    "search_criteria",
+    "budget"
+   ],
+   "output": "Shortlist of homes"
+  },
+  {
+   "code": "get_startup_support",
+   "label": "Start-up support",
+   "ecosystem": "Business",
+   "whatItSolves": "Validate the business plan with coaching and a network.",
+   "requiredData": [
+    "business_idea"
+   ],
+   "output": "Coaching and start-up network"
+  },
+  {
+   "code": "get_tax_legal_advice",
+   "label": "Tax and legal advice",
+   "ecosystem": "Business",
+   "whatItSolves": "Pick the right legal form and tax set-up.",
+   "requiredData": [
+    "business_plan"
+   ],
+   "output": "Legal form and tax set-up"
+  },
+  {
+   "code": "identify_grants",
+   "label": "Identify renovation grants",
+   "ecosystem": "Housing",
+   "whatItSolves": "Which grants lower the bill?",
+   "requiredData": [
+    "postal_code",
+    "income_bracket"
+   ],
+   "output": "Grants and amounts the customer can claim"
+  },
+  {
+   "code": "inspect_property",
+   "label": "Certificates and inspections (EPC)",
+   "ecosystem": "Housing",
+   "whatItSolves": "What state is the home really in?",
+   "requiredData": [
+    "property_address",
+    "property_type"
+   ],
+   "output": "EPC certificate and inspection report"
+  },
+  {
+   "code": "insure_income",
+   "label": "Guaranteed income insurance",
+   "ecosystem": "Business protection",
+   "whatItSolves": "Keep an income when ill.",
+   "requiredData": [
+    "monthly_income",
+    "date_of_birth"
+   ],
+   "output": "Income cover"
+  },
+  {
+   "code": "insure_liability",
+   "label": "Liability insurance",
+   "ecosystem": "Business protection",
+   "whatItSolves": "Cover mistakes made for a client.",
+   "requiredData": [
+    "activity",
+    "turnover_estimate"
+   ],
+   "output": "Liability cover"
+  },
+  {
+   "code": "insure_loan",
+   "label": "Outstanding balance insurance",
+   "ecosystem": "Housing",
+   "whatItSolves": "Protect the family if the borrower dies.",
+   "requiredData": [
+    "loan_amount",
+    "date_of_birth"
+   ],
+   "output": "Outstanding balance cover"
+  },
+  {
+   "code": "insure_property",
+   "label": "Home insurance",
+   "ecosystem": "Housing",
+   "whatItSolves": "Protect the home from the day of the deed.",
+   "requiredData": [
+    "property_address",
+    "property_value"
+   ],
+   "output": "Home insurance policy"
+  },
+  {
+   "code": "open_business_account",
+   "label": "Business account",
+   "ecosystem": "Business",
+   "whatItSolves": "Keep business and private money apart.",
+   "requiredData": [
+    "company_name",
+    "vat_number"
+   ],
+   "output": "Business account"
+  },
+  {
+   "code": "quote_heating",
+   "label": "Heat pump quote",
+   "ecosystem": "Energy and sustainability",
+   "whatItSolves": "Replace fossil heating.",
+   "requiredData": [
+    "property_address",
+    "renovation_budget"
+   ],
+   "output": "Heating quote"
+  },
+  {
+   "code": "quote_insulation",
+   "label": "Insulation quote",
+   "ecosystem": "Energy and sustainability",
+   "whatItSolves": "Cut heat loss, the biggest saving on an old home.",
+   "requiredData": [
+    "property_address",
+    "renovation_budget"
+   ],
+   "output": "Insulation quote"
+  },
+  {
+   "code": "quote_windows",
+   "label": "Window replacement quote",
+   "ecosystem": "Housing",
+   "whatItSolves": "Finish the building envelope.",
+   "requiredData": [
+    "property_address"
+   ],
+   "output": "Window quote"
+  },
+  {
+   "code": "set_up_invoicing",
+   "label": "Invoicing",
+   "ecosystem": "Business",
+   "whatItSolves": "Send compliant invoices from day one.",
+   "requiredData": [
+    "company_name",
+    "vat_number",
+    "email"
+   ],
+   "output": "Invoicing tool linked to the account"
+  },
+  {
+   "code": "value_property",
+   "label": "Value the property",
+   "ecosystem": "Housing",
+   "whatItSolves": "Is the asking price fair?",
+   "requiredData": [
+    "property_address"
+   ],
+   "output": "Estimated market value"
+  }
+ ],
+ "providers": [
+  {
+   "capability": "accept_payments",
+   "sourceRow": 89,
+   "itemName": "Payment terminals",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 7,
+   "costEur": null,
+   "priority": 6,
+   "estimates": {
+    "kbcRevenueEur": 200
+   }
+  },
+  {
+   "capability": "accept_payments",
+   "sourceRow": 122,
+   "itemName": "Bancontact Pro In Store",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 5,
+   "costEur": null,
+   "priority": 8,
+   "estimates": {
+    "kbcRevenueEur": 60
+   }
+  },
+  {
+   "capability": "accept_payments",
+   "sourceRow": 123,
+   "itemName": "Bancontact Pro Online",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 3,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {
+    "kbcRevenueEur": 60
+   }
+  },
+  {
+   "capability": "bridge_finance",
+   "sourceRow": 3,
+   "itemName": "Bridging loan",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 14,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {}
+  },
+  {
+   "capability": "build_pension",
+   "sourceRow": 58,
+   "itemName": "Supplementary pension for the self-employed",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 7,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {
+    "kbcRevenueEur": 200,
+    "customerEurPerYear": 400
+   }
+  },
+  {
+   "capability": "build_pension",
+   "sourceRow": 61,
+   "itemName": "Pension agreement for the self-employed",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 7,
+   "costEur": null,
+   "priority": 8,
+   "estimates": {
+    "kbcRevenueEur": 200
+   }
+  },
+  {
+   "capability": "connect_accountant",
+   "sourceRow": 88,
+   "itemName": "Send an expense claim to your accountant",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 1,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {}
+  },
+  {
+   "capability": "estimate_budget",
+   "sourceRow": 18,
+   "itemName": "Calculate housing budget",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 0,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {}
+  },
+  {
+   "capability": "estimate_renovation",
+   "sourceRow": 12,
+   "itemName": "Estimate renovation costs and grants",
+   "provider": "Setle",
+   "isPartner": true,
+   "leadTimeDays": 7,
+   "costEur": 0,
+   "priority": 10,
+   "estimates": {
+    "partnerValueEur": 100
+   }
+  },
+  {
+   "capability": "evaluate_solar",
+   "sourceRow": 129,
+   "itemName": "Calculate solar panels and request a quote",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 14,
+   "costEur": 7000,
+   "priority": 10,
+   "estimates": {
+    "kwhPerYear": 3500,
+    "co2KgPerYear": 350,
+    "kbcRevenueEur": 150,
+    "customerEurPerYear": 600
+   }
+  },
+  {
+   "capability": "evaluate_solar",
+   "sourceRow": 130,
+   "itemName": "Calculate a home battery and request a quote",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 14,
+   "costEur": 6000,
+   "priority": 5,
+   "estimates": {
+    "kwhPerYear": 1200,
+    "kbcRevenueEur": 100,
+    "customerEurPerYear": 250
+   }
+  },
+  {
+   "capability": "finance_property",
+   "sourceRow": 2,
+   "itemName": "Home loan",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 21,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {
+    "kbcRevenueEur": 0
+   }
+  },
+  {
+   "capability": "finance_renovation",
+   "sourceRow": 4,
+   "itemName": "Renovation loan",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 14,
+   "costEur": null,
+   "priority": 6,
+   "estimates": {
+    "kbcRevenueEur": 1500
+   }
+  },
+  {
+   "capability": "finance_renovation",
+   "sourceRow": 128,
+   "itemName": "Energy loan",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 14,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {
+    "kbcRevenueEur": 1500
+   }
+  },
+  {
+   "capability": "find_property",
+   "sourceRow": 15,
+   "itemName": "Search for a home",
+   "provider": "Immoscoop",
+   "isPartner": true,
+   "leadTimeDays": 45,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {
+    "partnerValueEur": 40
+   }
+  },
+  {
+   "capability": "get_startup_support",
+   "sourceRow": 107,
+   "itemName": "Start it @KBC",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 7,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {}
+  },
+  {
+   "capability": "get_startup_support",
+   "sourceRow": 109,
+   "itemName": "Boostpack",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 3,
+   "costEur": null,
+   "priority": 6,
+   "estimates": {}
+  },
+  {
+   "capability": "get_tax_legal_advice",
+   "sourceRow": 110,
+   "itemName": "Tax and legal advice for SMEs",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 7,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {}
+  },
+  {
+   "capability": "identify_grants",
+   "sourceRow": 12,
+   "itemName": "Estimate renovation costs and grants",
+   "provider": "Setle",
+   "isPartner": true,
+   "leadTimeDays": 7,
+   "costEur": 0,
+   "priority": 10,
+   "estimates": {
+    "customerEurOneOff": 8000
+   }
+  },
+  {
+   "capability": "inspect_property",
+   "sourceRow": 14,
+   "itemName": "Certificates and inspections",
+   "provider": "De Immowinkel",
+   "isPartner": true,
+   "leadTimeDays": 10,
+   "costEur": 300,
+   "priority": 10,
+   "estimates": {
+    "partnerValueEur": 120
+   }
+  },
+  {
+   "capability": "insure_income",
+   "sourceRow": 195,
+   "itemName": "Guaranteed income insurance for the self-employed",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 7,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {
+    "kbcRevenueEur": 300
+   }
+  },
+  {
+   "capability": "insure_liability",
+   "sourceRow": 187,
+   "itemName": "Business liability insurance",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 3,
+   "costEur": null,
+   "priority": 8,
+   "estimates": {
+    "kbcRevenueEur": 250
+   }
+  },
+  {
+   "capability": "insure_liability",
+   "sourceRow": 188,
+   "itemName": "Professional liability insurance",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 3,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {
+    "kbcRevenueEur": 250
+   }
+  },
+  {
+   "capability": "insure_loan",
+   "sourceRow": 10,
+   "itemName": "Outstanding balance insurance",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 2,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {
+    "kbcRevenueEur": 300
+   }
+  },
+  {
+   "capability": "insure_property",
+   "sourceRow": 8,
+   "itemName": "Home insurance",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 2,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {
+    "kbcRevenueEur": 400
+   }
+  },
+  {
+   "capability": "insure_property",
+   "sourceRow": 9,
+   "itemName": "Home assistance insurance",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 2,
+   "costEur": null,
+   "priority": 5,
+   "estimates": {
+    "kbcRevenueEur": 120
+   }
+  },
+  {
+   "capability": "open_business_account",
+   "sourceRow": 79,
+   "itemName": "KBC Business PRO Account",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 1,
+   "costEur": null,
+   "priority": 10,
+   "estimates": {
+    "kbcRevenueEur": 120
+   }
+  },
+  {
+   "capability": "open_business_account",
+   "sourceRow": 121,
+   "itemName": "Business Account",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 1,
+   "costEur": null,
+   "priority": 5,
+   "estimates": {}
+  },
+  {
+   "capability": "quote_heating",
+   "sourceRow": 132,
+   "itemName": "Heating quote",
+   "provider": "Impact us today",
+   "isPartner": true,
+   "leadTimeDays": 21,
+   "costEur": 14000,
+   "priority": 10,
+   "estimates": {
+    "kwhPerYear": 8000,
+    "co2KgPerYear": 1600,
+    "partnerValueEur": 300,
+    "customerEurPerYear": 700
+   }
+  },
+  {
+   "capability": "quote_insulation",
+   "sourceRow": 131,
+   "itemName": "Insulation quote",
+   "provider": "Impact us today",
+   "isPartner": true,
+   "leadTimeDays": 21,
+   "costEur": 15000,
+   "priority": 10,
+   "estimates": {
+    "kwhPerYear": 6000,
+    "co2KgPerYear": 1200,
+    "partnerValueEur": 300,
+    "customerEurPerYear": 900
+   }
+  },
+  {
+   "capability": "quote_windows",
+   "sourceRow": 13,
+   "itemName": "Quote for new windows",
+   "provider": "Impact us today",
+   "isPartner": true,
+   "leadTimeDays": 21,
+   "costEur": 12000,
+   "priority": 10,
+   "estimates": {
+    "kwhPerYear": 2500,
+    "co2KgPerYear": 500,
+    "partnerValueEur": 200,
+    "customerEurPerYear": 300
+   }
+  },
+  {
+   "capability": "set_up_invoicing",
+   "sourceRow": 86,
+   "itemName": "E-invoicing",
+   "provider": "Billit",
+   "isPartner": true,
+   "leadTimeDays": 2,
+   "costEur": 0,
+   "priority": 10,
+   "estimates": {
+    "partnerValueEur": 80
+   }
+  },
+  {
+   "capability": "set_up_invoicing",
+   "sourceRow": 92,
+   "itemName": "Electronic invoicing",
+   "provider": "Soluz.io",
+   "isPartner": true,
+   "leadTimeDays": 2,
+   "costEur": 0,
+   "priority": 8,
+   "estimates": {
+    "partnerValueEur": 80
+   }
+  },
+  {
+   "capability": "set_up_invoicing",
+   "sourceRow": 93,
+   "itemName": "KBC Invoicing Services",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 1,
+   "costEur": null,
+   "priority": 7,
+   "estimates": {}
+  },
+  {
+   "capability": "value_property",
+   "sourceRow": 16,
+   "itemName": "Property valuation by an estate agent",
+   "provider": "Immoscoop",
+   "isPartner": true,
+   "leadTimeDays": 7,
+   "costEur": 350,
+   "priority": 6,
+   "estimates": {
+    "partnerValueEur": 150
+   }
+  },
+  {
+   "capability": "value_property",
+   "sourceRow": 17,
+   "itemName": "Indicative online property valuation",
+   "provider": "KBC",
+   "isPartner": false,
+   "leadTimeDays": 1,
+   "costEur": 0,
+   "priority": 10,
+   "estimates": {}
+  }
+ ],
+ "templates": [
+  {
+   "goalType": "BUY_AND_PREPARE_HOME",
+   "label": "Buy and prepare a home",
+   "defaultConstraints": {
+    "termYears": 25
+   },
+   "outcome": "Home bought and renovation plan financed",
+   "steps": [
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "estimate_budget",
+     "chapter": "Find",
+     "position": 1,
+     "dependsOn": [],
+     "condition": null,
+     "why": "Your all-in budget is {budget}, with {ownFunds} of your own funds.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "find_property",
+     "chapter": "Find",
+     "position": 2,
+     "dependsOn": [
+      "estimate_budget"
+     ],
+     "condition": null,
+     "why": "Search homes up to {purchasePrice} so the renovation still fits your budget.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "value_property",
+     "chapter": "Find",
+     "position": 3,
+     "dependsOn": [
+      "find_property"
+     ],
+     "condition": null,
+     "why": "Check the asking price before you bid.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "inspect_property",
+     "chapter": "Find",
+     "position": 4,
+     "dependsOn": [
+      "find_property"
+     ],
+     "condition": null,
+     "why": "Know the EPC before you buy: an EPC {epc} home needs work.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "finance_property",
+     "chapter": "Finance",
+     "position": 5,
+     "dependsOn": [
+      "value_property",
+      "estimate_budget"
+     ],
+     "condition": null,
+     "why": "A {homeLoan} home loan over {termYears} years: about {monthlyPayment}/month.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "bridge_finance",
+     "chapter": "Finance",
+     "position": 6,
+     "dependsOn": [
+      "finance_property"
+     ],
+     "condition": {
+      "op": "eq",
+      "field": "ctx.housing",
+      "value": "owner"
+     },
+     "why": "Bridge the sale of your current home.",
+     "optional": true
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "estimate_renovation",
+     "chapter": "Renovate",
+     "position": 7,
+     "dependsOn": [
+      "inspect_property"
+     ],
+     "condition": {
+      "any": [
+       {
+        "op": "in",
+        "field": "ctx.properties.0.epc",
+        "value": [
+         "D",
+         "E",
+         "F"
+        ]
+       },
+       {
+        "op": "lt",
+        "field": "ctx.properties.0.buildYear",
+        "value": 1990
+       }
+      ]
+     },
+     "why": "A home built in {buildYear} with EPC {epc}: estimate the works first.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "identify_grants",
+     "chapter": "Renovate",
+     "position": 8,
+     "dependsOn": [
+      "estimate_renovation"
+     ],
+     "condition": {
+      "any": [
+       {
+        "op": "in",
+        "field": "ctx.properties.0.epc",
+        "value": [
+         "D",
+         "E",
+         "F"
+        ]
+       },
+       {
+        "op": "lt",
+        "field": "ctx.properties.0.buildYear",
+        "value": 1990
+       }
+      ]
+     },
+     "why": "Grants of up to {grants} lower what you need to borrow.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "quote_insulation",
+     "chapter": "Renovate",
+     "position": 9,
+     "dependsOn": [
+      "estimate_renovation"
+     ],
+     "condition": {
+      "any": [
+       {
+        "op": "in",
+        "field": "ctx.properties.0.epc",
+        "value": [
+         "D",
+         "E",
+         "F"
+        ]
+       },
+       {
+        "op": "lt",
+        "field": "ctx.properties.0.buildYear",
+        "value": 1990
+       }
+      ]
+     },
+     "why": "Insulation has the biggest impact on an EPC {epc} home.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "quote_heating",
+     "chapter": "Renovate",
+     "position": 10,
+     "dependsOn": [
+      "estimate_renovation"
+     ],
+     "condition": {
+      "any": [
+       {
+        "op": "in",
+        "field": "ctx.properties.0.epc",
+        "value": [
+         "D",
+         "E",
+         "F"
+        ]
+       },
+       {
+        "op": "lt",
+        "field": "ctx.properties.0.buildYear",
+        "value": 1990
+       }
+      ]
+     },
+     "why": "A heat pump cuts your energy bill.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "quote_windows",
+     "chapter": "Renovate",
+     "position": 11,
+     "dependsOn": [
+      "estimate_renovation"
+     ],
+     "condition": {
+      "any": [
+       {
+        "op": "in",
+        "field": "ctx.properties.0.epc",
+        "value": [
+         "D",
+         "E",
+         "F"
+        ]
+       },
+       {
+        "op": "lt",
+        "field": "ctx.properties.0.buildYear",
+        "value": 1990
+       }
+      ]
+     },
+     "why": "New windows finish the envelope.",
+     "optional": true
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "evaluate_solar",
+     "chapter": "Renovate",
+     "position": 12,
+     "dependsOn": [
+      "inspect_property"
+     ],
+     "condition": null,
+     "why": "Solar panels lower your bill once the roof is checked.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "finance_renovation",
+     "chapter": "Finance",
+     "position": 13,
+     "dependsOn": [
+      "quote_insulation",
+      "quote_heating",
+      "identify_grants"
+     ],
+     "condition": null,
+     "why": "A {renovationLoan} energy loan covers the works after grants.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "insure_property",
+     "chapter": "Protect",
+     "position": 14,
+     "dependsOn": [
+      "finance_property"
+     ],
+     "condition": null,
+     "why": "Your new home must be insured from the deed.",
+     "optional": false
+    },
+    {
+     "goalType": "BUY_AND_PREPARE_HOME",
+     "capability": "insure_loan",
+     "chapter": "Protect",
+     "position": 15,
+     "dependsOn": [
+      "finance_property"
+     ],
+     "condition": null,
+     "why": "Protect your family if something happens to you.",
+     "optional": false
+    }
+   ]
+  },
+  {
+   "goalType": "START_BUSINESS",
+   "label": "Start a business",
+   "defaultConstraints": {},
+   "outcome": "Business set up, getting paid and protected",
+   "steps": [
+    {
+     "goalType": "START_BUSINESS",
+     "capability": "get_startup_support",
+     "chapter": "Start",
+     "position": 1,
+     "dependsOn": [],
+     "condition": null,
+     "why": "Free coaching to validate your plan, {firstName}.",
+     "optional": false
+    },
+    {
+     "goalType": "START_BUSINESS",
+     "capability": "get_tax_legal_advice",
+     "chapter": "Start",
+     "position": 2,
+     "dependsOn": [
+      "get_startup_support"
+     ],
+     "condition": null,
+     "why": "Pick the right legal form before you register.",
+     "optional": false
+    },
+    {
+     "goalType": "START_BUSINESS",
+     "capability": "open_business_account",
+     "chapter": "Set up",
+     "position": 3,
+     "dependsOn": [
+      "get_tax_legal_advice"
+     ],
+     "condition": null,
+     "why": "Keep business and private money apart.",
+     "optional": false
+    },
+    {
+     "goalType": "START_BUSINESS",
+     "capability": "set_up_invoicing",
+     "chapter": "Get paid",
+     "position": 4,
+     "dependsOn": [
+      "open_business_account"
+     ],
+     "condition": null,
+     "why": "Send compliant invoices from day one.",
+     "optional": false
+    },
+    {
+     "goalType": "START_BUSINESS",
+     "capability": "accept_payments",
+     "chapter": "Get paid",
+     "position": 5,
+     "dependsOn": [
+      "open_business_account"
+     ],
+     "condition": null,
+     "why": "Let customers pay you on the spot.",
+     "optional": false
+    },
+    {
+     "goalType": "START_BUSINESS",
+     "capability": "connect_accountant",
+     "chapter": "Get paid",
+     "position": 6,
+     "dependsOn": [
+      "open_business_account"
+     ],
+     "condition": null,
+     "why": "Your accountant sees expenses as they happen.",
+     "optional": false
+    },
+    {
+     "goalType": "START_BUSINESS",
+     "capability": "insure_liability",
+     "chapter": "Protect",
+     "position": 7,
+     "dependsOn": [
+      "open_business_account"
+     ],
+     "condition": null,
+     "why": "Cover mistakes made for a client.",
+     "optional": false
+    },
+    {
+     "goalType": "START_BUSINESS",
+     "capability": "insure_income",
+     "chapter": "Protect",
+     "position": 8,
+     "dependsOn": [
+      "open_business_account"
+     ],
+     "condition": null,
+     "why": "As self-employed, you have no salary if you fall ill.",
+     "optional": false
+    },
+    {
+     "goalType": "START_BUSINESS",
+     "capability": "build_pension",
+     "chapter": "Future",
+     "position": 9,
+     "dependsOn": [
+      "open_business_account"
+     ],
+     "condition": null,
+     "why": "The self-employed state pension is low: start early.",
+     "optional": true
+    }
+   ]
+  }
+ ],
+ "decisionRules": [
+  {
+   "id": "already_held",
+   "condition": {
+    "op": "eq",
+    "field": "step.held",
+    "value": true
+   },
+   "effect": "ALREADY_COVERED",
+   "priority": 100,
+   "reason": "You already have this with KBC."
+  },
+  {
+   "id": "not_relevant_90d",
+   "condition": {
+    "op": "lte",
+    "field": "fb.notRelevantDaysAgo",
+    "value": 90
+   },
+   "effect": "HIDDEN",
+   "priority": 90,
+   "reason": "You told us this wasn't relevant."
+  },
+  {
+   "id": "cashflow_wait",
+   "condition": {
+    "all": [
+     {
+      "op": "eq",
+      "field": "ctx.cashflowPressure",
+      "value": "high"
+     },
+     {
+      "op": "eq",
+      "field": "step.commercial",
+      "value": true
+     },
+     {
+      "any": [
+       {
+        "op": "eq",
+        "field": "step.optional",
+        "value": true
+       },
+       {
+        "op": "in",
+        "field": "step.capability",
+        "value": [
+         "evaluate_solar",
+         "quote_windows",
+         "build_pension",
+         "accept_payments"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "effect": "WAIT",
+   "priority": 80,
+   "reason": "Paused while your finances settle."
+  },
+  {
+   "id": "not_now_30d",
+   "condition": {
+    "op": "lte",
+    "field": "fb.notNowDaysAgo",
+    "value": 30
+   },
+   "effect": "LOWER_PRIORITY",
+   "priority": 70,
+   "reason": "You asked us to come back to this later."
+  },
+  {
+   "id": "partner_consent",
+   "condition": {
+    "op": "eq",
+    "field": "step.provider.isPartner",
+    "value": true
+   },
+   "effect": "SHOW_PARTNER",
+   "priority": 50,
+   "reason": "Shared only with your consent."
+  },
+  {
+   "id": "advice_only",
+   "condition": {
+    "op": "in",
+    "field": "step.capability",
+    "value": [
+     "estimate_budget",
+     "get_startup_support",
+     "get_tax_legal_advice",
+     "connect_accountant"
+    ]
+   },
+   "effect": "SHOW_GUIDANCE",
+   "priority": 40,
+   "reason": "Free guidance, no product to buy."
+  }
+ ],
+ "disruptionTypes": [
+  {
+   "code": "COST_OVERRUN",
+   "signals": [
+    "COST_OVERRUN"
+   ],
+   "affects": [
+    "budget"
+   ],
+   "kateTemplate": "{firstName}, a quote came in {delta} above the estimate, so your {goal} plan no longer fits the budget. Here are two ways to absorb it."
+  },
+  {
+   "code": "INCOME_DROP",
+   "signals": [
+    "INCOME_DROP",
+    "BENEFITS_INFLOW"
+   ],
+   "affects": [
+    "maxMonthlyPayment",
+    "budget"
+   ],
+   "kateTemplate": "{firstName}, your income has changed, and your {goal} plan is now above what you can comfortably repay. I've prepared two options."
+  },
+  {
+   "code": "PARTNER_DELAY",
+   "signals": [
+    "PARTNER_DELAY"
+   ],
+   "affects": [
+    "deadline"
+   ],
+   "kateTemplate": "{firstName}, one of the partners in your {goal} plan is running late ({delta}). I've prepared two ways to keep you on schedule."
+  },
+  {
+   "code": "RATE_CHANGE",
+   "signals": [
+    "RATE_CHANGE"
+   ],
+   "affects": [
+    "maxMonthlyPayment"
+   ],
+   "kateTemplate": "{firstName}, interest rates moved ({delta}), which changes your monthly payment. Here are two options to stay comfortable."
+  },
+  {
+   "code": "UNEXPECTED_EXPENSE",
+   "signals": [
+    "LARGE_UNEXPECTED_EXPENSE"
+   ],
+   "affects": [
+    "ownFunds"
+   ],
+   "kateTemplate": "{firstName}, a large expense reduced your savings by {delta}. Your {goal} plan needs a small adjustment. Here are two options."
+  }
+ ],
+ "replanStrategies": [
+  {
+   "code": "ADD_PROTECTION",
+   "appliesTo": [
+    "INCOME_DROP"
+   ],
+   "params": {
+    "always": [
+     "insure_loan"
+    ],
+    "combineWith": [
+     "EXTEND_TERM"
+    ],
+    "selfEmployed": [
+     "insure_income"
+    ]
+   }
+  },
+  {
+   "code": "EXTEND_TERM",
+   "appliesTo": [
+    "INCOME_DROP",
+    "RATE_CHANGE",
+    "COST_OVERRUN"
+   ],
+   "params": {
+    "maxTermYears": 30
+   }
+  },
+  {
+   "code": "MAXIMISE_GRANTS",
+   "appliesTo": [
+    "COST_OVERRUN",
+    "UNEXPECTED_EXPENSE"
+   ],
+   "params": {
+    "capability": "identify_grants"
+   }
+  },
+  {
+   "code": "PAUSE",
+   "appliesTo": [
+    "INCOME_DROP",
+    "COST_OVERRUN",
+    "PARTNER_DELAY",
+    "UNEXPECTED_EXPENSE",
+    "RATE_CHANGE"
+   ],
+   "params": {
+    "followUpDays": 30
+   }
+  },
+  {
+   "code": "REDUCE_SCOPE",
+   "appliesTo": [
+    "INCOME_DROP",
+    "COST_OVERRUN",
+    "UNEXPECTED_EXPENSE",
+    "RATE_CHANGE"
+   ],
+   "params": {
+    "roundTo": 5000,
+    "phaseLater": [
+     "evaluate_solar",
+     "quote_windows"
+    ],
+    "paymentMargin": 0.95
+   }
+  },
+  {
+   "code": "REORDER",
+   "appliesTo": [
+    "PARTNER_DELAY"
+   ],
+   "params": {}
+  },
+  {
+   "code": "SWAP_PROVIDER",
+   "appliesTo": [
+    "PARTNER_DELAY",
+    "COST_OVERRUN"
+   ],
+   "params": {}
+  }
+ ]
+}

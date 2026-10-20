@@ -1,0 +1,2852 @@
+[
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "__bias__",
+  "weight": -7.6517
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_SAVING_FOR_DOWN_PAYMENT",
+  "weight": 19.9189
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_HOME_LOAN_KATE_QUESTION",
+  "weight": 10.4003
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_HOME_LOAN_VIEW",
+  "weight": 8.2848
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_EQUIPMENT_PURCHASE",
+  "weight": -7.2248
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_HOME_SEARCH_IN_APP",
+  "weight": -5.8525
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_MORTGAGE_SIMULATION",
+  "weight": 5.5349
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_NOTARY_PAYMENT",
+  "weight": 5.5259
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_HOUSING_BUDGET_VIEW",
+  "weight": 4.9001
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_CHILDCARE_PAYMENT",
+  "weight": 4.3766
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_HOME_LOAN_APPLICATION",
+  "weight": 4.1157
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_FAMILY_KATE_QUESTION",
+  "weight": -3.2692
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_BUSINESS_ACCOUNT_VIEW",
+  "weight": -2.6276
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_SAVING_FOR_DOWN_PAYMENT",
+  "weight": 2.5964
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_PROPERTY_VALUATION_VIEW",
+  "weight": 2.5938
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_HOME_LOAN_KATE_QUESTION",
+  "weight": 2.2353
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_EV_PAGE_VIEW",
+  "weight": -2.1601
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_ESTATE_PLANNING_VIEW",
+  "weight": -2.1452
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_CHILD_BORN",
+  "weight": -1.8099
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_NOTARY_PAYMENT",
+  "weight": 1.7935
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_HOME_LOAN_APPLICATION",
+  "weight": 1.7705
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_START_IT_VIEW",
+  "weight": -1.6867
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_RETIREMENT_KATE_QUESTION",
+  "weight": -1.5859
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_CAR_LOAN_ENDING",
+  "weight": -1.3808
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_RENOVATION_VIEW",
+  "weight": -1.3114
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_EV_CHARGING",
+  "weight": -1.2731
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_HOUSING_BUDGET_VIEW",
+  "weight": 1.269
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_ACCOUNTING_TOOL_PAYMENT",
+  "weight": -1.2067
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_EV_KATE_QUESTION",
+  "weight": -1.1864
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_BUSINESS_PROTECTION_VIEW",
+  "weight": -1.169
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_PENSION_VIEW",
+  "weight": -1.0779
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "is_tenant",
+  "weight": 1.0723
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_MORTGAGE_SIMULATION",
+  "weight": 1.0526
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_BUSINESS_TOOLS_VIEW",
+  "weight": -1.052
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_SALARY_STOPPED",
+  "weight": -1.0494
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "age_45_54",
+  "weight": -0.9334
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_LUMP_SUM_INVESTMENT",
+  "weight": -0.8787
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_CHILD_BORN",
+  "weight": -0.8407
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "emp_business_owner",
+  "weight": -0.8
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_PROPERTY_VALUATION_VIEW",
+  "weight": 0.7963
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "age_35_44",
+  "weight": 0.7952
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "is_owner",
+  "weight": -0.791
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "with_parents",
+  "weight": -0.7538
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_RENOVATION_VIEW",
+  "weight": -0.7147
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_HOME_LOAN_VIEW",
+  "weight": 0.6589
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_HOME_SEARCH_IN_APP",
+  "weight": 0.6084
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "age_65_plus",
+  "weight": -0.5958
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "has_baby",
+  "weight": -0.5891
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "debt_ratio",
+  "weight": -0.5882
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "emp_retired",
+  "weight": -0.5321
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "age_55_64",
+  "weight": -0.5119
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_FAMILY_KATE_QUESTION",
+  "weight": -0.5114
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "age_25_34",
+  "weight": 0.5041
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_FREELANCE_INCOME",
+  "weight": -0.5023
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "emp_student",
+  "weight": -0.4721
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_EQUIPMENT_PURCHASE",
+  "weight": -0.4656
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "holds_home_loan",
+  "weight": -0.4442
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "holds_save_for_child",
+  "weight": 0.4357
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "emp_self_employed",
+  "weight": 0.4315
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "emp_employee",
+  "weight": 0.4289
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_EV_LOAN_SIMULATION",
+  "weight": -0.4276
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "has_old_property",
+  "weight": -0.4253
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_INCOME_DROP",
+  "weight": -0.3532
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_CAR_LOAN_ENDING",
+  "weight": -0.3486
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_FAMILY_PROTECTION_VIEW",
+  "weight": -0.2936
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_FAMILY_PROTECTION_VIEW",
+  "weight": 0.2918
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_START_IT_VIEW",
+  "weight": -0.2861
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_RETIREMENT_KATE_QUESTION",
+  "weight": -0.28
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_BUSINESS_KATE_QUESTION",
+  "weight": 0.2553
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "savings_k_log",
+  "weight": 0.2552
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_BUSINESS_PROTECTION_VIEW",
+  "weight": 0.2536
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_PENSION_VIEW",
+  "weight": -0.2209
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_ACCOUNTING_TOOL_PAYMENT",
+  "weight": -0.2064
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "holds_pension_savings",
+  "weight": 0.203
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_EV_KATE_QUESTION",
+  "weight": -0.1829
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_BUSINESS_TOOLS_VIEW",
+  "weight": 0.1721
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "age_18_24",
+  "weight": 0.1696
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_SALARY_STOPPED",
+  "weight": -0.1623
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_BUSINESS_KATE_QUESTION",
+  "weight": 0.1575
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_LUMP_SUM_INVESTMENT",
+  "weight": -0.1457
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_INCOME_DROP",
+  "weight": -0.1421
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_BUSINESS_ACCOUNT_VIEW",
+  "weight": 0.1396
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_BABY_SPENDING",
+  "weight": -0.128
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_EV_PAGE_VIEW",
+  "weight": -0.1261
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_EV_LOAN_SIMULATION",
+  "weight": -0.1206
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "children",
+  "weight": -0.1127
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_FREELANCE_INCOME",
+  "weight": 0.1108
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "holds_ev_insurance",
+  "weight": -0.109
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_CHILDCARE_PAYMENT",
+  "weight": 0.1053
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_EV_CHARGING",
+  "weight": -0.0805
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "household_couple",
+  "weight": 0.0747
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "sig_BABY_SPENDING",
+  "weight": -0.0707
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "has_young_child",
+  "weight": 0.0556
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "holds_business_account",
+  "weight": -0.0395
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "HOME_BUYING",
+  "feature": "cnt_ESTATE_PLANNING_VIEW",
+  "weight": 0.0127
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "__bias__",
+  "weight": -7.6814
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_EQUIPMENT_PURCHASE",
+  "weight": 35.0654
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_BUSINESS_KATE_QUESTION",
+  "weight": 10.7478
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_ACCOUNTING_TOOL_PAYMENT",
+  "weight": 10.5829
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_RENOVATION_VIEW",
+  "weight": -7.9362
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_BUSINESS_TOOLS_VIEW",
+  "weight": 6.7293
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_BUSINESS_ACCOUNT_VIEW",
+  "weight": 6.2491
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_START_IT_VIEW",
+  "weight": 5.6558
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_HOME_LOAN_KATE_QUESTION",
+  "weight": -4.4821
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_HOME_SEARCH_IN_APP",
+  "weight": -4.4366
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_SAVING_FOR_DOWN_PAYMENT",
+  "weight": -3.4818
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_PENSION_VIEW",
+  "weight": -3.4205
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_FAMILY_PROTECTION_VIEW",
+  "weight": -3.0348
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_ESTATE_PLANNING_VIEW",
+  "weight": -2.3925
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_HOUSING_BUDGET_VIEW",
+  "weight": 2.3688
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_PROPERTY_VALUATION_VIEW",
+  "weight": -2.3188
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_FREELANCE_INCOME",
+  "weight": 2.1157
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_INCOME_DROP",
+  "weight": 2.0043
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_EQUIPMENT_PURCHASE",
+  "weight": 1.7767
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_ACCOUNTING_TOOL_PAYMENT",
+  "weight": 1.7474
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_CAR_LOAN_ENDING",
+  "weight": -1.6325
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_MORTGAGE_SIMULATION",
+  "weight": -1.6262
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_FAMILY_KATE_QUESTION",
+  "weight": -1.6225
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_SALARY_STOPPED",
+  "weight": 1.2927
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_LUMP_SUM_INVESTMENT",
+  "weight": -1.2181
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_BUSINESS_KATE_QUESTION",
+  "weight": 1.0959
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "age_25_34",
+  "weight": 0.9575
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_RETIREMENT_KATE_QUESTION",
+  "weight": -0.9453
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_INCOME_DROP",
+  "weight": 0.8799
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_BABY_SPENDING",
+  "weight": -0.873
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_EV_KATE_QUESTION",
+  "weight": -0.8577
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "emp_self_employed",
+  "weight": -0.8178
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "emp_employee",
+  "weight": 0.7934
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_EV_PAGE_VIEW",
+  "weight": -0.7855
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "emp_student",
+  "weight": -0.7375
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_RENOVATION_VIEW",
+  "weight": -0.7087
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_HOUSING_BUDGET_VIEW",
+  "weight": 0.6863
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_BUSINESS_PROTECTION_VIEW",
+  "weight": 0.671
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_HOME_LOAN_KATE_QUESTION",
+  "weight": -0.6355
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "age_18_24",
+  "weight": -0.6338
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_NOTARY_PAYMENT",
+  "weight": -0.6295
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "with_parents",
+  "weight": 0.6006
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_HOME_SEARCH_IN_APP",
+  "weight": -0.5253
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_EV_LOAN_SIMULATION",
+  "weight": -0.5122
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "age_55_64",
+  "weight": -0.4999
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_BUSINESS_ACCOUNT_VIEW",
+  "weight": 0.4832
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_HOME_LOAN_APPLICATION",
+  "weight": -0.4678
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_SAVING_FOR_DOWN_PAYMENT",
+  "weight": -0.4538
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "emp_business_owner",
+  "weight": -0.4168
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_CAR_LOAN_ENDING",
+  "weight": -0.4122
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_MORTGAGE_SIMULATION",
+  "weight": -0.4109
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "age_65_plus",
+  "weight": -0.4011
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_PENSION_VIEW",
+  "weight": -0.3496
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "holds_pension_savings",
+  "weight": 0.3397
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_HOME_LOAN_VIEW",
+  "weight": 0.3395
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "is_owner",
+  "weight": -0.3282
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "emp_retired",
+  "weight": -0.3247
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "holds_business_account",
+  "weight": 0.3154
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "debt_ratio",
+  "weight": -0.3086
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_FAMILY_PROTECTION_VIEW",
+  "weight": -0.3045
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_BUSINESS_TOOLS_VIEW",
+  "weight": 0.2859
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_EV_CHARGING",
+  "weight": -0.2826
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_FREELANCE_INCOME",
+  "weight": 0.2757
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "has_young_child",
+  "weight": -0.2568
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "holds_home_loan",
+  "weight": 0.2494
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_FAMILY_KATE_QUESTION",
+  "weight": -0.2491
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_SALARY_STOPPED",
+  "weight": 0.2176
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_START_IT_VIEW",
+  "weight": 0.2068
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_BUSINESS_PROTECTION_VIEW",
+  "weight": 0.2034
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_NOTARY_PAYMENT",
+  "weight": -0.2011
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_PROPERTY_VALUATION_VIEW",
+  "weight": -0.1999
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_HOME_LOAN_APPLICATION",
+  "weight": -0.1984
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_HOME_LOAN_VIEW",
+  "weight": -0.1973
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_ESTATE_PLANNING_VIEW",
+  "weight": -0.1941
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "age_45_54",
+  "weight": -0.1928
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_LUMP_SUM_INVESTMENT",
+  "weight": -0.182
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "is_tenant",
+  "weight": 0.1816
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "holds_ev_insurance",
+  "weight": 0.1752
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_EV_KATE_QUESTION",
+  "weight": -0.1701
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "savings_k_log",
+  "weight": -0.1616
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_BABY_SPENDING",
+  "weight": -0.1556
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "age_35_44",
+  "weight": -0.1494
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "holds_save_for_child",
+  "weight": -0.1335
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_EV_PAGE_VIEW",
+  "weight": -0.124
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_EV_LOAN_SIMULATION",
+  "weight": -0.1231
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_RETIREMENT_KATE_QUESTION",
+  "weight": -0.1072
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "children",
+  "weight": -0.0987
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_CHILD_BORN",
+  "weight": 0.0936
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "has_baby",
+  "weight": -0.0892
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_CHILD_BORN",
+  "weight": -0.0789
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "has_old_property",
+  "weight": 0.0507
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "household_couple",
+  "weight": -0.0497
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_CHILDCARE_PAYMENT",
+  "weight": 0.0428
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "sig_CHILDCARE_PAYMENT",
+  "weight": 0.0278
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "STARTING_BUSINESS",
+  "feature": "cnt_EV_CHARGING",
+  "weight": -0.005
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "__bias__",
+  "weight": -9.3549
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_FAMILY_KATE_QUESTION",
+  "weight": 13.0747
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_CHILD_BORN",
+  "weight": 10.9081
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_BABY_SPENDING",
+  "weight": 8.0073
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_ESTATE_PLANNING_VIEW",
+  "weight": -7.6198
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_HOME_LOAN_VIEW",
+  "weight": -7.2147
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_FAMILY_PROTECTION_VIEW",
+  "weight": 6.6212
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_RENOVATION_VIEW",
+  "weight": -6.3963
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_SAVING_FOR_DOWN_PAYMENT",
+  "weight": -4.4106
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_BUSINESS_TOOLS_VIEW",
+  "weight": -4.3436
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_EQUIPMENT_PURCHASE",
+  "weight": 3.8012
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_PENSION_VIEW",
+  "weight": 3.7582
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_CAR_LOAN_ENDING",
+  "weight": -3.688
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_HOUSING_BUDGET_VIEW",
+  "weight": -3.3317
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_START_IT_VIEW",
+  "weight": -3.0489
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_FAMILY_KATE_QUESTION",
+  "weight": 2.7941
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_CHILDCARE_PAYMENT",
+  "weight": -2.6495
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_EV_KATE_QUESTION",
+  "weight": -2.5446
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_HOME_SEARCH_IN_APP",
+  "weight": -2.4761
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_BUSINESS_PROTECTION_VIEW",
+  "weight": -2.3374
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_BUSINESS_KATE_QUESTION",
+  "weight": -2.1516
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_PROPERTY_VALUATION_VIEW",
+  "weight": -2.1423
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_HOME_LOAN_KATE_QUESTION",
+  "weight": -1.866
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_ACCOUNTING_TOOL_PAYMENT",
+  "weight": -1.817
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_BUSINESS_ACCOUNT_VIEW",
+  "weight": -1.7942
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_FREELANCE_INCOME",
+  "weight": -1.4647
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "has_young_child",
+  "weight": -1.3396
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_EV_CHARGING",
+  "weight": 1.1289
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_BABY_SPENDING",
+  "weight": 1.058
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "debt_ratio",
+  "weight": 1.0564
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_RETIREMENT_KATE_QUESTION",
+  "weight": -1.0251
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_EV_LOAN_SIMULATION",
+  "weight": -0.9765
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_EV_PAGE_VIEW",
+  "weight": 0.9371
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_CAR_LOAN_ENDING",
+  "weight": -0.9311
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_LUMP_SUM_INVESTMENT",
+  "weight": -0.7941
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "has_baby",
+  "weight": -0.7753
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_NOTARY_PAYMENT",
+  "weight": -0.7131
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "household_couple",
+  "weight": 0.6769
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_FAMILY_PROTECTION_VIEW",
+  "weight": 0.5946
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_SAVING_FOR_DOWN_PAYMENT",
+  "weight": -0.5749
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "holds_save_for_child",
+  "weight": 0.5722
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_HOME_LOAN_APPLICATION",
+  "weight": -0.5337
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "emp_business_owner",
+  "weight": -0.5144
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "is_tenant",
+  "weight": 0.5126
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_HOME_LOAN_VIEW",
+  "weight": -0.5119
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "children",
+  "weight": -0.5093
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_CHILD_BORN",
+  "weight": 0.4972
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "emp_employee",
+  "weight": 0.4969
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "holds_business_account",
+  "weight": -0.4846
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_RENOVATION_VIEW",
+  "weight": -0.4614
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_MORTGAGE_SIMULATION",
+  "weight": -0.4491
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_EV_KATE_QUESTION",
+  "weight": -0.4475
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "age_25_34",
+  "weight": 0.4452
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "emp_self_employed",
+  "weight": -0.4423
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "holds_pension_savings",
+  "weight": 0.4415
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "is_owner",
+  "weight": -0.439
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "age_55_64",
+  "weight": -0.4138
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_PROPERTY_VALUATION_VIEW",
+  "weight": 0.4029
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_BUSINESS_PROTECTION_VIEW",
+  "weight": -0.4016
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_HOUSING_BUDGET_VIEW",
+  "weight": -0.3927
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_SALARY_STOPPED",
+  "weight": -0.3671
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "age_45_54",
+  "weight": -0.3645
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "holds_ev_insurance",
+  "weight": 0.3587
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "age_65_plus",
+  "weight": -0.3537
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_START_IT_VIEW",
+  "weight": -0.3433
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "age_35_44",
+  "weight": 0.3376
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "emp_retired",
+  "weight": -0.3308
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_HOME_LOAN_KATE_QUESTION",
+  "weight": -0.3302
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_BUSINESS_TOOLS_VIEW",
+  "weight": -0.3297
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_ACCOUNTING_TOOL_PAYMENT",
+  "weight": -0.3073
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_PENSION_VIEW",
+  "weight": -0.2819
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_CHILDCARE_PAYMENT",
+  "weight": -0.2743
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_HOME_SEARCH_IN_APP",
+  "weight": -0.27
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_BUSINESS_ACCOUNT_VIEW",
+  "weight": -0.2504
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "sig_INCOME_DROP",
+  "weight": -0.2501
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "has_old_property",
+  "weight": 0.2464
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_BUSINESS_KATE_QUESTION",
+  "weight": -0.2135
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_FREELANCE_INCOME",
+  "weight": -0.209
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_EV_LOAN_SIMULATION",
+  "weight": -0.1987
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "age_18_24",
+  "weight": -0.1692
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_HOME_LOAN_APPLICATION",
+  "weight": -0.1686
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_RETIREMENT_KATE_QUESTION",
+  "weight": -0.1674
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_NOTARY_PAYMENT",
+  "weight": -0.1673
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_LUMP_SUM_INVESTMENT",
+  "weight": -0.1498
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "emp_student",
+  "weight": -0.1414
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "with_parents",
+  "weight": -0.1321
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_ESTATE_PLANNING_VIEW",
+  "weight": 0.1207
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_INCOME_DROP",
+  "weight": -0.1117
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_EQUIPMENT_PURCHASE",
+  "weight": 0.0966
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_EV_PAGE_VIEW",
+  "weight": 0.095
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_EV_CHARGING",
+  "weight": 0.0941
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_MORTGAGE_SIMULATION",
+  "weight": -0.0881
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "savings_k_log",
+  "weight": 0.0696
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "holds_home_loan",
+  "weight": 0.0626
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "NEW_PARENT",
+  "feature": "cnt_SALARY_STOPPED",
+  "weight": -0.0568
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "__bias__",
+  "weight": -7.6993
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_CAR_LOAN_ENDING",
+  "weight": 12.4017
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_EV_KATE_QUESTION",
+  "weight": 11.0625
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_EQUIPMENT_PURCHASE",
+  "weight": -7.5925
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_BUSINESS_PROTECTION_VIEW",
+  "weight": -7.3647
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_EV_LOAN_SIMULATION",
+  "weight": 7.2017
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_EV_PAGE_VIEW",
+  "weight": 6.6719
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_PROPERTY_VALUATION_VIEW",
+  "weight": -5.7573
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_FAMILY_PROTECTION_VIEW",
+  "weight": -5.3868
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_PENSION_VIEW",
+  "weight": -4.8685
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_EV_CHARGING",
+  "weight": 4.8384
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_HOME_LOAN_VIEW",
+  "weight": -4.5562
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_BUSINESS_ACCOUNT_VIEW",
+  "weight": 4.1879
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_FAMILY_KATE_QUESTION",
+  "weight": -4.0823
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_RENOVATION_VIEW",
+  "weight": -3.6845
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_BUSINESS_TOOLS_VIEW",
+  "weight": -3.4136
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_HOME_SEARCH_IN_APP",
+  "weight": -3.3346
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_SAVING_FOR_DOWN_PAYMENT",
+  "weight": -3.1759
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_RETIREMENT_KATE_QUESTION",
+  "weight": -3.15
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_CAR_LOAN_ENDING",
+  "weight": 3.1311
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_HOUSING_BUDGET_VIEW",
+  "weight": -3.0583
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_CHILDCARE_PAYMENT",
+  "weight": -2.9163
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_ESTATE_PLANNING_VIEW",
+  "weight": -2.1565
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_LUMP_SUM_INVESTMENT",
+  "weight": -2.0525
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_EV_KATE_QUESTION",
+  "weight": 1.7615
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "holds_ev_insurance",
+  "weight": 1.7172
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_EV_LOAN_SIMULATION",
+  "weight": 1.7113
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_FREELANCE_INCOME",
+  "weight": -1.3981
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_EV_PAGE_VIEW",
+  "weight": 1.3042
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "age_45_54",
+  "weight": 1.2838
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_BABY_SPENDING",
+  "weight": 1.1223
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "emp_retired",
+  "weight": -0.8965
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "age_65_plus",
+  "weight": -0.8174
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_PROPERTY_VALUATION_VIEW",
+  "weight": -0.7745
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_BUSINESS_PROTECTION_VIEW",
+  "weight": -0.7701
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_CHILD_BORN",
+  "weight": -0.759
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_ACCOUNTING_TOOL_PAYMENT",
+  "weight": -0.7285
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_NOTARY_PAYMENT",
+  "weight": -0.6859
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "has_young_child",
+  "weight": 0.6841
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_BUSINESS_KATE_QUESTION",
+  "weight": -0.6771
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_ESTATE_PLANNING_VIEW",
+  "weight": -0.6453
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "age_25_34",
+  "weight": -0.5892
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "holds_save_for_child",
+  "weight": -0.5822
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "holds_home_loan",
+  "weight": -0.58
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_RENOVATION_VIEW",
+  "weight": 0.5705
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "emp_business_owner",
+  "weight": 0.5562
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_START_IT_VIEW",
+  "weight": 0.5459
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "household_couple",
+  "weight": 0.5261
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_FAMILY_KATE_QUESTION",
+  "weight": -0.5185
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_SALARY_STOPPED",
+  "weight": -0.5169
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_HOME_LOAN_APPLICATION",
+  "weight": -0.5103
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "emp_self_employed",
+  "weight": -0.5008
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_EV_CHARGING",
+  "weight": -0.4921
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "emp_student",
+  "weight": -0.4671
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "age_18_24",
+  "weight": -0.4507
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_RETIREMENT_KATE_QUESTION",
+  "weight": -0.4395
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "emp_employee",
+  "weight": 0.4385
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "children",
+  "weight": 0.4385
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "with_parents",
+  "weight": -0.4205
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_SAVING_FOR_DOWN_PAYMENT",
+  "weight": -0.414
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_EQUIPMENT_PURCHASE",
+  "weight": -0.3972
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_HOME_LOAN_VIEW",
+  "weight": -0.3762
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_CHILDCARE_PAYMENT",
+  "weight": -0.3585
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "has_baby",
+  "weight": -0.3496
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_CHILD_BORN",
+  "weight": 0.3395
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_LUMP_SUM_INVESTMENT",
+  "weight": -0.3305
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "is_owner",
+  "weight": 0.304
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "holds_business_account",
+  "weight": 0.2972
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_MORTGAGE_SIMULATION",
+  "weight": -0.292
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "debt_ratio",
+  "weight": 0.2529
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_HOME_LOAN_KATE_QUESTION",
+  "weight": -0.2454
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_HOME_SEARCH_IN_APP",
+  "weight": -0.2284
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "age_35_44",
+  "weight": 0.2269
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_FREELANCE_INCOME",
+  "weight": -0.2252
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_PENSION_VIEW",
+  "weight": 0.2227
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "is_tenant",
+  "weight": -0.2074
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_BUSINESS_TOOLS_VIEW",
+  "weight": -0.1957
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_NOTARY_PAYMENT",
+  "weight": -0.1784
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_HOUSING_BUDGET_VIEW",
+  "weight": 0.177
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_HOME_LOAN_APPLICATION",
+  "weight": -0.1754
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_ACCOUNTING_TOOL_PAYMENT",
+  "weight": -0.1276
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "savings_k_log",
+  "weight": 0.1129
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_BUSINESS_ACCOUNT_VIEW",
+  "weight": 0.1115
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_START_IT_VIEW",
+  "weight": -0.1103
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "age_55_64",
+  "weight": 0.0891
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_FAMILY_PROTECTION_VIEW",
+  "weight": 0.0884
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_BUSINESS_KATE_QUESTION",
+  "weight": -0.0847
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_SALARY_STOPPED",
+  "weight": -0.0798
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_MORTGAGE_SIMULATION",
+  "weight": -0.0524
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_HOME_LOAN_KATE_QUESTION",
+  "weight": -0.0462
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "sig_INCOME_DROP",
+  "weight": -0.038
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "holds_pension_savings",
+  "weight": -0.0349
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "has_old_property",
+  "weight": -0.0285
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_INCOME_DROP",
+  "weight": -0.0177
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "EV_PURCHASE",
+  "feature": "cnt_BABY_SPENDING",
+  "weight": -0.0052
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "__bias__",
+  "weight": -7.431
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_LUMP_SUM_INVESTMENT",
+  "weight": 17.3554
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_RETIREMENT_KATE_QUESTION",
+  "weight": 11.1466
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_RENOVATION_VIEW",
+  "weight": -10.8549
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_ESTATE_PLANNING_VIEW",
+  "weight": 8.9967
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_BUSINESS_TOOLS_VIEW",
+  "weight": -5.2494
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_HOME_SEARCH_IN_APP",
+  "weight": -4.4267
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_LUMP_SUM_INVESTMENT",
+  "weight": 3.848
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_EV_PAGE_VIEW",
+  "weight": -3.7046
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_BUSINESS_ACCOUNT_VIEW",
+  "weight": -3.3924
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_PROPERTY_VALUATION_VIEW",
+  "weight": -3.2645
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_HOUSING_BUDGET_VIEW",
+  "weight": -3.1459
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_START_IT_VIEW",
+  "weight": -3.0322
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_EV_KATE_QUESTION",
+  "weight": -2.9365
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_EV_LOAN_SIMULATION",
+  "weight": -2.6457
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_CAR_LOAN_ENDING",
+  "weight": 2.5643
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "age_55_64",
+  "weight": 2.4532
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_BUSINESS_KATE_QUESTION",
+  "weight": -2.1911
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_FAMILY_PROTECTION_VIEW",
+  "weight": -2.1373
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_CHILDCARE_PAYMENT",
+  "weight": -2.1073
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_HOME_LOAN_VIEW",
+  "weight": -1.915
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_BUSINESS_PROTECTION_VIEW",
+  "weight": -1.7636
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_RETIREMENT_KATE_QUESTION",
+  "weight": 1.702
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_SAVING_FOR_DOWN_PAYMENT",
+  "weight": -1.4893
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_SALARY_STOPPED",
+  "weight": -1.3073
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_ACCOUNTING_TOOL_PAYMENT",
+  "weight": -1.1933
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "age_25_34",
+  "weight": -1.132
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_ESTATE_PLANNING_VIEW",
+  "weight": 1.1134
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_EV_CHARGING",
+  "weight": -1.0708
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_FREELANCE_INCOME",
+  "weight": -0.9276
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_RENOVATION_VIEW",
+  "weight": -0.8707
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "holds_home_loan",
+  "weight": -0.8366
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "emp_business_owner",
+  "weight": -0.8229
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "emp_retired",
+  "weight": -0.8046
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_EQUIPMENT_PURCHASE",
+  "weight": 0.7953
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "emp_employee",
+  "weight": 0.7934
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "age_45_54",
+  "weight": 0.7896
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_PENSION_VIEW",
+  "weight": 0.7657
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_EQUIPMENT_PURCHASE",
+  "weight": 0.7639
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "age_18_24",
+  "weight": -0.7212
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "age_35_44",
+  "weight": -0.6578
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_CAR_LOAN_ENDING",
+  "weight": 0.6474
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_EV_LOAN_SIMULATION",
+  "weight": -0.6424
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "has_old_property",
+  "weight": -0.618
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_FAMILY_PROTECTION_VIEW",
+  "weight": -0.6157
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "with_parents",
+  "weight": -0.5961
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_FAMILY_KATE_QUESTION",
+  "weight": -0.5784
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "emp_student",
+  "weight": -0.5583
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_HOME_SEARCH_IN_APP",
+  "weight": -0.5577
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_INCOME_DROP",
+  "weight": -0.5553
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_EV_KATE_QUESTION",
+  "weight": -0.5471
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "household_couple",
+  "weight": -0.5222
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "holds_business_account",
+  "weight": -0.4932
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "holds_save_for_child",
+  "weight": -0.4839
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_BUSINESS_ACCOUNT_VIEW",
+  "weight": -0.4717
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "children",
+  "weight": -0.4714
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_PROPERTY_VALUATION_VIEW",
+  "weight": -0.4379
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "is_owner",
+  "weight": 0.4091
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "holds_ev_insurance",
+  "weight": -0.3763
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_HOUSING_BUDGET_VIEW",
+  "weight": -0.3616
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_START_IT_VIEW",
+  "weight": 0.3521
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_BUSINESS_TOOLS_VIEW",
+  "weight": -0.3263
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_HOME_LOAN_KATE_QUESTION",
+  "weight": -0.3151
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_BUSINESS_KATE_QUESTION",
+  "weight": -0.3135
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_BUSINESS_PROTECTION_VIEW",
+  "weight": 0.2876
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "is_tenant",
+  "weight": -0.2703
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_INCOME_DROP",
+  "weight": -0.2449
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_CHILDCARE_PAYMENT",
+  "weight": -0.2187
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_SALARY_STOPPED",
+  "weight": -0.2038
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_ACCOUNTING_TOOL_PAYMENT",
+  "weight": -0.2022
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "emp_self_employed",
+  "weight": -0.1984
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_SAVING_FOR_DOWN_PAYMENT",
+  "weight": -0.1941
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_MORTGAGE_SIMULATION",
+  "weight": -0.1926
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "savings_k_log",
+  "weight": 0.1519
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_PENSION_VIEW",
+  "weight": -0.1391
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_HOME_LOAN_VIEW",
+  "weight": -0.1277
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_NOTARY_PAYMENT",
+  "weight": -0.1153
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_FREELANCE_INCOME",
+  "weight": -0.1081
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_EV_CHARGING",
+  "weight": -0.1043
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_CHILD_BORN",
+  "weight": 0.1027
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "holds_pension_savings",
+  "weight": 0.0944
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_HOME_LOAN_APPLICATION",
+  "weight": -0.0855
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_FAMILY_KATE_QUESTION",
+  "weight": -0.0801
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_BABY_SPENDING",
+  "weight": 0.0767
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "age_65_plus",
+  "weight": -0.0747
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "debt_ratio",
+  "weight": 0.073
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_HOME_LOAN_KATE_QUESTION",
+  "weight": -0.0488
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_EV_PAGE_VIEW",
+  "weight": 0.046
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "sig_CHILD_BORN",
+  "weight": -0.0446
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_MORTGAGE_SIMULATION",
+  "weight": -0.0355
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_NOTARY_PAYMENT",
+  "weight": -0.0284
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_HOME_LOAN_APPLICATION",
+  "weight": -0.028
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "has_young_child",
+  "weight": 0.0208
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "has_baby",
+  "weight": -0.0039
+ },
+ {
+  "modelVersion": "lr-2026-10-20",
+  "moment": "RETIREMENT_PREP",
+  "feature": "cnt_BABY_SPENDING",
+  "weight": 0.0016
+ }
+]

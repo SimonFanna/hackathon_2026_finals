@@ -16,6 +16,7 @@
   --color-green: #1db955;          /* --kdl-color-sustainability-green */
   --color-green-600: #00903d;      /* --kdl-color-sustainability-green-600 */
   --color-warning: #dc7507;        /* --kdl-color-system-warning */
+  --color-danger: #d4213d;         /* broken constraint; approximation, not read from KDL */
 
   --font-sans: var(--font-nunito), "Museo Sans", system-ui, sans-serif;
 
@@ -49,3 +50,8 @@ body {
 
 .press { transition: transform 100ms var(--ease-out), background-color 150ms ease, color 150ms ease; }
 .press:active { transform: scale(0.97); }
+
+/* Unexpected event: a short pulse on the event slot in the engine view */
+@keyframes hud-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgb(212 33 61 / 0.55); } 50% { box-shadow: 0 0 0 8px rgb(212 33 61 / 0); } }
+.hud-pulse { animation: hud-pulse 1.4s var(--ease-out) infinite; }
+@media (prefers-reduced-motion: reduce) { .hud-pulse { animation: none; } }
