@@ -31,7 +31,7 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 /** Locked look: sRGB in, grey-blue sRGB out. Keeps the value (luma) so the scene still reads. */
 export function lockedRGB(r: number, g: number, b: number): [number, number, number] {
   const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  const v = 0.06 + 0.55 * l;
+  const v = 0.05 + 0.32 * l; // compressed: locked goals read as night silhouettes behind the players
   return [clamp01(v * 0.86), clamp01(v * 0.94), clamp01(v * 1.06 + 0.03)];
 }
 

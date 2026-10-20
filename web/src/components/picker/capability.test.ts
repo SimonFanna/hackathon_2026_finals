@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { pickerMode } from "./capability";
+import { pickerMode, renderQuality } from "./capability";
 
 describe("pickerMode", () => {
   it("uses 3D on a capable desktop", () => {
@@ -16,5 +16,16 @@ describe("pickerMode", () => {
   });
   it("can be forced on for captures", () => {
     expect(pickerMode({ compact: false, search: "?q=high", webgl: true })).toBe("3d");
+  });
+});
+
+describe("renderQuality", () => {
+  it("defaults to high quality that never downgrades itself", () => {
+    expect(renderQuality("")).toEqual({ bloom: true, governor: false });
+    expect(renderQuality("?q=high")).toEqual({ bloom: true, governor: false });
+  });
+  it("has manual switches", () => {
+    expect(renderQuality("?bloom=0").bloom).toBe(false);
+    expect(renderQuality("?q=auto").governor).toBe(true);
   });
 });

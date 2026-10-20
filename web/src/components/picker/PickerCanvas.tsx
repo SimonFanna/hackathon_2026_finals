@@ -7,6 +7,7 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { renderQuality } from "./capability";
 import { dragFocus, indexOfId, layout, releaseTarget, type PlayableId } from "./carousel";
 import { buildDiorama, pickerKit } from "./dioramaSource";
 import { loadCharacters } from "./characterGltf";
@@ -15,7 +16,8 @@ import type { Diorama, DioramaId } from "./dioramaTypes";
 import type { ScreenRect } from "./handoff";
 
 // The 3D carousel. Vanilla three.js inside one effect (like pitch3d): no lights that cost per pixel,
-// no shadow maps, shared materials, half-resolution bloom that switches off if the GPU struggles.
+// no shadow maps, shared materials. High quality by default (MSAA + half-resolution bloom); the fps
+// governor that downgrades on a weak GPU only runs with ?q=auto (see renderQuality).
 // Text stays in the DOM (sharp on a projector, accessible); the canvas only draws the dioramas.
 
 export interface PickerItem { id: DioramaId; label: string; locked: boolean; title?: string }
@@ -69,9 +71,11 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     if (!el) return;
     let disposed = false;
     let renderer: THREE.WebGLRenderer;
+    const quality = renderQuality(window.location.search);
     try {
-      // Native MSAA, no post-processing by default: crisp edges and 55–60 fps on an integrated GPU.
-      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+      // With bloom the MSAA lives in the composer's target; the canvas only needs its own when bloom
+      // is off or may be switched off by the governor.
+      renderer = new THREE.WebGLRenderer({ antialias: !quality.bloom || quality.governor, powerPreference: "high-performance" });
     } catch {
       live.current.onFail("init");
       return;
@@ -154,8 +158,8 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       return sp;
     });
 
-    // Optional bloom (?bloom=1) for strong GPUs: half resolution, multisampled half-float target.
-    let useBloom = new URLSearchParams(window.location.search).get("bloom") === "1";
+    // Bloom (default, ?bloom=0 to skip): half resolution, over a multisampled half-float target.
+    let useBloom = quality.bloom;
     const target = useBloom ? new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }) : null;
     const composer = target ? new EffectComposer(renderer, target) : null;
     const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.55, 0.5, 0.86);
@@ -489,12 +493,12 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         requestAnimationFrame(() => !disposed && live.current.onReady());
       }
 
-      // fps governor: drop bloom first under 45 fps, then hand over to the 2D picker under 30 fps.
+      // fps governor (?q=auto only): drop bloom first under 45 fps, then hand over to the 2D picker under 30 fps.
       times.push(now);
       while (times.length && now - times[0] > 2000) times.shift();
       if (times.length > 1) stats.fps = Math.round(((times.length - 1) * 1000) / (now - times[0]));
       // Sustained only: a stutter (asset upload, resize, another app) never decides on its own.
-      if (now > calmFrom && !diving && times.length > 30) {
+      if (quality.governor && now > calmFrom && !diving && times.length > 30) {
         if (useBloom) {
           if (stats.fps < 45) {
             slowSince ||= now;

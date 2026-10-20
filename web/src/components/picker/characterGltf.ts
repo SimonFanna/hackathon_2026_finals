@@ -28,7 +28,7 @@ const TINTS: Partial<Record<CharacterId, Record<string, string>>> = {
 };
 
 const HEIGHT = 1.1;
-const SILHOUETTE = "#24426b";
+const SILHOUETTE = "#1a3152";
 
 const CLIPS: Record<Pose, string> = { idle: "Idle", wave: "Wave", cheer: "Wave" };
 const HOP = 0.12;
@@ -36,8 +36,10 @@ const HOP = 0.12;
 // A thin cool rim (fresnel) that separates the people from brick walls and the navy background.
 const RIM = new THREE.Color("#9cc8ff");
 function addRim(mat: THREE.MeshStandardMaterial) {
+  const uRim = { value: RIM.clone() }; // per material: locked people get a dimmer rim
+  mat.userData.rim = uRim;
   mat.onBeforeCompile = (shader) => {
-    shader.uniforms.uRim = { value: RIM };
+    shader.uniforms.uRim = uRim;
     shader.fragmentShader = shader.fragmentShader
       .replace("#include <common>", "#include <common>\nuniform vec3 uRim;")
       .replace(
@@ -167,6 +169,7 @@ function makeCharacter(id: CharacterId, gltf: GLTF): Character {
 
   const applyColours = () => {
     for (const m of materials) {
+      (m.userData.rim as { value: THREE.Color }).value.copy(RIM).multiplyScalar(locked ? 0.35 : 1);
       if (locked) {
         m.color.set(SILHOUETTE);
         m.emissive.setRGB(0, 0, 0);
