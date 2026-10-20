@@ -1,5 +1,5 @@
 # Feature — 3D persona carousel at app start
-> Owner: peer session "README hackathon 2026" (ultracode) · Coordinator: kepa · App owner: Victor · Status: V1 on `main` (kepa 81f32f9, merged by the coordinator in 1556de3); art polish continues on `kepa` · Last update: 13:55
+> Owner: peer session "README hackathon 2026" (ultracode) · Coordinator: kepa · App owner: Victor · Status: V1 on `main` (kepa 81f32f9, merged by the coordinator in 1556de3); art polish continues on `kepa` · Last update: 14:30
 
 ## Goal
 Replace the 2D "Choose your player" cards (`CharacterSelect.tsx`, Victor, see `outcome-engine.md`) with a **3D carousel of miniature life scenes**, then an **entry animation into the phone**, then the existing live demo, unchanged. It makes the app feel premium from the first second (Creativity + Pitch = 50%).
@@ -76,7 +76,7 @@ Replaces the paused "Lucas's World" (`pitch-3d.md`). Reuse its learnings: the Ir
 7. **Reduced motion.** A 200 ms crossfade instead of the dive.
 
 **Carousel:**
-- Cover-flow order: retire · **Thomas** · **Lina** · baby · car.
+- Cover-flow order (Demo V2 P2, 14:25): **Lina** (business, the default) · **Thomas**. The three locked goals were removed from both pickers; slot 3 is reserved for a backend-driven "Your own" player. `dioramas.ts` still builds retire/baby/car for that day.
 - **Framing:** `CharacterSelect3D` measures the free band between the headline and the player card. `PickerCanvas` shrinks the FOV (never enlarges) and sets a camera view offset so the stage (roofs to plinth front) sits centred in that band; picking and the DOM overlay follow the camera. Under 860 px height the card collapses to one line of facts. Checked at 1920×1080, 1536×864, 1366×768 and 1280×720.
 - Critically damped spring on a continuous `focus` index. A drag maps pixels to focus; release snaps to the nearest playable item. A tap is a raycast: a side item selects, the centred item plays, a locked item wiggles.
 - Each diorama sways gently on its turntable; off under reduced motion.
