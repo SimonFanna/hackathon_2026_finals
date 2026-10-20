@@ -151,7 +151,7 @@ export const houseOutcome: OutcomeModel = {
       id: "installer-delay", month: 6, kind: "delay",
       title: "Your installer is 3 months late",
       detail: "The insulation crew is stuck on another site. The works would end after your lease does.",
-      source: "Impact us today · installer",
+      source: "Your contractor · schedule update",
       delta: { values: { finish: 3, buffer: -2850 } },
       affects: ["insulation"],
       options: [
