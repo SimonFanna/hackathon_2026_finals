@@ -7,6 +7,7 @@ import {
   advance, buildJourney, decide, detectIntents, getPersona, hit, initState, isComplete, resolve, scoreboard, setConsent, startRun,
   type Journey, type JourneyState, type OutcomeModel, type PendingHit, type Persona, type Run, type Scoreboard,
 } from "@/engine";
+import { affectedStep, BuildStage } from "../build/BuildStage";
 import { CharacterSelect3D } from "../picker/CharacterSelect3D";
 import { providerName } from "./copy";
 import { EngineHud, type AdaptStep, type Phase } from "./EngineHud";
@@ -95,6 +96,8 @@ export function Stage() {
   const finale = screen === "finale";
   const stageFinale = finale && framed && w >= 1100;
   const showHud = framed && w >= 1100 && screen !== "select" && !stageFinale;
+  // Demo V2 P4: the 3D build on the left (phone centre, HUD right). At the stage finale only when there is room.
+  const showBuild = framed && w >= 1100 && screen !== "select" && (!stageFinale || w >= 1600);
   const base = Math.min((h * 0.92) / FRAME_H, 1.3);
   const scale = stageFinale ? base * 0.82 : base;
 
@@ -103,6 +106,10 @@ export function Stage() {
   const step = screen === "step" ? steps[index] ?? null : null;
   const accepted = useMemo(
     () => new Set(state ? state.journey.steps.filter((s) => state.decisions[s.id] === "accepted").map((s) => s.id) : []),
+    [state],
+  );
+  const skipped = useMemo(
+    () => (state ? state.journey.steps.filter((s) => state.decisions[s.id] === "skipped").map((s) => s.id) : []),
     [state],
   );
   const finishLine = run ? Math.max(model.horizon, run.plan.values.finish) : model.horizon;
@@ -544,18 +551,17 @@ export function Stage() {
       </button>
       <LayoutGroup>
         <div className="relative flex flex-1 items-center justify-center gap-14 px-10 py-[4vh]">
-          <AnimatePresence>
-            {presenter && (
-              <PresenterPanel
-                key="presenter"
-                signals={signals}
-                model={persona.intentModel}
-                intent={intent}
-                step={step}
-                state={state}
-                board={board}
-                weak={signalSet === "weak"}
-                onToggleWeak={() => reset(signalSet === "weak" ? "real" : "weak")}
+          <AnimatePresence mode="popLayout">
+            {showBuild && (
+              <BuildStage
+                key={`build-${personaId}`}
+                persona={personaId}
+                steps={steps.map((s) => s.id)}
+                accepted={[...accepted]}
+                skipped={skipped}
+                hit={pending ? { step: affectedStep(pending), n: shock } : null}
+                repaired={run?.history.length ?? 0}
+                finale={finale}
               />
             )}
           </AnimatePresence>
@@ -574,6 +580,24 @@ export function Stage() {
           </AnimatePresence>
         </div>
       </LayoutGroup>
+
+      {/* Presenter view (key P): an overlay, so the left column stays free for the 3D build. */}
+      <AnimatePresence>
+        {presenter && (
+          <div key="presenter" className="absolute left-6 top-16 z-20 max-h-[calc(100dvh-7rem)] overflow-y-auto rounded-[16px] bg-[rgb(2_30_67/0.92)] p-5 shadow-raised ring-1 ring-white/15">
+            <PresenterPanel
+              signals={signals}
+              model={persona.intentModel}
+              intent={intent}
+              step={step}
+              state={state}
+              board={board}
+              weak={signalSet === "weak"}
+              onToggleWeak={() => reset(signalSet === "weak" ? "real" : "weak")}
+            />
+          </div>
+        )}
+      </AnimatePresence>
 
       {stageFinale && (
         <div className="pointer-events-none absolute inset-0">
