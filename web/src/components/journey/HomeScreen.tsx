@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowsLeftRight, House, ListBullets, SquaresFour } from "@phosphor-icons/react";
+import { ArrowsLeftRight, HandTap, House, ListBullets, SquaresFour } from "@phosphor-icons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 import type { Persona } from "@/engine";
@@ -74,6 +74,20 @@ export function HomeScreen({
               <span className="mt-0.5 block text-[15px] font-semibold leading-5 text-night">{copy.notification}</span>
             </span>
           </motion.button>
+        )}
+        {visible && (
+          // A tapping hand: on stage, nobody guesses that the notification is the thing to press.
+          <motion.span
+            key="hand"
+            aria-hidden
+            initial={{ opacity: 0 }}
+            animate={reduce ? { opacity: 1 } : { opacity: 1, y: [0, -7, 0], scale: [1, 0.92, 1] }}
+            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            transition={reduce ? { duration: 0.3 } : { opacity: { delay: 0.9, duration: 0.3 }, y: { delay: 0.9, duration: 1.1, repeat: Infinity, ease: "easeInOut" }, scale: { delay: 0.9, duration: 1.1, repeat: Infinity, ease: "easeInOut" } }}
+            className="pointer-events-none absolute top-[84px] right-7 z-30 grid size-12 place-items-center rounded-full bg-white text-kate shadow-raised ring-2 ring-kate/60"
+          >
+            <HandTap size={28} weight="fill" />
+          </motion.span>
         )}
         {pill && (
           <motion.div
