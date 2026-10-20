@@ -1,5 +1,5 @@
 # Assumptions — every figure in the demo
-> Owner: Kepa's UI terminal · Status: done (inventory, no data changed) · Last update: 10:55
+> Owner: Kepa's UI terminal · Status: done (inventory, no data changed) · Last update: 10:48
 
 Every number a jury member can see, with where it comes from. **Nothing in `web/src/engine/data.ts` was changed.** The figures belong to the engine / DB + ML owners; this file tells them what to keep, what to source and what to drop.
 
@@ -10,7 +10,7 @@ Legend:
 
 ---
 
-## 1. Public figures we can quote (verified, 10:55)
+## 1. Public figures we can quote (verified, 10:48)
 
 Use these in the pitch and in "How we estimate this". They are stronger than our own numbers.
 
