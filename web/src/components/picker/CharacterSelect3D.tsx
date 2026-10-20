@@ -84,6 +84,7 @@ export function CharacterSelect3D({
       busy.current = true;
       setPlaying(true);
       const h = createHandoff(reduce);
+      void import("../build/BuildCanvas"); // warm the build stage's chunk during the dive, not when the home screen mounts
       try {
         const dive = diveRef.current;
         if (dive && ready && !reduce) {

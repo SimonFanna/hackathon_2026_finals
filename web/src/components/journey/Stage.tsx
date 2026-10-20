@@ -18,6 +18,7 @@ import type { PlanPersona } from "../custom/CustomPlayer";
 import { CharacterSelect3D } from "../picker/CharacterSelect3D";
 import { ChapterScreen } from "./ChapterScreen";
 import { providerName } from "./copy";
+import { buildStepAlias, withLocalAliases } from "./stepAlias";
 import { buildDemoSequence, type DemoPage } from "./demoSequence";
 import { EngineHud, type AdaptStep, type Phase } from "./EngineHud";
 import { EventPage } from "./EventPage";
@@ -194,14 +195,18 @@ export function Stage() {
   const board = beGoal && beBoard ? beBoard : state ? scoreboard(state) : EMPTY;
   const steps = state?.journey.steps ?? [];
   const step = screen === "step" ? steps[index] ?? null : null;
+  // The journey may be the backend's (its own step ids): the engine's surprises keep the local ids, so the
+  // accepted set carries both (matched by catalogue item), and the build gets the journey's id for a hit.
+  const alias = useMemo(() => buildStepAlias(persona.journey, state?.journey), [persona, state]);
   const accepted = useMemo(
-    () => new Set(state ? state.journey.steps.filter((s) => state.decisions[s.id] === "accepted").map((s) => s.id) : []),
-    [state],
+    () => withLocalAliases(state ? state.journey.steps.filter((s) => state.decisions[s.id] === "accepted").map((s) => s.id) : [], alias),
+    [state, alias],
   );
   const skipped = useMemo(
     () => (state ? state.journey.steps.filter((s) => state.decisions[s.id] === "skipped").map((s) => s.id) : []),
     [state],
   );
+  const actualStep = (id: string | null) => (id ? alias.toActual.get(id) ?? id : null);
   const finishLine = run ? Math.max(model.horizon, run.plan.values.finish) : model.horizon;
   const pages = useMemo(() => buildDemoSequence(persona, accepted, state?.journey), [persona, accepted, state]); // the journey may be the backend's
 
@@ -220,7 +225,7 @@ export function Stage() {
   }, [screen, page]);
 
   // Pitch backups: ?player=house|business, and ?demo=intent | step[&n=6] | live | event[&n=2] | finale | weak.
-  // ?demo=event&n=N lands on page N of the post-plan sequence (chapters and surprises interleaved); live = page 1.
+  // ?demo=event&n=N lands on the Nth surprise's page of the post-plan sequence (chapters and surprises interleaved).
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
     const player = p.get("player");
@@ -252,7 +257,10 @@ export function Stage() {
       if (demo === "live" || demo === "event" || demo === "options") {
         // Kate's picks for every surprise before page n; page n is shown as the customer would reach it.
         const seq = buildDemoSequence(ps, ids);
-        const n = demo === "live" ? 1 : Math.min(Math.max(Number(p.get("n") ?? 1) || 1, 1), seq.length);
+        // ?demo=event&n=N = the Nth surprise (its page); ?demo=live&n=N = page N; ?demo=live = page 1.
+        const raw = Math.max(Number(p.get("n") ?? 1) || 1, 1);
+        const events = seq.map((pg, i) => (pg.kind === "event" ? i + 1 : 0)).filter(Boolean);
+        const n = demo === "live" ? Math.min(raw, seq.length) : (events[Math.min(raw, events.length) - 1] ?? seq.length);
         const at = runForPage(ps.outcome, seq, n - 1, ids, []);
         setState(all);
         setRun(at.run);
@@ -760,9 +768,9 @@ export function Stage() {
                 key={`build-${personaId}`}
                 persona={personaId}
                 steps={steps.map((s) => s.id)}
-                accepted={[...accepted]}
+                accepted={steps.filter((s) => accepted.has(s.id)).map((s) => s.id)}
                 skipped={skipped}
-                hit={pending ? { step: affectedStep(pending), n: shock } : null}
+                hit={pending ? { step: actualStep(affectedStep(pending)), n: shock } : null}
                 repaired={run?.history.length ?? 0}
                 finale={finale}
               />
