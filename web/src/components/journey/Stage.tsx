@@ -7,7 +7,7 @@ import {
   advance, buildJourney, decide, detectIntents, getPersona, hit, initState, isComplete, resolve, scoreboard, setConsent, startRun,
   type Journey, type JourneyState, type OutcomeModel, type PendingHit, type Persona, type Run, type Scoreboard,
 } from "@/engine";
-import { CharacterSelect } from "./CharacterSelect";
+import { CharacterSelect3D } from "../picker/CharacterSelect3D";
 import { providerName } from "./copy";
 import { EngineHud, type AdaptStep, type Phase } from "./EngineHud";
 import { Finale } from "./Finale";
@@ -88,6 +88,7 @@ export function Stage() {
   const [shock, setShock] = useState(0);
   const reduce = useReducedMotion();
   const [phoneScope, animatePhone] = useAnimate<HTMLDivElement>();
+  const pickerPlay = useRef<((id: PersonaId) => void) | null>(null); // the 3D picker's dive, when it is showing
 
   const { w, h } = useViewport();
   const framed = w >= 520;
@@ -336,7 +337,7 @@ export function Stage() {
       if (k === "arrowleft" || k === "arrowright") return setPicked((p) => (p === "house" ? "business" : "house"));
       if (k === "1") return setPicked("house");
       if (k === "2") return setPicked("business");
-      if (k === "enter" && !onControl) return play(picked);
+      if (k === "enter" && !onControl) return (pickerPlay.current ?? play)(picked);
       return;
     }
 
@@ -380,7 +381,7 @@ export function Stage() {
   }, []);
 
   if (screen === "select") {
-    return <CharacterSelect selected={picked} onSelect={setPicked} onPlay={play} compact={!framed} />;
+    return <CharacterSelect3D selected={picked} onSelect={setPicked} onPlay={play} compact={!framed} playRef={pickerPlay} />;
   }
 
   // Screen transitions: forward/accept enter from the right; skip leaves to the left; back reverses.
@@ -558,7 +559,7 @@ export function Stage() {
             )}
           </AnimatePresence>
           <motion.div layout transition={{ type: "spring", bounce: 0, duration: 0.6 }}>
-            <div ref={phoneScope}>
+            <div ref={phoneScope} data-phone-anchor>
               <Phone scale={scale} framed>{phoneContent}</Phone>
             </div>
           </motion.div>

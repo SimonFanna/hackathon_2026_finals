@@ -1,5 +1,5 @@
 # Feature — 3D persona carousel at app start
-> Owner: peer session "README hackathon 2026" (ultracode) · Coordinator: kepa · App owner: Victor · Status: todo · Last update: 12:00
+> Owner: peer session "README hackathon 2026" (ultracode) · Coordinator: kepa · App owner: Victor · Status: in progress (plan ready) · Last update: 12:10
 
 ## Goal
 Replace the 2D "Choose your player" cards (`CharacterSelect.tsx`, Victor, see `outcome-engine.md`) with a **3D carousel of miniature life scenes**, then an **entry animation into the phone**, then the existing live demo, unchanged. It makes the app feel premium from the first second (Creativity + Pitch = 50%).
@@ -35,6 +35,26 @@ Replaces the paused "Lucas's World" (`pitch-3d.md`). Reuse its learnings: the Ir
 - [ ] fps measured on the GPU (`--use-angle=vulkan --enable-features=Vulkan --ignore-gpu-blocklist`), high + fallback.
 - [ ] `npm run lint`, `npm test`, `npm run build` green in `web/`.
 - [ ] Screenshots in `docs/screenshots/picker-3d/`; this doc + `SOLUTION.md` updated; Victor informed.
+
+## Implementation plan (12:10)
+
+**Files (all new, in `web/src/components/picker/`, except the Stage swap):**
+| File | Owner | Role |
+|---|---|---|
+| `CharacterSelect3D.tsx` | UI terminal | Drop-in with Victor's props (+ optional `playRef`). No three.js import. Renders the page's DOM layer immediately (title, player card from `personas`, buttons, hints), mounts the canvas via `next/dynamic({ ssr: false })`, and falls back to Victor's `CharacterSelect` (unchanged) when needed. |
+| `PickerCanvas.tsx` | UI terminal | The three.js scene (vanilla, like pitch3d): renderer, camera, lights, carousel ring of 5 dioramas, drag/touch/click, fps governor (→ fallback), the dive animation (returns a promise). |
+| `dioramas.ts` | dioramas agent | Procedural scenes behind the contract in `dioramaTypes.ts`: house (Thomas), coffee bar (Lina), 3 locked (retire, baby, car), padlock, focus/locked states. |
+| `carousel.ts` (+ test) | UI terminal | Pure math: ring layout, angles, drag → nearest playable, which item is centred. |
+| `capability.ts` (+ test) | UI terminal | Pure: should we use 3D? (`compact`, `?q=low`, deep links, WebGL support). |
+| `handoff.ts` | UI terminal | Body-level overlay that turns the window light into the phone screen: after Stage mounts, it measures `[data-phone-anchor]` and morphs into it, then fades to reveal the home screen. |
+
+**Stage diff (Victor's file, ~5 lines):** import swap; render `CharacterSelect3D`; `const pickerPlay = useRef(...)` so Enter on the select screen runs the dive first (`(pickerPlay.current ?? play)(picked)`); `data-phone-anchor` on the phone wrapper.
+
+**Fallback triggers:** `compact` · `?q=low` · no WebGL · WebGL context lost · fps < 30 for 2 s (governor) · the canvas chunk fails to load. In every case Victor's 2D picker renders with the same props.
+
+**Perf budget:** ≤ 120 draw calls, ≤ 150k triangles, no point/spot lights, no shadow maps (contact-shadow textures instead), shared materials, half-resolution bloom in high only, DPR ≤ 1.5. Target ≥ 50 fps on the Iris Xe at 1080p.
+
+**Milestones:** plan ready → first render → integrated + verified (prod build, GPU Playwright, full flow Thomas → C → Lina, no console/CSP errors) → merged into `main` from a separate worktree.
 
 ## Decisions (and why)
 - **Victor's players, not the 6 Supabase personas** (user, 12:00): they already have full journeys and disruptions; the least risk before 16:00.
