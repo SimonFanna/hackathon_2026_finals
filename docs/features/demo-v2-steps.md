@@ -43,4 +43,4 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 - [x] P2 business first, locked goals removed (14:25, kepa)
 - [ ] P3 one page per chapter + one page per event (interleaved)
 - [ ] P4 3D build on the left
-- [ ] P5 "Your own" player (optional)
+- [x] P5 "Your own" player (14:25, custom-player branch: docs/features/custom-player.md)
