@@ -83,7 +83,7 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 | UX redesign V1 (KBC brand, Kate voice, phone stage, triple-win finale) | peer agent (kepa) | done (V1) | `ux-redesign.md` |
 | Supabase catalogue + data | Simon | in progress | — (Simon to add `supabase.md`) |
 | Deck + demo (GIF/video) | — | todo | — |
-| Security (Aikido) + public repo | — | todo | — |
+| Security (Aikido) + public repo | Kepa UI terminal (hardening) · user/Simon (Aikido) | in progress: headers + CSP done, Aikido not connected | `docs/features/security.md` |
 
 ## Open questions
 
@@ -99,3 +99,4 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 - **10:05** — Supabase access OK (empty DB). V0 UI judged too cluttered → UX redesign started (KBC brand + market benchmark). `CLAUDE.md` team rules added; docs switched to English.
 - **10:20** — UX redesign V1 shipped in `web/`: a KBC Design Language look (tokens read live from kbc.be), Kate's voice, one step at a time with a consent sentence per partner, a hidden presenter panel (key P) and a triple-win finale. Screenshots in `docs/screenshots/`. MyHome finding added (Differentiation, Open questions).
 - **10:32** — MyHome verified (KBC press release, 29 Jan 2026, opt-in "extra convenience"). Immoscoop × KBC integration and haalbaarheidsattest documented. Our Immoscoop-signal assumption is labelled and gated on the same opt-in.
+- **10:50** — Quick wins from `docs/review-1100.md`: root README rewritten (run, architecture, status, team, Vercel steps); CSP + security headers; stale `pitch/idea-a.html` removed; `docs/features/security.md` (Aikido steps) and `docs/assumptions.md` (every figure sourced or flagged) added.
