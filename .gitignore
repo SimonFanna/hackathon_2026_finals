@@ -27,3 +27,4 @@ next-env.d.ts
 # generated synthetic bank (regenerate with scripts/bank_data/generate.py)
 scripts/bank_data/out/
 __pycache__/
+scripts/ml/out/
