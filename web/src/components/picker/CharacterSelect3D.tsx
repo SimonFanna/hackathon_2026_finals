@@ -22,13 +22,6 @@ const PickerCanvas = dynamic(() => import("./PickerCanvas"), { ssr: false, loadi
 
 type PersonaId = Persona["id"];
 
-// Same locked goals as the 2D picker.
-const LOCKED: Record<"retire" | "baby" | "car", string> = {
-  retire: "Retire in 5 years",
-  baby: "Expecting a baby",
-  car: "Switch to an electric car",
-};
-
 export function CharacterSelect3D({
   selected, onSelect, onPlay, compact, playRef,
 }: {
@@ -121,11 +114,8 @@ export function CharacterSelect3D({
 
   const persona = personas.find((p) => p.id === selected) ?? personas[0];
   const items: PickerItem[] = ORDER.map((id) => {
-    if (id === "house" || id === "business") {
-      const p = personas.find((x) => x.id === id)!;
-      return { id, locked: false, label: `${p.customer.name}, ${p.customer.age}, ${p.customer.city}: ${p.copy.quest}` };
-    }
-    return { id, locked: true, title: LOCKED[id], label: `${LOCKED[id]}. Coming next: same engine, new data.` };
+    const p = personas.find((x) => x.id === id)!;
+    return { id, locked: false, label: `${p.customer.name}, ${p.customer.age}, ${p.customer.city}: ${p.copy.quest}` };
   });
 
   return (
@@ -174,7 +164,7 @@ export function CharacterSelect3D({
           <section ref={cardRef} data-player-card className="pointer-events-auto w-full max-w-[860px]">
             <PlayerCard persona={persona} onPlay={() => void play(persona.id)} disabled={playing} reduce={reduce} />
           </section>
-          <p className="mt-4 text-[13px] text-white/50">← → or drag to choose · Enter to play · locked goals: same engine, new data</p>
+          <p className="mt-4 text-[13px] text-white/50">← → or drag to choose · Enter to play</p>
         </div>
       </motion.div>
     </main>

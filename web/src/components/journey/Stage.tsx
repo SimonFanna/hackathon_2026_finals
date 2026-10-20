@@ -57,8 +57,8 @@ const EMPTY: Scoreboard = {
 const isPersonaId = (v: string | null): v is PersonaId => v === "house" || v === "business";
 
 export function Stage() {
-  const [personaId, setPersonaId] = useState<PersonaId>("house");
-  const [picked, setPicked] = useState<PersonaId>("house");
+  const [personaId, setPersonaId] = useState<PersonaId>("business"); // the entrepreneur is player 1
+  const [picked, setPicked] = useState<PersonaId>("business");
   const persona = getPersona(personaId);
   const { customer, outcome: model } = persona;
 
@@ -122,7 +122,7 @@ export function Stage() {
     const demo = p.get("demo");
     if (!demo && !isPersonaId(player)) return;
     const t = setTimeout(() => {
-      const id: PersonaId = isPersonaId(player) ? player : "house";
+      const id: PersonaId = isPersonaId(player) ? player : "business";
       const ps = getPersona(id);
       setPersonaId(id);
       setPicked(id);
@@ -336,10 +336,10 @@ export function Stage() {
     const k = e.key.toLowerCase();
 
     if (screen === "select") {
-      if (k === "arrowleft") return setPicked("house"); // Thomas is on the left, Lina on the right
-      if (k === "arrowright") return setPicked("business");
-      if (k === "1") return setPicked("house");
-      if (k === "2") return setPicked("business");
+      if (k === "arrowleft") return setPicked("business"); // Lina is on the left, Thomas on the right
+      if (k === "arrowright") return setPicked("house");
+      if (k === "1") return setPicked("business");
+      if (k === "2") return setPicked("house");
       if (k === "enter" && !onControl) return (pickerPlay.current ?? play)(picked);
       return;
     }

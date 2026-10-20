@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Baby, Car, House, LockSimple, PiggyBank, Storefront } from "@phosphor-icons/react";
+import { ArrowRight, House, Storefront } from "@phosphor-icons/react";
 import { motion, useReducedMotion } from "motion/react";
 import { personas, type Persona } from "@/engine";
 import { KbcLogo } from "./KbcLogo";
@@ -44,11 +44,8 @@ function Avatar({ id, size = 112 }: { id: Persona["id"]; size?: number }) {
   );
 }
 
-const locked = [
-  { title: "Retire in 5 years", tags: "Pensions · Investing · Wealth", Icon: PiggyBank },
-  { title: "Expecting a baby", tags: "Family · Protection · Savings", Icon: Baby },
-  { title: "Switch to an electric car", tags: "Mobility · Energy", Icon: Car },
-];
+// Lina (business) first: the entrepreneur is player 1 and the default.
+const order: Persona["id"][] = ["business", "house"];
 
 /** S0: pick a player. Two goals, one engine. */
 export function CharacterSelect({
@@ -81,26 +78,10 @@ export function CharacterSelect({
         </motion.div>
 
         <div role="radiogroup" aria-label="Players" className="mt-10 grid gap-5 md:grid-cols-2">
-          {personas.map((p, i) => (
+          {order.map((id) => personas.find((p) => p.id === id)!).map((p, i) => (
             <PlayerCard key={p.id} persona={p} n={i + 1} active={selected === p.id} onSelect={() => onSelect(p.id)} onPlay={() => onPlay(p.id)} delay={0.1 + i * 0.08} />
           ))}
         </div>
-
-        <section className="mt-10">
-          <h2 className="text-[15px] font-bold text-white/70">More players. Same engine, new data.</h2>
-          <ul className="mt-3 grid gap-3 sm:grid-cols-3">
-            {locked.map((l) => (
-              <li key={l.title} className="flex items-center gap-3 rounded-[8px] bg-white/6 px-4 py-3 ring-1 ring-white/10">
-                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-white/70"><l.Icon size={20} /></span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-[15px] font-bold text-white/85">{l.title}</span>
-                  <span className="block truncate text-[12px] text-white/50">{l.tags}</span>
-                </span>
-                <LockSimple size={16} className="shrink-0 text-white/40" aria-label="Coming next" />
-              </li>
-            ))}
-          </ul>
-        </section>
 
         {!compact && <p className="mt-8 text-center text-[13px] text-white/45">← → to choose · Enter to play</p>}
       </div>

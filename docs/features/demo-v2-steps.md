@@ -40,7 +40,7 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 
 ## Status checklist
 - [x] P1 notification dismiss + Kate pill (14:15, kepa)
-- [ ] P2 business first, locked goals removed
+- [x] P2 business first, locked goals removed (14:25, kepa)
 - [ ] P3 one page per chapter + one page per event (interleaved)
 - [ ] P4 3D build on the left
 - [ ] P5 "Your own" player (optional)
