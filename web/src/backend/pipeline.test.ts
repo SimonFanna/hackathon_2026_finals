@@ -130,5 +130,17 @@ describe("pipeline, offline", () => {
     expect(plan.steps.length).toBeGreaterThan(0);
     expect(outcome.goalId).toBe(plan.goalId);
   });
+
+  it("creating a goal survives a reset that deletes it mid-write (plans FK), by re-saving once", async () => {
+    const repo = memoryRepo();
+    let first = true;
+    const d: Deps = { db: null, repo: { ...repo, savePlan: (p) => {
+      if (first) { first = false; return Promise.reject(new Error('insert or update on table "plans" violates foreign key constraint "plans_goal_id_fkey"')); }
+      return repo.savePlan(p);
+    } } };
+    const { goal, plan } = await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, d);
+    expect(await repo.getGoal(goal.id)).not.toBeNull();
+    expect((await repo.getPlan(goal.id))?.id).toBe(plan.id);
+  });
 });
 
