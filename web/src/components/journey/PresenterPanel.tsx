@@ -7,9 +7,10 @@ import { eur, num } from "./format";
 
 /** Jury-only view (key P): what the engine sees and decides. Never shown to the customer. */
 export function PresenterPanel({
-  signals, weights, intent, step, state, board, weak, onToggleWeak,
+  signals, source, weights, intent, step, state, board, weak, onToggleWeak,
 }: {
   signals: Signal[];
+  source: "supabase" | "snapshot";
   weights: Record<string, number>;
   intent: DetectedIntent | undefined;
   step: JourneyStep | null;
@@ -34,6 +35,9 @@ export function PresenterPanel({
       className="w-[320px] shrink-0 text-[14px] leading-[20px] text-white/80"
     >
       <h2 className="text-[20px] font-bold text-white">What the engine sees</h2>
+      <p className="mt-1 text-white/60">
+        {source === "supabase" ? "Live from Supabase (synthetic bank, app events)" : "Offline snapshot of the Supabase rows"}
+      </p>
 
       <Block title="Signals (independent evidence)">
         <ul className="space-y-1.5">

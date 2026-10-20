@@ -1,15 +1,15 @@
 "use client";
 
 import { CaretDown } from "@phosphor-icons/react";
-import type { DetectedIntent } from "@/engine";
-import { intentCopy } from "./copy";
+import type { DetectedIntent, Signal } from "@/engine";
+import { intentCopy, kateLineFor } from "./copy";
 import { KateLine } from "./Kate";
 import { BackButton, PrimaryButton, ScreenLayout, TextButton } from "./ui";
 
 /** S2: Kate asks before assuming. */
 export function IntentScreen({
-  intent, onConfirm, onDecline, onBack, onWhy,
-}: { intent: DetectedIntent; onConfirm: () => void; onDecline: () => void; onBack: () => void; onWhy: () => void }) {
+  intent, signals, onConfirm, onDecline, onBack, onWhy,
+}: { intent: DetectedIntent; signals: Signal[]; onConfirm: () => void; onDecline: () => void; onBack: () => void; onWhy: () => void }) {
   return (
     <ScreenLayout
       top={<BackButton onClick={onBack} />}
@@ -23,7 +23,7 @@ export function IntentScreen({
       }
     >
       <div className="pt-6">
-        <KateLine>{intentCopy.kateLine}</KateLine>
+        <KateLine>{kateLineFor(signals)}</KateLine>
         <h1 className="mt-8 text-[30px] font-extrabold leading-[34px] tracking-[-0.02em]">
           {intent.needsConfirmation ? intentCopy.question : intentCopy.sure}
         </h1>

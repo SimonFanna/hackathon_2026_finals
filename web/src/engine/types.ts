@@ -7,9 +7,10 @@ export type SignalType =
   | "mortgage_simulation"
   | "savings_transfer"
   | "epc_lookup"
-  | "notary_contact";
+  | "notary_contact"
+  | "renovation_research";
 
-export interface Signal { id: string; customerId: string; type: SignalType; label: string; source: string; observedAt: string }
+export interface Signal { id: string; customerId: string; type: SignalType; label: string; source: string; observedAt: string; amountEur?: number }
 
 export interface DetectedIntent {
   intentId: "buy_house";

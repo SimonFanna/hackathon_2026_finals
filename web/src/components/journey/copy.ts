@@ -1,4 +1,4 @@
-import type { Chapter, JourneyStep } from "@/engine";
+import type { Chapter, JourneyStep, Signal } from "@/engine";
 
 // UI copy in Kate's voice: short, "you", reassuring, no emoji. Data (steps, signals, figures) comes from @/engine.
 
@@ -13,12 +13,25 @@ export const chapterOrder: Chapter[] = ["find", "finance", "renovate", "protect"
 
 export const intentCopy = {
   notification: "Looks like you're house hunting. Want a hand with the plan?",
-  kateLine: "You saved 4 houses on Immoscoop and simulated a €320k home loan.",
   question: "Are you planning to buy a home?",
   unsure: "Kate isn't sure yet, so she's asking first.",
   sure: "Here's a plan for your new home.",
   declined: "Got it. Kate won't bring this up again. Nothing was shared.",
 };
+
+/** Kate's opening line, built from the customer's own signals (Supabase app events). */
+export function kateLineFor(signals: Signal[]): string {
+  const has = (t: Signal["type"]) => signals.some((s) => s.type === t);
+  const amount = signals.find((s) => s.type === "mortgage_simulation")?.amountEur;
+  const parts = [
+    has("property_search") && "checked property valuations",
+    amount ? `simulated a €${Math.round(amount / 1000)}k home loan` : has("mortgage_simulation") && "simulated a home loan",
+    has("renovation_research") && "looked into renovation",
+  ].filter(Boolean) as string[];
+  if (parts.length === 0) return "Kate noticed some activity around housing.";
+  const list = parts.length === 1 ? parts[0] : `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}`;
+  return `You ${list}.`;
+}
 
 /** Purpose line of the consent block ("why"), per step. */
 const purposeByStep: Record<string, string> = {

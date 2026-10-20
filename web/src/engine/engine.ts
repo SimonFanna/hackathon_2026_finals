@@ -23,14 +23,17 @@ export function detectIntents(customer: Customer, signals: Signal[]): DetectedIn
   }];
 }
 
-// Customer is part of the contract for future personalisation of steps.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function buildJourney(intentId: string, _customer: Customer): Journey {
+export function buildJourney(intentId: string, customer: Customer, signals: Signal[] = []): Journey {
   if (intentId !== "buy_house") throw new Error(`Unknown intent: ${intentId}`);
+  // The budget step quotes the customer's own latest home-loan simulation, when there is one.
+  const amount = signals.filter((s) => s.customerId === customer.id && s.type === "mortgage_simulation" && s.amountEur).at(-1)?.amountEur;
+  const steps = buyHouseSteps.map((s) => s.id === "budget"
+    ? { ...s, why: amount ? `Your loan simulation suggests ~€${Math.round(amount / 1000)}k; let's check it fits your income.` : "Let's check what you can borrow with your income." }
+    : s);
   return {
     intentId,
     title: "From house hunt to an energy-efficient home",
-    steps: [...buyHouseSteps].sort((a, b) => a.order - b.order),
+    steps: steps.sort((a, b) => a.order - b.order),
   };
 }
 
