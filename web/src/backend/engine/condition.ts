@@ -2,7 +2,7 @@ import type { Condition, Goal, PersistentContext } from "../types";
 
 /**
  * Scope a Condition is evaluated against. `ctx` and `goal` are the contract;
- * callers may add more roots (e.g. `signals`) and reference them by dotted path.
+ * callers may add more roots (`step`, `fb`, `moment`…) and reference them by dotted path.
  */
 export interface ConditionScope {
   ctx: PersistentContext;

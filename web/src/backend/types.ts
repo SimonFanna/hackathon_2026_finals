@@ -45,12 +45,15 @@ export interface ActiveMoment { type: MomentCode; confidence: number; evidence: 
   contributions: Contribution[]; since: string; expiresAt: string; source: "ml" | "rules" }
 export interface Intent { code: IntentCode; moment: MomentCode; confidence: number; goalType: GoalType | null }
 export type DecisionLevel = "NO_ACTION" | "WAIT" | "ASK" | "SUGGEST";
-export interface Decision { intent: IntentCode; level: DecisionLevel; reason: string; explanation: string[] }
+export interface Decision { intent: IntentCode; level: DecisionLevel; reason: string; explanation: string[];
+  confidence?: number; moment?: MomentCode; goalType?: GoalType | null }   // T3: so T8/UI can rank and route without re-joining
 export interface Feedback { customerId: number; target: string /* intent or capability code */;
   kind: "yes" | "not_now" | "no" | "not_relevant"; at: string }
 
 // ===== ⑥ Goal (T5 creates it from T8's confirmed answers) =====
-export interface GoalConstraints { budget?: number; ownFunds?: number; maxMonthlyPayment?: number; deadline?: string; termYears?: number }
+export interface GoalConstraints { budget?: number; ownFunds?: number; maxMonthlyPayment?: number; deadline?: string; termYears?: number;
+  ratePct?: number;                                                         // T6: loan rate used for financing (T5 defaults it)
+  targetProperty?: { kind?: "house" | "apartment"; buildYear?: number; epc?: string | null; price?: number } }  // T5: a buyer has no property yet
 export interface Goal { id: string; customerId: number; type: GoalType; status: "proposed" | "confirmed" | "at_risk" | "replanned" | "achieved" | "paused" | "abandoned";
   constraints: GoalConstraints; priorities: Priority[]; dependsOn: string[]; createdAt: string }
 export type Priority = "affordability" | "energy_efficiency" | "speed" | "security";
@@ -76,10 +79,12 @@ export type StepStatus = "todo" | "accepted" | "skipped" | "in_progress" | "done
 export type StepDisplay = "SHOW_STEP" | "SHOW_GUIDANCE" | "SHOW_PARTNER" | "ALREADY_COVERED" | "WAIT" | "HIDDEN";
 export interface PlanStep { id: string; capability: CapabilityCode; chapter: string; order: number; provider: Provider;
   alternatives: Provider[]; dependsOn: string[]; status: StepStatus; display: StepDisplay; why: string;
-  dataRequested: string[]; estimates: Estimates; eta: string | null }
+  dataRequested: string[]; estimates: Estimates; eta: string | null;
+  optional?: boolean; displayReason?: string }                              // T5: template flag + decision-rule reason
 export interface ConstraintCheck { constraint: keyof GoalConstraints; ok: boolean; actual: number | string; limit: number | string; message: string }
 export interface Plan { id: string; goalId: string; version: number; reason: "initial" | "replan" | "scenario";
-  steps: PlanStep[]; checks: ConstraintCheck[]; atRisk: boolean; createdAt: string }
+  steps: PlanStep[]; checks: ConstraintCheck[]; atRisk: boolean; createdAt: string;
+  summary?: { purchasePrice: number; renovationCost: number; grants: number; homeLoan: number; renovationLoan: number; monthlyPayment: number; ratePct: number } }  // T5
 export interface Consent { goalId: string; stepId: string; partner: string; field: string; granted: boolean; at: string }
 export interface Outcome { goalId: string; progressPct: number; stepsDone: number; stepsTotal: number;
   customer: { eurOneOff: number; eurPerYear: number; kwhPerYear: number; co2KgPerYear: number; handoffsAvoided: number };
@@ -88,11 +93,13 @@ export interface Outcome { goalId: string; progressPct: number; stepsDone: numbe
 
 // ===== ⑪ Disruption & scenarios (T6) =====
 export interface Disruption { code: DisruptionCode; customerId: number; at: string; evidence: string[];
-  delta: Partial<PersistentContext> & { costOverrunEur?: number; delayDays?: number; capability?: CapabilityCode } }
+  delta: Partial<PersistentContext> & { costOverrunEur?: number; delayDays?: number; capability?: CapabilityCode;
+    rateDeltaPct?: number; sourceRow?: number /* provider hit by COST_OVERRUN / PARTNER_DELAY */ } }  // T6
 export interface Impact { goalId: string; disruption: DisruptionCode; broken: ConstraintCheck[]; affectedStepIds: string[]; severity: "low" | "medium" | "high" }
 export interface Scenario { id: string; goalId: string; label: string; strategies: ReplanStrategyCode[];
   plan: Plan; goalPatch: Partial<GoalConstraints>; score: number; probabilityOfSuccess: number;
-  tradeoffs: string[]; monthlyPayment: number | null; deadline: string | null }
+  tradeoffs: string[]; monthlyPayment: number | null; deadline: string | null;
+  goalStatus?: Goal["status"] }                                             // T6: PAUSE sets the goal to "paused" on choose
 
 // ===== Kate (T8) =====
 export interface KateMessage { id: string; customerId: number; at: string; kind: "proactive" | "goal_setup" | "answer" | "scenario_choice" | "info";
@@ -116,9 +123,13 @@ export interface RuleSet {
 export interface SignalRule { code: SignalCode; match: { kind: string; sourceRows?: number[]; detail?: Condition; textAny?: string[] };
   strength: number; windowDays: number; halfLifeDays: number; isDisruption: boolean; label: string }
 export interface ModelWeight { modelVersion: string; moment: MomentCode; feature: string; weight: number }
-export interface MomentRule { moment: MomentCode; weights: Partial<Record<SignalCode, number>>; context: Condition | null; bias: number; expiryDays: number }
+export interface MomentRule { moment: MomentCode; weights: Partial<Record<SignalCode, number>>; context: Condition | null; bias: number; expiryDays: number;
+  label?: string;                                                           // T3: "buying a home" — for explanations
+  contextScores?: { condition: Condition; score: number; label: string }[]; // T3: context facts added to the logit (rules fallback)
+  requiresSignal?: boolean }                                                // T3: default true; false = context alone can open the moment
 export interface IntentDef { code: IntentCode; label: string; goalType: GoalType | null; askThreshold: number; suggestThreshold: number;
-  kateAsk: string; kateSuggest: string }
+  kateAsk: string; kateSuggest: string;
+  commercial?: boolean }                                                    // T3: commercial intents WAIT under cashflow pressure
 export interface IntentRule { moment: MomentCode; intent: IntentCode; weight: number; condition: Condition | null }
 export interface DecisionRule { id: string; condition: Condition; effect: StepDisplay | "LOWER_PRIORITY"; priority: number; reason: string }
 export interface DisruptionType { code: DisruptionCode; signals: SignalCode[]; affects: (keyof GoalConstraints)[]; kateTemplate: string }
