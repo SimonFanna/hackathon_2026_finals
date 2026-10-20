@@ -359,8 +359,9 @@ function paintAwning(): HTMLCanvasElement {
 
 /** Warm room seen through a window: lamp-lit wall and curtains (luminance; tinted by the material colour). */
 function paintWindow(): HTMLCanvasElement {
-  const W = 128;
-  const H = 180;
+  const K = 4; // the dive ends with this window filling the screen: paint it at 512×720 (once)
+  const W = 128 * K;
+  const H = 180 * K;
   const { c, g } = makeCanvas(W, H);
   const bg = g.createRadialGradient(W * 0.5, H * 0.28, 4, W * 0.5, H * 0.42, H * 0.75);
   bg.addColorStop(0, "#ffffff");
@@ -370,21 +371,21 @@ function paintWindow(): HTMLCanvasElement {
   g.fillRect(0, 0, W, H);
   // pendant lamp
   g.fillStyle = "rgba(70,45,30,0.65)";
-  g.fillRect(W / 2 - 1, 0, 2, 22);
+  g.fillRect(W / 2 - K, 0, 2 * K, 22 * K);
   g.beginPath();
-  g.moveTo(W / 2 - 15, 34);
-  g.lineTo(W / 2 + 15, 34);
-  g.lineTo(W / 2 + 8, 22);
-  g.lineTo(W / 2 - 8, 22);
+  g.moveTo(W / 2 - 15 * K, 34 * K);
+  g.lineTo(W / 2 + 15 * K, 34 * K);
+  g.lineTo(W / 2 + 8 * K, 22 * K);
+  g.lineTo(W / 2 - 8 * K, 22 * K);
   g.closePath();
   g.fill();
   // a shelf with a plant silhouette in the back
   g.fillStyle = "rgba(90,60,40,0.35)";
-  g.fillRect(W * 0.3, H * 0.62, W * 0.4, 3);
+  g.fillRect(W * 0.3, H * 0.62, W * 0.4, 3 * K);
   g.fillStyle = "rgba(60,50,35,0.35)";
   for (let i = 0; i < 7; i++) {
     g.beginPath();
-    g.ellipse(W * 0.42 + i * 3, H * 0.6 - (i % 3) * 4, 5, 2.5, -0.6 + i * 0.25, 0, Math.PI * 2);
+    g.ellipse(W * 0.42 + i * 3 * K, H * 0.6 - (i % 3) * 4 * K, 5 * K, 2.5 * K, -0.6 + i * 0.25, 0, Math.PI * 2);
     g.fill();
   }
   // curtains (per pixel)
@@ -397,7 +398,7 @@ function paintWindow(): HTMLCanvasElement {
     for (let side = 0; side < 2; side++) {
       for (let x = 0; x < width; x++) {
         const px = side === 0 ? x : W - 1 - x;
-        const fold = 0.66 + 0.2 * Math.sin((x / W) * 46 + side * 1.7 + y * 0.01) - 0.18 * (x / width) * (1 - tie);
+        const fold = 0.66 + 0.2 * Math.sin((x / W) * 46 + side * 1.7 + (y / K) * 0.01) - 0.18 * (x / width) * (1 - tie);
         const i = (y * W + px) * 4;
         d[i] = 248 * fold;
         d[i + 1] = 196 * fold;
@@ -406,7 +407,7 @@ function paintWindow(): HTMLCanvasElement {
     }
   }
   // curtain rail
-  for (let y = 0; y < 6; y++) {
+  for (let y = 0; y < 6 * K; y++) {
     for (let x = 0; x < W; x++) {
       const i = (y * W + x) * 4;
       d[i] *= 0.45;

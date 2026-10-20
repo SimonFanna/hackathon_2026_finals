@@ -30,7 +30,7 @@ const TINTS: Partial<Record<CharacterId, Record<string, string>>> = {
 const HEIGHT = 1.1;
 const SILHOUETTE = "#1a3152";
 
-const CLIPS: Record<Pose, string> = { idle: "Idle", wave: "Wave", cheer: "Wave" };
+const CLIPS: Record<Pose, string> = { idle: "Idle_Neutral", wave: "Wave", cheer: "Wave" }; // Idle is a combat stance
 const HOP = 0.12;
 
 // A thin cool rim (fresnel) that separates the people from brick walls and the navy background.
@@ -58,18 +58,19 @@ function blobShadow(): THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial> 
     c.width = c.height = 64;
     const g = c.getContext("2d")!;
     const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-    grad.addColorStop(0, "rgba(0,8,24,0.62)");
-    grad.addColorStop(0.45, "rgba(0,8,24,0.34)");
+    grad.addColorStop(0, "rgba(0,8,24,0.78)");
+    grad.addColorStop(0.35, "rgba(0,8,24,0.45)");
     grad.addColorStop(1, "rgba(0,8,24,0)");
     g.fillStyle = grad;
     g.fillRect(0, 0, 64, 64);
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
-    blob = { geo: new THREE.PlaneGeometry(0.56, 0.4).rotateX(-Math.PI / 2), tex };
+    // Square: the ~10° camera squashes it into the right ellipse; smaller discs vanish behind the shoes.
+    blob = { geo: new THREE.PlaneGeometry(0.66, 0.66).rotateX(-Math.PI / 2), tex };
   }
   const mat = new THREE.MeshBasicMaterial({ map: blob.tex, transparent: true, depthWrite: false, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -2 });
   const m = new THREE.Mesh(blob.geo, mat);
-  m.position.y = 0.004;
+  m.position.set(0, 0.004, 0.05);
   m.renderOrder = 1;
   return m;
 }

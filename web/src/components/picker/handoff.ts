@@ -10,7 +10,7 @@ export interface ScreenRect { left: number; top: number; width: number; height: 
 const WARM = "#ffe2bd";
 const SCREEN = "#f2f2f2"; // KDL surface background = the phone screen colour
 const GLOW = "0 0 56px 6px rgb(255 207 150 / 0.35)";
-const EASE = "cubic-bezier(0.23, 1, 0.32, 1)";
+const EASE = "cubic-bezier(0.65, 0, 0.35, 1)"; // a glide, not a snap: the light travels ~200 px
 // Phone.tsx: 10px bezel and 50px inner radius at scale 1, frame FRAME_W × FRAME_H.
 const BEZEL = 10;
 const RADIUS = 50;
@@ -49,8 +49,10 @@ export function createHandoff(reduce: boolean): Handoff {
       Object.assign(card.style, { left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px` });
       await Promise.all([
         card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: ms, easing: "ease-out", fill: "forwards" }).finished,
-        backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: "ease-out", fill: "forwards" }).finished,
+        backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 80, easing: "ease-out", fill: "forwards" }).finished,
       ]);
+      // Stage mounts now (250–300 ms): a slow breath so the light never looks frozen.
+      card.animate([{ filter: "brightness(1)" }, { filter: "brightness(1.12)" }, { filter: "brightness(1)" }], { duration: 600, iterations: Infinity, easing: "ease-in-out" });
     },
 
     async land() {
@@ -70,11 +72,11 @@ export function createHandoff(reduce: boolean): Handoff {
           { left: `${from.left}px`, top: `${from.top}px`, width: `${from.width}px`, height: `${from.height}px`, borderRadius: "3px", background: WARM, boxShadow: GLOW },
           { left: `${to.left}px`, top: `${to.top}px`, width: `${to.width}px`, height: `${to.height}px`, borderRadius: `${to.radius}px`, background: SCREEN, boxShadow: "0 0 0 0 rgb(255 207 150 / 0)" },
         ],
-        { duration: 480, easing: EASE, fill: "forwards" },
+        { duration: 600, easing: EASE, fill: "forwards" },
       );
-      const reveal = backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, delay: 120, easing: "ease-out", fill: "forwards" });
+      const reveal = backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 440, delay: 160, easing: "ease-out", fill: "forwards" });
       // The home screen shows through as the light lands, not after it.
-      const fade = card.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, delay: 300, easing: "ease-out", fill: "forwards" });
+      const fade = card.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, delay: 380, easing: "ease-out", fill: "forwards" });
       await Promise.all([morph.finished, reveal.finished, fade.finished]);
       remove();
     },

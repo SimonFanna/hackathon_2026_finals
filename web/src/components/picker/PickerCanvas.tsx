@@ -42,7 +42,7 @@ const PERSON: Record<DioramaId, CharacterId> = { house: "thomas", business: "lin
 const CAM_POS = new THREE.Vector3(0, 2.9, 11.9);
 const CAM_LOOK = new THREE.Vector3(0, 0.5, -1.4);
 // Framing: the stage (roof tops to the plinth's front edge) is fitted into the free band.
-const STAGE_TOP = 2.65;
+const STAGE_TOP = 2.85; // Lina's chimney pots reach 2.83
 const STAGE_BOTTOM = -0.34;
 const BAND_MARGIN = 6;
 const CARD_GAP = 16; // Band.bottom sits this far above the card
@@ -51,6 +51,10 @@ const FLY_MS = 950;
 const SETTLE_MS = 350;
 const END_FOV = 26;
 const WINDOW_FILL = 0.86;
+const smoothstep = (a: number, b: number, x: number) => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+};
 const ease = {
   inOutCubic: (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
 };
@@ -80,7 +84,8 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       live.current.onFail("init");
       return;
     }
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    // Bloom works over a multisampled full-frame target: cap at DPR 1 then, or 150 % laptops drop to 25 fps.
+    const dpr = Math.min(window.devicePixelRatio || 1, quality.bloom ? 1 : 1.5);
     renderer.setPixelRatio(dpr);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -211,7 +216,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       composer?.setPixelRatio(dpr);
       composer?.setSize(w, h);
       calmFrom = Math.max(calmFrom, performance.now() + 1500);
-      bloom.resolution.set((w * dpr) / 2, (h * dpr) / 2);
+      bloom.resolution.set((w * dpr) / 4, (h * dpr) / 4); // quarter resolution: a glow needs no detail
       view.w = w;
       view.h = h;
       if (!diving) fit();
@@ -367,8 +372,12 @@ export default function PickerCanvas(props: PickerCanvasProps) {
           camera.lookAt(tmp[4].lerpVectors(fromLook, wp, eLook));
           camera.fov = fromFov + (END_FOV - fromFov) * e;
           setViewY(fromViewY * (1 - eLook)); // end centred on screen
-          d.setFocus(1 + 0.3 * e); // a little brighter, never clipped: the curtains and lamp stay readable
+          d.setFocus(1 + 0.1 * e); // the curtains and lamp stay readable up close
           diveFade = e;
+          // The street sinks into night before the light takes over; the window ignores tone mapping and stays lit.
+          const night = smoothstep(0.72, 1, k);
+          renderer.toneMappingExposure = 1.1 * (1 - 0.9 * night);
+          bloom.strength = 0.55 * (1 - 0.65 * e);
           if (!covered && k >= 0.92) {
             covered = true;
             onCover(120, screenRect(d.window, box));

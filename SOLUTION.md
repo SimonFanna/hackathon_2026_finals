@@ -86,7 +86,7 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 | Supabase catalogue + data | Simon | done (applied + loaded) | `bank-data.md` |
 | Supabase live data in the demo (Sofie + signals, offline snapshot) | kepa | done on `main`; **not wired into the UI on branch `victor`** (Victor's call: static players Thomas + Lina for now). `bank.ts`, `bankSnapshot.ts`, `bankClient.ts` and their tests are kept as is. | `supabase-live-data.md` |
 | Pitch 3D "Lucas's World" (`pitch3d/`, three.js, 7 beats, Supabase snapshot) | Kepa UI terminal | **paused** (V1 works on `kepa`, not merged) | `pitch-3d.md` |
-| 3D persona carousel at app start (`web/src/components/picker/`, three.js, CC0 people, procedural scenes, 2D fallback) | Kepa UI terminal | in progress: V1 integrated on `kepa` (60 fps at 1080p on Iris Xe) | `persona-picker-3d.md` |
+| 3D persona carousel at app start (`web/src/components/picker/`, three.js, CC0 people, procedural scenes, 2D fallback) | Kepa UI terminal | V1 on `main` (1556de3); art polish on `kepa`. High quality by default (bloom + MSAA); `?q=low` → 2D | `persona-picker-3d.md` |
 | Deck + demo (GIF/video) | — | todo | — |
 | Security (Aikido) + public repo | Kepa UI terminal (hardening) · user/Simon (Aikido) | in progress: headers + CSP done, Aikido not connected | `docs/features/security.md` |
 
@@ -121,3 +121,9 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 - **11:48** — Pitch 3D "Lucas's World" V1 **paused** by the user (too big). It works on `kepa` (`pitch3d/`): 7 beats from Lucas's Supabase rows, low-quality mode, fps measured on an Intel Iris Xe (high 25–54, low 40–59 at 1080p), screenshots in `docs/screenshots/3d/`. Not merged into `main`.
 - **12:24** — Backend review (7 parallel reviewers + an end-to-end HTTP run): `backend/REVIEW.md`. 10 P0 to fix before 15:00 (simulate DoS, scenario A not choosable, double injection, Kate on a frozen fixture, unprotected write API, Nadia/Pieter 500…), each with an owner.
 - **12:45** — 3D persona carousel V1 on `kepa`. Thomas and Lina are CC0 rigged people (Quaternius, user-approved download, credited) standing in a procedural Flemish house and Lina's coffee bar. Locked goals are silhouettes. Entry dive: the window light morphs into the measured phone screen. Victor's 2D picker is the fallback. 60 fps at 1080p on an Intel Iris Xe. Stage diff: 6 lines.
+- **13:35** — 3D picker after an adversarial art review, merged into `main` by the coordinator (kepa 81f32f9 → main 1556de3). Changes:
+  - the stage fits the free band at any screen size (720p projectors no longer hide the plinths);
+  - the dive stops on the lit window, and the light lands on the window's own rectangle and morphs into the phone (no full-screen flash);
+  - locked goals are night silhouettes, there is a KBC-blue selection ring, and the people have contact shadows;
+  - production default is high quality (bloom + MSAA, no automatic downgrade; `?q=low`, `?bloom=0`, `?q=auto` are manual switches).
+  Prod full flow Thomas → C → Lina: 0 console/CSP errors.
