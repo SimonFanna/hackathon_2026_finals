@@ -19,12 +19,14 @@ export function buildDiorama(id: DioramaId, kit: PickerKit): Diorama {
   const winMat = new THREE.MeshBasicMaterial({ color: new THREE.Color("#ffc98a").multiplyScalar(2), toneMapped: false });
   const window = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.34), winMat);
   window.position.set(0, 1.0, 0.56);
-  root.add(plinth, body, window);
+  const stand = new THREE.Object3D();
+  stand.position.set(0.95, 0, 0.75);
+  root.add(plinth, body, window, stand);
   let focus = 1;
   let locked = false;
   const apply = () => winMat.color.set("#ffc98a").multiplyScalar(locked ? 0 : 0.4 + 1.8 * focus);
   return {
-    id, root, window,
+    id, root, window, stand,
     setLocked(l) { locked = l; (body.material as THREE.MeshStandardMaterial).color.set(l ? "#5d6b7d" : COLORS[id]); apply(); },
     setFocus(f) { focus = f; apply(); },
     update() {},

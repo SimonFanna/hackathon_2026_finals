@@ -17,6 +17,12 @@ export interface Diorama {
    * centre around y = 0.8–1.2, about 0.3–0.45 wide. Its world position/size drive the dive.
    */
   window: THREE.Mesh;
+  /**
+   * Where the 3D person stands (an empty Object3D in root space, feet at its origin, facing +z):
+   * in front of the scene, beside the door/boxes or the coffee bar's A-frame, never hiding the window.
+   * A person is about 1.1 units tall. The carousel adds the character as a child of this object.
+   */
+  stand: THREE.Object3D;
   /** Desaturate every material, switch emissives off, show a padlock above the scene. */
   setLocked(locked: boolean): void;
   /** 0 = dim (side of the carousel), 1 = fully lit (centred). Drives emissive strength only. */

@@ -9,6 +9,8 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { dragFocus, indexOfId, layout, nearestPlayable, type PlayableId } from "./carousel";
 import { buildDiorama, pickerKit } from "./dioramaSource";
+import { loadCharacters } from "./characterGltf";
+import type { Character, CharacterId } from "./characterTypes";
 import type { Diorama, DioramaId } from "./dioramaTypes";
 
 // The 3D carousel. Vanilla three.js inside one effect (like pitch3d): no lights that cost per pixel,
@@ -30,6 +32,7 @@ export interface PickerCanvasProps {
 }
 
 const NIGHT = "#021e43";
+const PERSON: Record<DioramaId, CharacterId> = { house: "thomas", business: "lina", retire: "retiree", baby: "parent", car: "driver" };
 const CAM_POS = new THREE.Vector3(0, 3.1, 12.6);
 const CAM_LOOK = new THREE.Vector3(0, 0.15, -1.4);
 const ease = {
@@ -102,6 +105,25 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       dioramas.push(d);
       holders.push(holder);
     });
+
+    // The people: two CC0 rigged models, cloned and recoloured, standing in their scenes (async, optional).
+    const people: (Character | null)[] = items.map(() => null);
+    const waveAt = items.map(() => 0);
+    const waveUntil = items.map(() => -1);
+    loadCharacters(items.map((it) => PERSON[it.id]))
+      .then((map) => {
+        if (disposed) return map.forEach((c) => c.dispose());
+        items.forEach((it, i) => {
+          const c = map.get(PERSON[it.id]);
+          if (!c) return;
+          c.setLocked(it.locked);
+          dioramas[i].stand.add(c.root);
+          people[i] = c;
+        });
+      })
+      .catch(() => {
+        /* the scenes still work without people */
+      });
 
     // Post: bloom at half resolution on a multisampled half-float target (keeps edges clean).
     const target = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
@@ -224,9 +246,10 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         focus = i;
         vel = 0;
         holders.forEach((h) => (h.userData.settle = 0));
-        // Settle the turntable to face the camera, then fly into the lit window.
+        people[i]?.setPose("cheer");
+        // Settle the turntable to face the camera (the person hops), then fly into the lit window.
         const start = performance.now();
-        const settleMs = 220;
+        const settleMs = 420;
         const flyMs = 900;
         const fromPos = camera.position.clone();
         const fromLook = CAM_LOOK.clone();
@@ -267,7 +290,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     const times: number[] = [];
     let lowSince = 0;
     let readySent = false;
-    const stats = { fps: 60, calls: 0, triangles: 0, bloom: true };
+    const stats = { fps: 60, calls: 0, triangles: 0, bloom: true, people: [] as unknown[] };
     (window as unknown as { __picker?: typeof stats }).__picker = stats;
     const proj = new THREE.Vector3();
 
@@ -307,6 +330,24 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         const d = dioramas[i];
         if (!diving || d !== dioramas[indexOfId(live.current.selected)]) d.setFocus(s.light);
         d.update(t, dt);
+        const person = people[i];
+        if (person) {
+          person.setFocus(s.light);
+          // The centred player greets the camera now and then; everyone else idles.
+          const centred = !items[i].locked && Math.abs(i - focus) < 0.12 && !drag?.moved;
+          if (!diving) {
+            if (centred && waveUntil[i] < 0 && t >= waveAt[i]) {
+              person.setPose("wave");
+              waveUntil[i] = t + 2.6;
+              waveAt[i] = t + 7.5;
+            } else if (waveUntil[i] >= 0 && (t >= waveUntil[i] || !centred)) {
+              person.setPose("idle");
+              waveUntil[i] = -1;
+              if (!centred) waveAt[i] = 0; // greet again as soon as it comes back to the centre
+            }
+          }
+          person.update(t, dt);
+        }
 
         // DOM overlay: a focusable button over each diorama + captions under locked ones.
         proj.set(s.x, 1.1 * s.scale, s.z).project(camera);
@@ -335,6 +376,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       else renderer.render(scene, camera);
       stats.calls = renderer.info.render.calls;
       stats.triangles = renderer.info.render.triangles;
+      stats.people = people.map((c) => (c ? { id: c.id, ...c.root.userData.measured, world: c.root.getWorldPosition(proj.clone()).toArray().map((v) => +v.toFixed(2)) } : null));
 
       if (!readySent) {
         readySent = true;
@@ -367,6 +409,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       canvas.removeEventListener("pointerup", onUp);
       canvas.removeEventListener("pointercancel", onCancel);
       canvas.removeEventListener("webglcontextlost", onLost);
+      people.forEach((c) => c?.dispose());
       dioramas.forEach((d) => d.dispose());
       kit.dispose();
       floor.geometry.dispose();
