@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-navy: #0b2547;
+  --color-navy-2: #12345f;
+  --color-kbc: #0097db;
+  --color-sky: #e3f3fb;
+  --color-paper: #f4f7fa;
+  --color-ink: #0f1d2e;
+  --color-mute: #5d6b7c;
+  --color-line: #dce4ec;
+  --color-partner: #3f8a12;
+  --color-partner-soft: #eaf5e1;
+  --color-warn: #b45f00;
+  --font-display: var(--font-bricolage);
+  --font-sans: var(--font-plex);
+  --font-mono: var(--font-plex-mono);
+}
+
+html { font-size: 17px; }
+@media (min-width: 1600px) { html { font-size: 19px; } }
+
+body {
+  background-color: var(--color-paper);
+  /* faint blueprint grid — a nod to the 1975 house being planned */
+  background-image:
+    linear-gradient(to right, rgb(11 37 71 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(11 37 71 / 0.045) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.rise { animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgb(0 151 219 / 0.45); }
+  100% { box-shadow: 0 0 0 14px rgb(0 151 219 / 0); }
+}
+.pulse { animation: pulse-ring 1.6s ease-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .pulse { animation: none; }
+}

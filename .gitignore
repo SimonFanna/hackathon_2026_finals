@@ -19,3 +19,7 @@ next-env.d.ts
 # misc
 .DS_Store
 *.log
+
+# local editor/agent files
+.~lock.*#
+.claude/launch.json

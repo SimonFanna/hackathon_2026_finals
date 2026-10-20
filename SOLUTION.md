@@ -1,77 +1,79 @@
 # SOLUTION — Intent → Journey
 
-> Document vivant : mis à jour au fil de la journée. Chaque feature a son propre fichier dans `docs/features/<feature>.md`.
-> Dernière mise à jour : 09:20
+> Living document, updated throughout the day. Each feature has its own file in `docs/features/<feature>.md`.
+> Last update: 10:05
 
-## En une phrase
+## One-liner
 
-**KBC détecte qu'un client entre dans un moment de vie, et transforme cette intention en un parcours concret, étape par étape, en combinant KBC et ses partenaires — le client garde la main à chaque étape.**
+**KBC notices that a customer is entering a life moment and turns that intent into a concrete, step-by-step journey combining KBC and its partners — with the customer in control at every step.**
 
-## Le problème
+## The problem
 
-KBC possède déjà ~229 produits et services répartis en 21 écosystèmes (Housing, Energy, Mobility, Business…), dont ~27 partenaires (Immoscoop, Setle, Cambio, NMBS, Billit…). Mais pour le client, c'est un catalogue éclaté : il doit savoir quoi chercher, dans quel ordre, et chez qui. Résultat : l'intention (« j'achète une maison ») ne se transforme pas en action.
+KBC already offers ~229 products and services across 21 ecosystems (Housing, Energy, Mobility, Business…), including ~27 partners (Immoscoop, Setle, Cambio, NMBS, Billit…). For the customer it is a fragmented catalogue: they must know what to look for, in which order, and from whom. The intent ("I'm buying a house") never becomes action.
 
-## Notre solution
+## Our solution
 
-Un **orchestrateur** qui suit toujours la même boucle :
+An **orchestrator** that always runs the same loop:
 
-1. **Signal** — un événement observé (recherche sur Immoscoop, simulation de prêt, versement important…)
-2. **Intention** — on en déduit un moment de vie, avec un score de confiance. Sous un seuil, on *demande* au client au lieu de supposer.
-3. **Parcours** — on compose un parcours multi-étapes à partir du catalogue KBC + partenaires.
-4. **Contrôle client** — à chaque étape : accepter / passer, et choisir quelles données sont partagées avec quel partenaire.
-5. **Résultat mesurable** — un tableau de bord « triple win » : gain pour le client, pour KBC, pour les partenaires.
+1. **Signal** — an observed event (Immoscoop search, loan simulation, EPC lookup…)
+2. **Intent** — inferred life moment with a confidence score. Below a threshold we *ask* the customer instead of assuming.
+3. **Journey** — a multi-step journey composed from the KBC + partner catalogue.
+4. **Customer control** — at each step: accept / skip, and choose which data is shared with which partner (off by default).
+5. **Measurable outcome** — a triple-win view: value for the customer, for KBC, for partners.
 
-**Clé de scalabilité :** une nouvelle intention = de nouvelles *données* (intention + étapes), pas de nouveau code.
+**Scalability key:** a new intent = new *data* (intent + steps), not new code.
 
-## Parcours démontrés
+## Demonstrated journeys
 
-### Héros — « J'achète une maison de 1975 »
-Immoscoop (recherche) → estimation & budget → crédit hypothécaire → obligation de rénovation (EPC) → primes via Setle → devis isolation / chauffage → solaire + batterie → prêt énergie → assurance habitation.
-*Mesurable :* € économisés, kWh, CO₂, primes obtenues.
+### Hero — "I'm buying a 1975 house"
+Immoscoop search → valuation → housing budget → home loan → renovation obligation (EPC) → renovation costs & grants via Setle → insulation / heating quotes → solar → energy loan → home insurance.
+*Measurable:* € saved, kWh, CO₂, grants obtained.
 
-### Preuve de généralisation — « Je lance mon entreprise »
-Start it → Business PRO → facturation Billit → statut indépendant, pension & assurances.
+### Generalisation proof — "I'm starting my business" (not built yet)
+Start it → Business PRO → Billit invoicing → self-employed status, pension & insurance.
 
 ## Triple win
 
-| Client | KBC | Partenaires |
+| Customer | KBC | Partners |
 |---|---|---|
-| Un chemin clair, moins d'effort, € et CO₂ économisés | Plus de produits par client, engagement, données consenties | Leads qualifiés, au bon moment, avec consentement |
+| A clear path, less effort, € and CO₂ saved | More products per customer, engagement, consented data | Qualified leads, at the right moment, with consent |
 
-## Principes (alignés sur le guide KBC)
+## Principles (from the KBC guide)
 
-- **Bold** — on ne recommande pas un produit, on orchestre un moment de vie.
-- **Scalable** — moteur générique, intentions pilotées par les données.
-- **Transparent & privacy-first** — consentement par partenaire et par étape, « pourquoi je vois ça » visible.
-- **Commercialement viable** — chaque étape est un produit KBC ou un partenaire rémunérable.
+- **Bold** — we don't recommend a product, we orchestrate a life moment.
+- **Scalable** — generic engine, data-driven intents.
+- **Transparent & privacy-first** — consent per partner and per step, visible "why am I seeing this".
+- **Commercially viable** — every step is a KBC product or a revenue-generating partner.
 
-## Architecture (MVP)
+## Architecture
 
-- **Front :** Next.js + TypeScript + Tailwind, déployé sur Vercel
-- **Données :** Supabase — `ecosystem_items` (catalogue nettoyé), `intents`, `intent_steps`, `customers`, `signals` ; RLS activée, lecture seule
-- **Moteur :** TypeScript pur, testé (Vitest) ; pas de LLM dans la prise de décision
-- **Données clients :** synthétiques (le xlsx est un catalogue, pas des données clients)
+- **Front:** Next.js + TypeScript + Tailwind in `web/`, deployed on Vercel
+- **Engine:** pure TypeScript in `web/src/engine/`, tested with Vitest; no LLM in decision-making
+- **Data:** static synthetic data in the engine (V0); Supabase planned (`ecosystem_items`, `intents`, `intent_steps`, `customers`, `signals`; RLS on, read-only) with static fallback
 
-## Hors scope (sauf temps restant)
+## Out of scope (unless time allows)
 
-Authentification, LLM décisionnel, voix Kate, intégrations partenaires réelles.
+Authentication, LLM decisioning, Kate voice, real partner integrations.
 
-## Features (une par fichier `docs/features/`)
+## Features (one file each in `docs/features/`)
 
-| Feature | Responsable | Statut |
-|---|---|---|
-| Import & nettoyage du catalogue | — | à faire |
-| Moteur signal → intention → parcours | — | à faire |
-| UI parcours + consentement par partenaire | — | à faire |
-| Tableau de bord triple win | — | à faire |
-| Deck + démo (GIF/vidéo) | — | à faire |
-| Sécurité (Aikido) + repo public | — | à faire |
+| Feature | Owner | Status | Doc |
+|---|---|---|---|
+| Engine signal → intent → journey | coordinator (kepa) | done (V0) | `journey-house-v0.md` |
+| Journey UI V0 | peer agent (kepa) | done, being redesigned | `journey-house-v0.md` |
+| UX redesign (KBC brand, market benchmark) | peer agent (kepa) | in progress | `ux-redesign.md` |
+| Supabase catalogue + data | — | todo | — |
+| Deck + demo (GIF/video) | — | todo | — |
+| Security (Aikido) + public repo | — | todo | — |
 
-## Questions ouvertes
+## Open questions
 
-- Quels KPI d'écosystème KBC utilise-t-il ? (à demander au staff)
-- Peut-on citer les partenaires nommément dans la démo / le pitch ?
+- Which ecosystem KPIs does KBC use? (ask staff on site)
+- Can we name partners in the demo / pitch?
+- Verify the Flemish rule: buyers of an E/F-label home must renovate to at least label D within 5 years (used in the EPC step).
 
-## Journal
+## Log
 
-- **09:20** — Direction A validée. Création de ce document.
+- **09:20** — Direction A validated. Document created.
+- **09:50** — No Supabase access yet: V0 on static TS data. Engine `web/src/engine/` delivered (tests green); Next.js UI built.
+- **10:05** — Supabase access OK (empty DB). V0 UI judged too cluttered → UX redesign started (KBC brand + market benchmark). `CLAUDE.md` team rules added; docs switched to English.

@@ -1,0 +1,111 @@
+import type { Customer, JourneyStep, Signal, SignalType } from "./types";
+
+// Synthetic demo data. Catalogue labels are copied verbatim from KBC_Ecosystems.xlsx;
+// euro / kWh / CO2 figures are illustrative estimates for the demo, not KBC data.
+
+export const demoCustomer: Customer = {
+  id: "c-001",
+  name: "Sofie",
+  age: 32,
+  city: "Gent",
+  household: "Couple, 1 child",
+};
+
+export const demoSignals: Signal[] = [
+  { id: "s1", customerId: "c-001", type: "property_search", label: "Saved 4 houses built before 1980 on Immoscoop", source: "Immoscoop", observedAt: "2026-10-12" },
+  { id: "s2", customerId: "c-001", type: "mortgage_simulation", label: "Ran a €320k home loan simulation in KBC Mobile", source: "KBC Mobile", observedAt: "2026-10-15" },
+  { id: "s3", customerId: "c-001", type: "epc_lookup", label: "Looked up the EPC label of a listed house (label E)", source: "KBC Mobile", observedAt: "2026-10-18" },
+];
+
+export const BUY_HOUSE_THRESHOLD = 0.75;
+
+export const buyHouseSignalWeights: Record<SignalType, number> = {
+  property_search: 0.35,
+  mortgage_simulation: 0.4,
+  savings_transfer: 0.15,
+  epc_lookup: 0.2,
+  notary_contact: 0.5,
+};
+
+const kbc = { kind: "kbc" } as const;
+const partner = (name: string) => ({ kind: "partner", name }) as const;
+
+export const buyHouseSteps: JourneyStep[] = [
+  {
+    id: "search", order: 1, title: "Find the right house",
+    why: "You are already searching; keep your saved houses in one place.",
+    ecosystem: "Housing", catalogueItem: "Search for a home - Immoscoop", provider: partner("Immoscoop"),
+    dataShared: ["search criteria", "budget range"],
+    outcome: { partnerValueEur: 40 },
+  },
+  {
+    id: "valuation", order: 2, title: "Know what the house is worth",
+    why: "An estate-agent valuation before you make an offer avoids overpaying.",
+    ecosystem: "Housing", catalogueItem: "Property valuation by an estate agent - Immoscoop", provider: partner("Immoscoop"),
+    dataShared: ["property address"],
+    outcome: { customerEur: 5000, partnerValueEur: 150 },
+  },
+  {
+    id: "budget", order: 3, title: "Calculate your housing budget",
+    why: "Your loan simulation suggests ~€320k; let's check it fits your income.",
+    ecosystem: "Housing", catalogueItem: "Calculate housing budget", provider: kbc,
+    dataShared: [],
+    outcome: {},
+  },
+  {
+    id: "home-loan", order: 4, title: "Secure your home loan",
+    why: "Lock in financing so your offer is credible.",
+    ecosystem: "Housing", catalogueItem: "Home loan", provider: kbc,
+    dataShared: [],
+    outcome: { kbcRevenueEur: 9000 },
+  },
+  {
+    id: "epc", order: 5, title: "Check the renovation obligation",
+    why: "The house has EPC label E: in Flanders, buyers must renovate to at least label D within 5 years.",
+    ecosystem: "Housing", catalogueItem: "Certificates and inspections - De Immowinkel", provider: partner("De Immowinkel"),
+    dataShared: ["property address"],
+    outcome: { partnerValueEur: 120 },
+  },
+  {
+    id: "grants", order: 6, title: "Estimate renovation costs and grants",
+    why: "See what the renovation costs and which grants you are entitled to.",
+    ecosystem: "Housing", catalogueItem: "Estimate renovation costs and grants - Setle", provider: partner("Setle"),
+    dataShared: ["property address", "EPC label", "household income bracket"],
+    outcome: { customerEur: 8000, partnerValueEur: 100 },
+  },
+  {
+    id: "insulation", order: 7, title: "Insulate roof and walls",
+    why: "Insulation is the biggest step towards a better EPC label.",
+    ecosystem: "Energy and sustainability", catalogueItem: "Insulation quote - Impact us today", provider: partner("Impact us today"),
+    dataShared: ["property address", "EPC label"],
+    outcome: { customerEur: 900, kwhPerYear: 6000, co2KgPerYear: 1200, partnerValueEur: 300 },
+  },
+  {
+    id: "heating", order: 8, title: "Replace the old boiler with a heat pump",
+    why: "A 1975 gas boiler is inefficient and expensive.",
+    ecosystem: "Energy and sustainability", catalogueItem: "Heating quote - Impact us today", provider: partner("Impact us today"),
+    dataShared: ["property address", "current heating type"],
+    outcome: { customerEur: 700, kwhPerYear: 8000, co2KgPerYear: 2000, partnerValueEur: 400 },
+  },
+  {
+    id: "solar", order: 9, title: "Produce your own electricity",
+    why: "Solar panels cut the running cost of the heat pump.",
+    ecosystem: "Energy and sustainability", catalogueItem: "Calculate solar panels and request a quote", provider: kbc,
+    dataShared: [],
+    outcome: { customerEur: 600, kwhPerYear: 3500, co2KgPerYear: 700, kbcRevenueEur: 150 },
+  },
+  {
+    id: "energy-loan", order: 10, title: "Finance the renovation",
+    why: "Spread the renovation cost with a dedicated energy loan.",
+    ecosystem: "Energy and sustainability", catalogueItem: "Energy loan", provider: kbc,
+    dataShared: [],
+    outcome: { kbcRevenueEur: 1500 },
+  },
+  {
+    id: "home-insurance", order: 11, title: "Insure your new home",
+    why: "Your home loan requires fire insurance from day one.",
+    ecosystem: "Housing", catalogueItem: "Home insurance", provider: kbc,
+    dataShared: [],
+    outcome: { kbcRevenueEur: 400 },
+  },
+];
