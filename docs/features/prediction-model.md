@@ -1,6 +1,6 @@
 # Feature — Prediction model + synthetic data spec
 
-> Owner: Simon's sessions (schema + generator: Supabase session · model + engine: to assign) · Status: spec, nothing built · Last update: 10:15
+> Owner: Simon · Status: **built**: see `backend/T1-signals-context.md` and `backend/T2-ml-model.md` for what shipped (this file is the original design) · Last update: 12:10
 
 ## Goal
 
