@@ -3,6 +3,7 @@
 import { ArrowRight, House, Storefront } from "@phosphor-icons/react";
 import { motion, useReducedMotion } from "motion/react";
 import { personas, type Persona } from "@/engine";
+import { YourOwnSlot } from "../custom/YourOwnSlot";
 import { KbcLogo } from "./KbcLogo";
 import { EventBadge } from "./outcome-ui";
 import { eur } from "./format";
@@ -49,8 +50,8 @@ const order: Persona["id"][] = ["business", "house"];
 
 /** S0: pick a player. Two goals, one engine. */
 export function CharacterSelect({
-  selected, onSelect, onPlay, compact,
-}: { selected: Persona["id"]; onSelect: (id: Persona["id"]) => void; onPlay: (id: Persona["id"]) => void; compact: boolean }) {
+  selected, onSelect, onPlay, compact, onCustom,
+}: { selected: Persona["id"]; onSelect: (id: Persona["id"]) => void; onPlay: (id: Persona["id"]) => void; compact: boolean; onCustom?: () => void }) {
   const reduce = useReducedMotion();
   return (
     <main className="relative min-h-[100dvh] overflow-x-hidden bg-[linear-gradient(180deg,#021e43_0%,#0d2a50_100%)] px-5 pb-16 pt-6 text-white sm:px-10">
@@ -82,6 +83,7 @@ export function CharacterSelect({
             <PlayerCard key={p.id} persona={p} n={i + 1} active={selected === p.id} onSelect={() => onSelect(p.id)} onPlay={() => onPlay(p.id)} delay={0.1 + i * 0.08} />
           ))}
         </div>
+        {onCustom && <div className="mt-5"><YourOwnSlot variant="2d" onOpen={onCustom} /></div>}
 
         {!compact && <p className="mt-8 text-center text-[13px] text-white/45">← → to choose · Enter to play</p>}
       </div>
