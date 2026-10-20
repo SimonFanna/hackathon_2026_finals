@@ -23,6 +23,12 @@ export interface Diorama {
    * A person is about 1.1 units tall. The carousel adds the character as a child of this object.
    */
   stand: THREE.Object3D;
+  /**
+   * Build stage only (`buildDiorama(id, kit, { phased: true })`): one group per build phase, in build
+   * order (plinth excluded). The stage drops them in one per accepted step; a pending/skipped step's
+   * group stays a ghost outline. Undefined for the carousel.
+   */
+  parts?: THREE.Group[];
   /** Desaturate every material, switch emissives off, show a padlock above the scene. */
   setLocked(locked: boolean): void;
   /** 0 = dim (side of the carousel), 1 = fully lit (centred). Drives emissive strength only. */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { glowScale, groundPx, lockedRGB, ringOpacity, sway } from "./dioramas";
+import { BUILD_PHASES, glowScale, groundPx, lockedRGB, phasesForStep, ringOpacity, sway } from "./dioramas";
 
 describe("diorama helpers", () => {
   it("glowScale dims side items, is 1 when centred and keeps growing during the dive", () => {
@@ -46,5 +46,24 @@ describe("diorama helpers", () => {
 
   it("sway stays within its amplitude", () => {
     for (let t = 0; t < 20; t += 0.37) expect(Math.abs(sway(t, 0.07))).toBeLessThanOrEqual(0.07 + 1e-9);
+  });
+});
+
+describe("build phases (build stage)", () => {
+  it("gives every step at least one phase when there are enough phases, in order, covering all of them", () => {
+    for (const [, count] of Object.entries(BUILD_PHASES)) {
+      for (const steps of [1, 4, count, count - 1]) {
+        const all = Array.from({ length: steps }, (_, i) => phasesForStep(i, steps, count));
+        const flat = all.flat();
+        expect(flat).toEqual(Array.from({ length: count }, (_, i) => i + 1));
+        if (steps <= count) for (const ph of all) expect(ph.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("is empty for bad input", () => {
+    expect(phasesForStep(0, 0, 11)).toEqual([]);
+    expect(phasesForStep(3, 3, 11)).toEqual([]);
+    expect(phasesForStep(-1, 3, 11)).toEqual([]);
   });
 });
