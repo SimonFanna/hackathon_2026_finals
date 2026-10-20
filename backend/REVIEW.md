@@ -4,6 +4,22 @@
 > **Reproducibility:** every item below was reproduced, unless it is marked *plausible*. The repro scripts live in the reviewers' scratch dirs; nothing was added to the repo.
 > **Health:** lint ✓ · 258/258 tests ✓ · build ✓ · no secret in the client bundle.
 
+## Status — 12:55 (main @ cbe63d1, 264 tests ✓, build ✓)
+
+| P0 | Status |
+|---|---|
+| #1 Kate what-if hangs the server | ❌ **Open: still reproduces.** The server stops answering every route. Mathias |
+| #2 Scenario A can't be chosen | ✅ T7 route (choose A → 200, re-verified over HTTP) · ❌ Kate's `REPLY_ACTION`, Mathias |
+| #3 Double "income drop" click | ✅ Memory repo replaces by id (re-verified: still INCOME_DROP + 5 scenarios) · ⏳ T1 de-duplication in `toEvents`, Simon |
+| #4 Kate repeats her reason | ❌ Open: Simon (T2 merge) + Mathias (`evidenceWords`) |
+| #5 Nadia / Pieter plan → 500 | ✅ `POST /api/goals` → 400 "no plan template for WELCOME_BABY yet" (re-verified) · ❌ T3 still offers the plan, Mathias |
+| #6 Kate on a frozen fixture | ❌ Open: Mathias |
+| #7 Anonymous writes | ✅ Same-origin check (cross-site → 403, re-verified), 30 writes/min/client, event numbers bounded (re-verified), `x-demo-token` on reset + events if `DEMO_TOKEN` is set (**not set on Vercel yet: Simon's call**) · `GET /pipeline` still persists derived rows (idempotent; reset clears them) |
+| #8 Feedback dates on Supabase | ✅ Repo maps `at` → YYYY-MM-DD (T7; not re-verified live) |
+| #9 Impossible dates | ✅ `z.iso.date()` (re-verified: 400) |
+| #10 Supabase unreachable | ✅ Cached 1.5 s probe → snapshot + memory, 4 s timeout per call (T7; not re-verified live) |
+| P1 (T7) | ✅ A re-created goal starts fresh (v1, no consents); reads newest-first (500); the `partner_delay` preset is now 120 days |
+
 ## Verdict
 
 - **The stages hold up on their own:** pure, deterministic and consistent with the contract. Catalogue = seed = fixtures = snapshot, and the 6 demo checks pass in-process.
