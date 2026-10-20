@@ -112,4 +112,48 @@ describe("pipeline, offline", () => {
     const after = await runPipeline("sofie", d);
     expect(after.decisions.find((x) => x.intent === "BUY_HOME")?.level).not.toMatch(/ASK|SUGGEST/);
   });
+
+  it("still answers when persisting derived rows fails (a concurrent reset deleted the goal: FK violation)", async () => {
+    const repo = memoryRepo();
+    const fk = () => Promise.reject(new Error('insert or update on table "scenarios" violates foreign key constraint "scenarios_goal_id_fkey"'));
+    const d: Deps = { db: null, repo: { ...repo, saveScenarios: fk, saveOutcome: fk, saveRunOutput: fk, saveKateMessage: fk } };
+    await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, { db: null, repo });
+    await injectFor("sofie", { preset: "cost_overrun" }, d);
+    const r = await runPipeline("sofie", d);
+    expect(r.decisions.length).toBeGreaterThan(0);
+  });
+
+  it("creating a goal still answers when saving its outcome fails (concurrent reset)", async () => {
+    const repo = memoryRepo();
+    const d: Deps = { db: null, repo: { ...repo, saveOutcome: () => Promise.reject(new Error("outcomes_goal_id_fkey")) } };
+    const { plan, outcome } = await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, d);
+    expect(plan.steps.length).toBeGreaterThan(0);
+    expect(outcome.goalId).toBe(plan.goalId);
+  });
+
+  it("creating a goal survives a reset that deletes it mid-write (plans FK), by re-saving once", async () => {
+    const repo = memoryRepo();
+    let first = true;
+    const d: Deps = { db: null, repo: { ...repo, savePlan: (p) => {
+      if (first) { first = false; return Promise.reject(new Error('insert or update on table "plans" violates foreign key constraint "plans_goal_id_fkey"')); }
+      return repo.savePlan(p);
+    } } };
+    const { goal, plan } = await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, d);
+    expect(await repo.getGoal(goal.id)).not.toBeNull();
+    expect((await repo.getPlan(goal.id))?.id).toBe(plan.id);
+  });
+
+  it("three active surprises never yield duplicate scenario ids, and Kate's pick stays choosable (live 404)", async () => {
+    const d = deps();
+    const { goal } = await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, d);
+    for (const preset of ["cost_overrun", "partner_delay", "income_drop"] as const) {
+      await injectFor("sofie", { preset }, d);
+      const r = await runPipeline("sofie", d);
+      const ids = r.scenarios.map((x) => x.id);
+      expect(new Set(ids).size, preset).toBe(ids.length);
+      const pick = r.kate?.refs?.scenarioIds?.[0] ?? ids[0];
+      await chooseScenarioFor(goal.id, pick, d);
+    }
+  });
 });
+

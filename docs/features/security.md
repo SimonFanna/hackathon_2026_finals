@@ -38,6 +38,21 @@ The scan takes time, so connect early.
   - The package runs only in local linting. It is never bundled or shipped.
   - Re-check when a patched `braces` is released. Mark it "accepted / dev-only" in Aikido if it is listed.
 
+## Aikido findings and how they were handled (14:45)
+- **"Potential file inclusion attack via reading file"** (SAST, **High, risk 70**, 4 subissues). Status: **Solved, risk 1 (Low)**.
+  - What was flagged:
+    - `web/src/components/journey/Stage.tsx`:
+      - line 69: `swap = (s) => s.split(be.customer.name).join(name)`, which replaces the backend customer's name with the player's name in a string;
+      - line 46: `resolve(run, model, p, …)`, a pure in-memory function of the local engine.
+    - `scripts/ml/demo_scores.ts`, line 11: `readFileSync(new URL(p, import.meta.url))`.
+  - Why it is a false positive:
+    - No user input reaches a file read.
+    - `Stage.tsx` runs in the browser and never touches the file system.
+    - `demo_scores.ts` is an offline dev script. It reads three repo files with hard-coded relative paths, and it is not part of the build or the deployment.
+    - Aikido's AI analysis reached the same verdict ("AI assessed SAST finding to be false positive").
+  - Action: every subissue was verified line by line, then marked ignored with that reason in Aikido. No code change was needed.
+- **`braces`** (npm, dev-only ESLint chain, no patched version): accepted, see above.
+
 ## Known limits / improvement ideas
 - Run the **`security-review`** skill on the final diff before submitting.
 - If a Supabase client is added to the web app, use only the **publishable** key in the browser, keep `SUPABASE_SECRET_KEY` server-side, and add RLS to every new table.
@@ -50,7 +65,7 @@ The scan takes time, so connect early.
 - [x] Supabase RLS read-only on the catalogue
 - [x] Production dependencies: 0 vulnerabilities; dev advisory documented
 - [x] Stale public pitch file removed
-- [ ] Aikido connected (user / Simon)
-- [ ] Aikido findings fixed
+- [x] Aikido connected (Simon)
+- [x] Aikido findings triaged: file-inclusion SAST issue verified as a false positive, Solved (risk 70 → 1)
 - [ ] Final Aikido screenshots (repo name + remaining issues) in Builderbase by 16:00
 - [ ] `security-review` skill run before the freeze

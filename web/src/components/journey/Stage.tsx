@@ -19,6 +19,8 @@ import { CharacterSelect3D } from "../picker/CharacterSelect3D";
 import { ChapterScreen } from "./ChapterScreen";
 import { ChapterStepsScreen } from "./ChapterStepsScreen";
 import { providerName } from "./copy";
+import { demoPersona } from "./demoDisruptions";
+import { buildStepAlias, withLocalAliases } from "./stepAlias";
 import { buildDemoSequence, type DemoPage } from "./demoSequence";
 import { EngineHud, type AdaptStep, type Phase } from "./EngineHud";
 import { EventPage } from "./EventPage";
@@ -127,7 +129,7 @@ function asLocalHit(be: PendingHit, local: PendingHit, from: string | undefined,
 export function Stage() {
   const [personaId, setPersonaId] = useState<PersonaId>("business"); // the entrepreneur is player 1
   const [picked, setPicked] = useState<PersonaId>("business");
-  const persona = getPersona(personaId);
+  const persona = demoPersona(getPersona(personaId)); // two surprises per player (Demo V2, demoDisruptions.ts)
   const { customer, outcome: model } = persona;
 
   const [signalSet, setSignalSet] = useState<SignalSet>("real");
@@ -148,10 +150,12 @@ export function Stage() {
   const [bePlan, setBePlan] = useState<OutcomePlan | null>(null);
   const [beScenarios, setBeScenarios] = useState<Record<string, string> | null>(null);
   const keepGoal = useRef<string | null>(null); // the "Your own" player just created this slug's goal: don't wipe it
+  const pendingReset = useRef<Promise<boolean> | null>(null); // startJourney waits for it instead of resetting again
   useEffect(() => {
     let live = true;
     // A previous run leaves a goal in progress, and the engine then rightly stays quiet: each demo run starts fresh.
     const fresh = keepGoal.current === slug ? Promise.resolve(true) : resetPersona(slug);
+    pendingReset.current = fresh;
     if (keepGoal.current !== slug) keepGoal.current = null;
     fresh
       .then(() => fetchIntent(slug))
@@ -203,14 +207,18 @@ export function Stage() {
   const stepPages = useMemo(() => (state ? groupPages(state.journey) : []), [state]);
   const pageSteps = useMemo(() => (screen === "step" ? stepPages[index]?.steps ?? [] : []), [screen, stepPages, index]);
   const step = screen === "step" && state ? pageSteps.find((s) => state.decisions[s.id] === "pending") ?? pageSteps[0] ?? null : null;
+  // The journey may be the backend's (its own step ids): the engine's surprises keep the local ids, so the
+  // accepted set carries both (matched by catalogue item), and the build gets the journey's id for a hit.
+  const alias = useMemo(() => buildStepAlias(persona.journey, state?.journey), [persona, state]);
   const accepted = useMemo(
-    () => new Set(state ? state.journey.steps.filter((s) => state.decisions[s.id] === "accepted").map((s) => s.id) : []),
-    [state],
+    () => withLocalAliases(state ? state.journey.steps.filter((s) => state.decisions[s.id] === "accepted").map((s) => s.id) : [], alias),
+    [state, alias],
   );
   const skipped = useMemo(
     () => (state ? state.journey.steps.filter((s) => state.decisions[s.id] === "skipped").map((s) => s.id) : []),
     [state],
   );
+  const actualStep = (id: string | null) => (id ? alias.toActual.get(id) ?? id : null);
   const finishLine = run ? Math.max(model.horizon, run.plan.values.finish) : model.horizon;
   const pages = useMemo(() => buildDemoSequence(persona, accepted, state?.journey), [persona, accepted, state]); // the journey may be the backend's
 
@@ -229,7 +237,7 @@ export function Stage() {
   }, [screen, page]);
 
   // Pitch backups: ?player=house|business, and ?demo=intent | step[&n=6] | live | event[&n=2] | finale | weak.
-  // ?demo=event&n=N lands on page N of the post-plan sequence (chapters and surprises interleaved); live = page 1.
+  // ?demo=event&n=N lands on the Nth surprise's page of the post-plan sequence (chapters and surprises interleaved).
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
     const player = p.get("player");
@@ -237,7 +245,7 @@ export function Stage() {
     if (!demo && !isPersonaId(player)) return;
     const t = setTimeout(() => {
       const id: PersonaId = isPersonaId(player) ? player : "business";
-      const ps = getPersona(id);
+      const ps = demoPersona(getPersona(id));
       setPersonaId(id);
       setPicked(id);
       setScreen("home");
@@ -262,7 +270,10 @@ export function Stage() {
       if (demo === "live" || demo === "event" || demo === "options") {
         // Kate's picks for every surprise before page n; page n is shown as the customer would reach it.
         const seq = buildDemoSequence(ps, ids);
-        const n = demo === "live" ? 1 : Math.min(Math.max(Number(p.get("n") ?? 1) || 1, 1), seq.length);
+        // ?demo=event&n=N = the Nth surprise (its page); ?demo=live&n=N = page N; ?demo=live = page 1.
+        const raw = Math.max(Number(p.get("n") ?? 1) || 1, 1);
+        const events = seq.map((pg, i) => (pg.kind === "event" ? i + 1 : 0)).filter(Boolean);
+        const n = demo === "live" ? Math.min(raw, seq.length) : (events[Math.min(raw, events.length) - 1] ?? seq.length);
         const at = runForPage(ps.outcome, seq, n - 1, ids, []);
         setState(all);
         setRun(at.run);
@@ -343,9 +354,18 @@ export function Stage() {
     go("select", "back");
   };
 
+  const confirming = useRef(false); // startJourney may take seconds: a second → / Enter meanwhile must not start a second goal
   const confirm = async () => {
-    if (!intent) return;
-    const live = intent !== localIntent && beIntent?.goalType ? await startJourney(slug, beIntent.goalType) : null;
+    if (!intent || confirming.current) return;
+    confirming.current = true;
+    const reset = pendingReset.current ?? undefined; // one reset per run: the one the stage already started, if any
+    pendingReset.current = null;
+    let live: Awaited<ReturnType<typeof startJourney>> = null;
+    try {
+      live = intent !== localIntent && beIntent?.goalType ? await startJourney(slug, beIntent.goalType, reset) : null;
+    } finally {
+      confirming.current = false;
+    }
     if (live) {
       // Start from the local shape (every step and consent field present), then apply the backend's decisions.
       const base = initState(live.journey);
@@ -455,7 +475,17 @@ export function Stage() {
    * On an event page the surprise is replayed in the backend (T6) when it can: its impact and scenarios A/B replace
    * the scripted ones; otherwise (no backend, other kind of surprise, API down) the local story plays.
    */
+  const navigating = useRef(false); // a page change may await the backend: a second → / Enter meanwhile is ignored
   const showPage = async (i: number, m: Move, from: Run) => {
+    if (navigating.current) return;
+    navigating.current = true;
+    try {
+      await turnPage(i, m, from);
+    } finally {
+      navigating.current = false;
+    }
+  };
+  const turnPage = async (i: number, m: Move, from: Run) => {
     if (i >= pages.length) {
       setRun(advance(from, finishLine));
       setPending(null);
@@ -507,11 +537,13 @@ export function Stage() {
 
   /** The customer picks an option on an event page: the plan moves on with it, then the next page. */
   const choose = async () => {
-    if (!run || !pending || !selected) return;
+    if (!run || !pending || !selected || navigating.current) return;
     const opt = pending.options.find((o) => o.id === selected);
     if (!opt?.available) return;
     const sid = beScenarios?.[selected];
-    const live = beGoal && sid ? await chooseScenario(beGoal, sid) : null;
+    navigating.current = true;
+    const live = beGoal && sid ? await chooseScenario(beGoal, sid).catch(() => null) : null;
+    navigating.current = false;
     const resolved = resolve(run, model, pending, selected);
     let next = resolved;
     if (live) {
@@ -771,9 +803,9 @@ export function Stage() {
                 key={`build-${personaId}`}
                 persona={personaId}
                 steps={steps.map((s) => s.id)}
-                accepted={[...accepted]}
+                accepted={steps.filter((s) => accepted.has(s.id)).map((s) => s.id)}
                 skipped={skipped}
-                hit={pending ? { step: affectedStep(pending), n: shock } : null}
+                hit={pending ? { step: actualStep(affectedStep(pending)), n: shock } : null}
                 repaired={run?.history.length ?? 0}
                 finale={finale}
               />
@@ -814,8 +846,8 @@ export function Stage() {
       </AnimatePresence>
 
       {stageFinale && (
-        <div className="pointer-events-none absolute inset-0">
-          <div className="pointer-events-auto relative mx-auto h-full max-w-[560px]">
+        <div className={`absolute inset-0 ${sheet === "estimate" ? "" : "pointer-events-none"}`}>
+          <div className="relative mx-auto h-full max-w-[560px]">
             <EstimateSheet open={sheet === "estimate"} state={state} onClose={() => setSheet(null)} />
           </div>
         </div>

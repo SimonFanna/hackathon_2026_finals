@@ -28,7 +28,8 @@ async function goalAndPlan(goalId: string, deps: Deps): Promise<{ goal: Goal; pl
 
 async function saveOutcome(goal: Goal, plan: Plan, deps: Deps, consents?: Consent[]): Promise<Outcome> {
   const outcome = trackOutcome(goal, plan, consents ?? (await deps.repo.getConsents(goal.id)));
-  await deps.repo.saveOutcome(outcome);
+  // The outcome is derived: if a concurrent reset deleted the goal (FK violation), still answer with it.
+  await deps.repo.saveOutcome(outcome).catch((e) => console.warn("[service] outcome not saved:", e instanceof Error ? e.message : e));
   return outcome;
 }
 
@@ -43,8 +44,18 @@ export async function createGoalFor(
   const plan = applyDecisionRules(buildPlan(goal, s.ctx, s.rules, s.asOf), s.ctx, s.feedback, s.rules);
   // Same goal again (no reset): start over, so old plan versions, consents and scenarios never resurface.
   if (await deps.repo.getGoal(goal.id)) await deps.repo.deleteGoal(goal.id);
-  await deps.repo.saveGoal(goal);
-  await deps.repo.savePlan(plan);
+  // A concurrent reset (another tab/visitor, or the UI's own persona reset landing late) can delete the goal between
+  // the two writes → plans FK violation. Re-save the goal and retry once instead of failing the request.
+  for (let attempt = 0; ; attempt++) {
+    await deps.repo.saveGoal(goal);
+    try {
+      await deps.repo.savePlan(plan);
+      break;
+    } catch (e) {
+      if (attempt >= 1) throw e;
+      console.warn("[service] plan save retried:", e instanceof Error ? e.message : e);
+    }
+  }
   return { goal, plan, outcome: await saveOutcome(goal, plan, deps) };
 }
 

@@ -9,6 +9,7 @@ import { YourOwnSlot } from "../custom/YourOwnSlot";
 import { CharacterSelect } from "../journey/CharacterSelect";
 import { eur } from "../journey/format";
 import { KbcLogo } from "../journey/KbcLogo";
+import { demoDisruptions } from "../journey/demoDisruptions";
 import { EventBadge } from "../journey/outcome-ui";
 import { hasWebGL, pickerMode } from "./capability";
 import { ORDER, type PlayableId } from "./carousel";
@@ -84,6 +85,7 @@ export function CharacterSelect3D({
       busy.current = true;
       setPlaying(true);
       const h = createHandoff(reduce);
+      void import("../build/BuildCanvas"); // warm the build stage's chunk during the dive, not when the home screen mounts
       try {
         const dive = diveRef.current;
         if (dive && ready && !reduce) {
@@ -203,10 +205,10 @@ function PlayerCard({ persona: p, onPlay, disabled, reduce }: { persona: Persona
         <p className="mt-0.5 text-[clamp(24px,2.2vw,32px)] font-extrabold leading-[1.1] tracking-[-0.02em]">{p.copy.quest}</p>
         <p className="mt-1.5 text-[15px] leading-[21px] text-white/70">{p.copy.tagline}</p>
         <p className="mt-3 flex items-center gap-2 text-[13px] font-semibold text-white/60">
-          <span className="flex gap-1.5" aria-label={`${p.outcome.disruptions.length} unexpected events`}>
-            {p.outcome.disruptions.map((d) => <EventBadge key={d.id} kind={d.kind} size={26} />)}
+          <span className="flex gap-1.5" aria-label={`${demoDisruptions(p).length} unexpected events`}>
+            {demoDisruptions(p).map((d) => <EventBadge key={d.id} kind={d.kind} size={26} />)}
           </span>
-          {p.outcome.disruptions.length} things will go wrong
+          {demoDisruptions(p).length} things will go wrong
         </p>
       </motion.div>
       </AnimatePresence>

@@ -142,7 +142,9 @@ export async function runPipeline(slug: DemoSlug, deps: Deps, opts: { asOf?: str
     const hit = disruptions.map((d) => ({ d, impact: assessImpact(d, goal, plan, ctx) })).filter(({ impact }) => impact.broken.length > 0);
     for (const { d, impact } of hit) {
       impacts.push(impact);
-      scenarios.push(...replan(goal, plan, ctx, impact, rules, asOf, d));
+      // Several active surprises share T6's id scheme (<plan>:<strategy>): keep the first (the trigger's) per id.
+      // Duplicates made the scenarios upsert fail on Postgres, so nothing was saved and "choose" returned 404.
+      for (const x of replan(goal, plan, ctx, impact, rules, asOf, d)) if (!scenarios.some((y) => y.id === x.id)) scenarios.push(x);
       trigger ??= { impact, disruption: d, goal };
     }
     if (hit.length) plan = { ...plan, atRisk: true };
@@ -165,12 +167,15 @@ export async function runPipeline(slug: DemoSlug, deps: Deps, opts: { asOf?: str
   }
   lap("kate");
 
-  await Promise.all([
+  // Derived rows are a cache: a failed write must not fail the answer. On the shared demo deployment, a
+  // concurrent run's reset can delete the goal meanwhile (FK violation on scenarios/outcomes) → it used to 500.
+  const saved = await Promise.allSettled([
     deps.repo.saveRunOutput(ctx.customerId, signals, intents),
     deps.repo.saveScenarios(scenarios),
     ...outcomes.map((o) => deps.repo.saveOutcome(o)),
     kate ? deps.repo.saveKateMessage(kate) : null,
   ]);
+  for (const r of saved) if (r.status === "rejected") console.warn("[pipeline] persist skipped:", r.reason instanceof Error ? r.reason.message : r.reason);
   lap("persist");
 
   return {
