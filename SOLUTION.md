@@ -1,7 +1,7 @@
 # SOLUTION — Intent → Journey
 
 > Living document, updated throughout the day. Each feature has its own file in `docs/features/<feature>.md`.
-> Last update: 10:05
+> Last update: 10:20
 
 ## One-liner
 
@@ -45,6 +45,17 @@ Start it → Business PRO → Billit invoicing → self-employed status, pension
 - **Transparent & privacy-first** — consent per partner and per step, visible "why am I seeing this".
 - **Commercially viable** — every step is a KBC product or a revenue-generating partner.
 
+## Differentiation
+
+KBC Mobile already has a **MyHome** dashboard (since March 2026, to verify) that groups Setle, Immoscoop, Impact Us Today, Immowinkel and Samen Overstappen. So our pitch is **not** "we bundle housing partners". What we add:
+- **proactive detection** from signals;
+- a **sequenced plan** across ecosystems (housing → finance → energy → insurance), not a toolbox;
+- **per-step, per-partner consent**;
+- a **measured triple win**;
+- **one generic engine**, where a new intent is new data.
+
+This also matches KBC's own line on Kate: *"Kate will never implement anything without explicit customer approval"* ([KBC newsroom, Nov 2025](https://newsroom.kbc.com/kate-five-years-and-five-milestones)).
+
 ## Architecture
 
 - **Front:** Next.js + TypeScript + Tailwind in `web/`, deployed on Vercel
@@ -60,8 +71,8 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 | Feature | Owner | Status | Doc |
 |---|---|---|---|
 | Engine signal → intent → journey | coordinator (kepa) | done (V0) | `journey-house-v0.md` |
-| Journey UI V0 | peer agent (kepa) | done, being redesigned | `journey-house-v0.md` |
-| UX redesign (KBC brand, market benchmark) | peer agent (kepa) | in progress | `ux-redesign.md` |
+| Journey UI V0 | peer agent (kepa) | replaced by UX redesign V1 | `journey-house-v0.md` |
+| UX redesign V1 (KBC brand, Kate voice, phone stage, triple-win finale) | peer agent (kepa) | done (V1) | `ux-redesign.md` |
 | Supabase catalogue + data | Simon | in progress | — (Simon to add `supabase.md`) |
 | Deck + demo (GIF/video) | — | todo | — |
 | Security (Aikido) + public repo | — | todo | — |
@@ -70,6 +81,7 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 
 - Which ecosystem KPIs does KBC use? (ask staff on site)
 - Can we name partners in the demo / pitch?
+- **MyHome (KBC Mobile, March 2026):** confirm with KBC staff what it already does, and adjust the pitch so we position as the proactive, sequenced layer on top of it. Source seen only in a search snippet: [KBC press release (NL)](https://www.kbc.com/content/dam/kbccom/doc/newsroom/pressreleases/2026/20260129%20MyHome_NL.pdf).
 - Verify the Flemish rule: buyers of an E/F-label home must renovate to at least label D within 5 years (used in the EPC step).
 
 ## Log
@@ -77,3 +89,4 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 - **09:20** — Direction A validated. Document created.
 - **09:50** — No Supabase access yet: V0 on static TS data. Engine `web/src/engine/` delivered (tests green); Next.js UI built.
 - **10:05** — Supabase access OK (empty DB). V0 UI judged too cluttered → UX redesign started (KBC brand + market benchmark). `CLAUDE.md` team rules added; docs switched to English.
+- **10:20** — UX redesign V1 shipped in `web/`: a KBC Design Language look (tokens read live from kbc.be), Kate's voice, one step at a time with a consent sentence per partner, a hidden presenter panel (key P) and a triple-win finale. Screenshots in `docs/screenshots/`. MyHome finding added (Differentiation, Open questions).

@@ -1,50 +1,51 @@
 @import "tailwindcss";
 
+/* KBC Design Language (KDL) tokens, read from kbc.be's kdl-design-tokens stylesheet (:root, KBC retail).
+   See docs/features/ux-redesign.md for sources. */
 @theme inline {
-  --color-navy: #0b2547;
-  --color-navy-2: #12345f;
-  --color-kbc: #0097db;
-  --color-sky: #e3f3fb;
-  --color-paper: #f4f7fa;
-  --color-ink: #0f1d2e;
-  --color-mute: #5d6b7c;
-  --color-line: #dce4ec;
-  --color-partner: #3f8a12;
-  --color-partner-soft: #eaf5e1;
-  --color-warn: #b45f00;
-  --font-display: var(--font-bricolage);
-  --font-sans: var(--font-plex);
-  --font-mono: var(--font-plex-mono);
+  --color-night: #0d2a50;          /* --kdl-color-primary-main */
+  --color-night-600: #021e43;      /* --kdl-color-primary-main-600 */
+  --color-night-300: #45658f;      /* --kdl-color-primary-main-300 */
+  --color-night-100: #bfdaff;      /* --kdl-color-primary-main-100 */
+  --color-accent: #0097db;         /* --kdl-color-primary-accent */
+  --color-accent-600: #007ab1;     /* --kdl-color-primary-accent-600 (text on white, AA) */
+  --color-accent-100: #e5f4ff;     /* --kdl-color-primary-accent-100 */
+  --color-surface: #f2f2f2;        /* --kdl-color-surface-background */
+  --color-element: #f2faff;        /* --kdl-color-surface-element */
+  --color-kate: #55c7df;           /* --kdl-color-os-kate */
+  --color-green: #1db955;          /* --kdl-color-sustainability-green */
+  --color-green-600: #00903d;      /* --kdl-color-sustainability-green-600 */
+  --color-warning: #dc7507;        /* --kdl-color-system-warning */
+
+  --font-sans: var(--font-nunito), "Museo Sans", system-ui, sans-serif;
+
+  --radius-card: 8px;
+  --radius-chip: 4px;
+
+  --shadow-card: 0 4px 16px rgb(0 54 101 / 0.08);
+  --shadow-raised: 0 4px 16px rgb(0 54 101 / 0.16);
+  --shadow-phone: 0 30px 80px rgb(2 30 67 / 0.55), 0 8px 24px rgb(2 30 67 / 0.35);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-html { font-size: 17px; }
-@media (min-width: 1600px) { html { font-size: 19px; } }
+html, body { height: 100%; }
 
 body {
-  background-color: var(--color-paper);
-  /* faint blueprint grid — a nod to the 1975 house being planned */
-  background-image:
-    linear-gradient(to right, rgb(11 37 71 / 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(11 37 71 / 0.045) 1px, transparent 1px);
-  background-size: 28px 28px;
-  color: var(--color-ink);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--color-night-600);
+  color: var(--color-night);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
+
+::selection { background: var(--color-accent-100); color: var(--color-night); }
+
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 4px; }
 
 .tabular { font-variant-numeric: tabular-nums; }
 
-@keyframes rise {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: none; }
-}
-.rise { animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+/* Scroll area inside the phone: thin, themed scrollbar */
+.phone-scroll { scrollbar-width: thin; scrollbar-color: var(--color-night-100) transparent; }
 
-@keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgb(0 151 219 / 0.45); }
-  100% { box-shadow: 0 0 0 14px rgb(0 151 219 / 0); }
-}
-.pulse { animation: pulse-ring 1.6s ease-out infinite; }
-
-@media (prefers-reduced-motion: reduce) {
-  .rise, .pulse { animation: none; }
-}
+.press { transition: transform 100ms var(--ease-out), background-color 150ms ease, color 150ms ease; }
+.press:active { transform: scale(0.97); }

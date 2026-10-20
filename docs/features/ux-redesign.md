@@ -1,5 +1,5 @@
 # Feature — House journey UX redesign (V1)
-> Owner: Kepa's UI terminal · Status: in progress (spec, waiting for the coordinator's go) · Last update: 10:40
+> Owner: Kepa's UI terminal · Status: done (V1 shipped) · Last update: 10:20
 
 ## Goal
 
@@ -18,10 +18,19 @@ Replace the cluttered V0 (3 columns, 11 cards at once, a wall of toggles, a heav
 
 ### Same engine API, new screens
 - **Engine:** imports only from `@/engine`: `demoCustomer`, `demoSignals`, `detectIntents`, `buildJourney`, `initState`, `decide`, `setConsent`, `scoreboard`. **No change required** (optional requests in §Decisions D8).
-- **Files (Phase 2):** `web/src/components/journey/` gets rewritten. Planned files: `Stage.tsx`, `Phone.tsx`, `HomeScreen.tsx`, `IntentScreen.tsx`, `PathScreen.tsx`, `StepScreen.tsx`, `ConsentSheet.tsx`, `PlanScreen.tsx`, `Finale.tsx`, `PresenterPanel.tsx`, `KbcLogo.tsx`, `copy.ts`.
+- **Files (built):** everything lives in `web/src/components/journey/`.
+  - `Stage.tsx`: state machine, presenter keys, phone scaling, finale layout.
+  - `Phone.tsx`: frame and status bar.
+  - Screens: `HomeScreen.tsx` (S1), `IntentScreen.tsx` (S2, S2b), `PathScreen.tsx` (S3), `StepScreen.tsx` (S4: card, consent block, segmented progress, impact pill), `PlanScreen.tsx` (S5), `Finale.tsx` (S6, stage and in-app variants).
+  - Sheets: `Sheet.tsx` (bottom sheet with focus trap, plus the switch) and `Sheets.tsx` (Why, Choose what to share, How we estimate this).
+  - `PresenterPanel.tsx` (key P).
+  - Small parts: `Kate.tsx` (Kate mark and line), `KbcLogo.tsx`, `AnimatedNumber.tsx`, `ui.tsx` (buttons, layout).
+  - Helpers: `copy.ts` (Kate copy, chapter labels, consent purpose lines), `format.ts`, `useViewport.ts`.
+- **Screenshots:** in `docs/screenshots/`. Desktop: `s1`…`s6` at 1600×900 @2x. Mobile: `mobile-s1`, `mobile-s4` at 390×844.
 - **Tokens and font:** KDL tokens as CSS variables in `web/src/app/globals.css`; Nunito Sans loaded via `next/font` in `layout.tsx`.
 - **Logo:** `web/public/brand/kbc-logo.svg`, taken from the KDL asset library on kbc.be.
-- **New dependencies:** `motion` (card stack and springs) and `@phosphor-icons/react` (one icon family).
+- **New dependencies:** `motion` (screen transitions, springs, count-up) and `@phosphor-icons/react` (one icon family).
+- **Presenter keys:** `→` / `Enter` = primary action of the screen, `←` = back, `S` = skip (or "Not now" on S2), `R` = restart, `P` = presenter panel.
 
 ### 1. KBC brand tokens (verified, live)
 
@@ -358,6 +367,17 @@ Tapping the notification goes to S2. The rest of the home screen is inert decor 
   3. export `BUY_HOUSE_THRESHOLD` from `index.ts` for the presenter panel.
 
 ## Known limits / improvement ideas
+- **Deviations from the spec:**
+  - no house photo on S3, because no licensed 1970s house photo is available; the four chapter rows carry the screen;
+  - the bottom sheets use a 16px top radius (iOS sheet convention, documented exception to the 8px card radius);
+  - the toast sits at the top of the phone so it never covers the actions;
+  - no `autoFocus` on CTAs, since presenter keys are global and auto focus drew a double outline on projector.
+- **Engine export request:** the presenter panel reads `buyHouseSignalWeights` from `@/engine/data` (read only). Ask the engine owner to re-export it from `@/engine`.
+- **Next ideas:**
+  - a `?demo=finale` deep link, as a pitch backup if a click fails;
+  - a 20s screen recording of the flow for the deck (the guide requires the demo embedded in PPT/PDF);
+  - an "Undo" on the "Continue without sharing" toast;
+  - dark theme from `.kdl-theme-dark` for the in-app screens.
 - The Museo Sans look is approximated with Nunito Sans. If KBC supplies the font on the day, swap one line in `layout.tsx`.
 - Kate's real avatar is not public. We use a neutral `#55C7DF` disc; replace it with the official Kate mark if KBC provides it.
 - The house photo is a placeholder: replace it with a real (licensed) photo of a 1970s Flemish house.
@@ -369,5 +389,5 @@ Tapping the notification goes to S2. The rest of the home screen is inert decor 
 - [x] KBC brand research (live KDL tokens + kbc.be CSS + KBC press)
 - [x] Market benchmark (6 products + consent references + Kate in production)
 - [x] Screen-by-screen flow, copy, motion rules, removals
-- [ ] Coordinator go
-- [ ] Phase 2 implementation (lint + test + build + visual check)
+- [x] Coordinator go
+- [x] Phase 2 implementation: lint clean, 10/10 tests, build green, Impeccable detector clean, checked in the browser (desktop 1440/1600, mobile 390), screenshots saved

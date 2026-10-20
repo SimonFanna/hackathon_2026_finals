@@ -1,5 +1,5 @@
-import { JourneyApp } from "@/components/journey/JourneyApp";
+import { Stage } from "@/components/journey/Stage";
 
 export default function Home() {
-  return <JourneyApp />;
+  return <Stage />;
 }
