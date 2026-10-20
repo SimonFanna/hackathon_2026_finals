@@ -11,7 +11,8 @@ export function ScoreboardPanel({ board, decided, total }: { board: Scoreboard; 
       <StageLabel n={3} id="win-title" dark>Triple win · live</StageLabel>
 
       <Block title="Customer" accent="bg-[#ffb547]">
-        <Big value={board.customer.eur} fmt={eur} label="saved or unlocked" />
+        <Big value={board.customer.eurOneOff} fmt={eur} label="unlocked once" />
+        <Big value={board.customer.eurPerYear} fmt={eur} label="saved per year" />
         <div className="grid grid-cols-2 gap-3">
           <Small value={board.customer.kwhPerYear} fmt={num} label="kWh / year saved" />
           <Small value={board.customer.co2KgPerYear} fmt={num} label="kg CO₂ / year" />

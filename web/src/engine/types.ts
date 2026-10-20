@@ -20,16 +20,20 @@ export interface DetectedIntent {
 }
 
 export interface Outcome {
-  customerEur?: number;
+  customerEurOneOff?: number;   // one-off gain (grants, avoided overpay)
+  customerEurPerYear?: number;  // recurring yearly saving
   kwhPerYear?: number;
   co2KgPerYear?: number;
   kbcRevenueEur?: number;
   partnerValueEur?: number;
 }
 
+export type Chapter = "find" | "finance" | "renovate" | "protect";
+
 export interface JourneyStep {
   id: string;
   order: number;
+  chapter: Chapter;
   title: string;
   why: string;
   ecosystem: string;
@@ -50,7 +54,7 @@ export interface JourneyState {
 }
 
 export interface Scoreboard {
-  customer: { eur: number; kwhPerYear: number; co2KgPerYear: number };
+  customer: { eurOneOff: number; eurPerYear: number; kwhPerYear: number; co2KgPerYear: number };
   kbc: { productsActivated: number; revenueEur: number };
   partners: { leads: number; valueEur: number };
 }

@@ -25,7 +25,8 @@ export function StepCard({
   const o = step.outcome;
 
   const badges = [
-    o.customerEur ? `+${eur(o.customerEur)} for you` : null,
+    o.customerEurOneOff ? `+${eur(o.customerEurOneOff)} for you` : null,
+    o.customerEurPerYear ? `+${eur(o.customerEurPerYear)}/yr for you` : null,
     o.kwhPerYear ? `−${num(o.kwhPerYear)} kWh/yr` : null,
     o.co2KgPerYear ? `−${num(o.co2KgPerYear)} kg CO₂/yr` : null,
   ].filter(Boolean) as string[];

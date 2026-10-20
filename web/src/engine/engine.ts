@@ -59,14 +59,15 @@ export function setConsent(state: JourneyState, stepId: string, field: string, o
 
 export function scoreboard(state: JourneyState): Scoreboard {
   const board: Scoreboard = {
-    customer: { eur: 0, kwhPerYear: 0, co2KgPerYear: 0 },
+    customer: { eurOneOff: 0, eurPerYear: 0, kwhPerYear: 0, co2KgPerYear: 0 },
     kbc: { productsActivated: 0, revenueEur: 0 },
     partners: { leads: 0, valueEur: 0 },
   };
   for (const step of state.journey.steps) {
     if (state.decisions[step.id] !== "accepted") continue;
     const o = step.outcome;
-    board.customer.eur += o.customerEur ?? 0;
+    board.customer.eurOneOff += o.customerEurOneOff ?? 0;
+    board.customer.eurPerYear += o.customerEurPerYear ?? 0;
     board.customer.kwhPerYear += o.kwhPerYear ?? 0;
     board.customer.co2KgPerYear += o.co2KgPerYear ?? 0;
     if (step.provider.kind === "kbc") {

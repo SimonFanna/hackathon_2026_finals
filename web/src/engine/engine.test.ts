@@ -67,3 +67,19 @@ describe("scoreboard", () => {
     expect(scoreboard(st).partners).toEqual({ leads: 1, valueEur: 300 });
   });
 });
+
+describe("chapters and euros", () => {
+  const journey = buildJourney("buy_house", demoCustomer);
+
+  it("groups steps into chapters in path order", () => {
+    const chapters = [...new Set(journey.steps.map((s) => s.chapter))];
+    expect(chapters).toEqual(["find", "finance", "renovate", "protect"]);
+  });
+
+  it("keeps one-off and yearly customer euros apart", () => {
+    let st = initState(journey);
+    st = decide(st, "grants", "accepted");
+    st = decide(st, "insulation", "accepted");
+    expect(scoreboard(st).customer).toMatchObject({ eurOneOff: 8000, eurPerYear: 900 });
+  });
+});

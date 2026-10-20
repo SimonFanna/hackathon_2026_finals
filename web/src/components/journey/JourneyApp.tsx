@@ -34,7 +34,7 @@ export function JourneyApp() {
 
   const board = state
     ? scoreboard(state)
-    : { customer: { eur: 0, kwhPerYear: 0, co2KgPerYear: 0 }, kbc: { productsActivated: 0, revenueEur: 0 }, partners: { leads: 0, valueEur: 0 } };
+    : { customer: { eurOneOff: 0, eurPerYear: 0, kwhPerYear: 0, co2KgPerYear: 0 }, kbc: { productsActivated: 0, revenueEur: 0 }, partners: { leads: 0, valueEur: 0 } };
   const steps = state?.journey.steps ?? [];
   const decided = state ? steps.filter((s) => state.decisions[s.id] !== "pending").length : 0;
 
