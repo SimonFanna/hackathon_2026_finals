@@ -112,4 +112,23 @@ describe("pipeline, offline", () => {
     const after = await runPipeline("sofie", d);
     expect(after.decisions.find((x) => x.intent === "BUY_HOME")?.level).not.toMatch(/ASK|SUGGEST/);
   });
+
+  it("still answers when persisting derived rows fails (a concurrent reset deleted the goal: FK violation)", async () => {
+    const repo = memoryRepo();
+    const fk = () => Promise.reject(new Error('insert or update on table "scenarios" violates foreign key constraint "scenarios_goal_id_fkey"'));
+    const d: Deps = { db: null, repo: { ...repo, saveScenarios: fk, saveOutcome: fk, saveRunOutput: fk, saveKateMessage: fk } };
+    await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, { db: null, repo });
+    await injectFor("sofie", { preset: "cost_overrun" }, d);
+    const r = await runPipeline("sofie", d);
+    expect(r.decisions.length).toBeGreaterThan(0);
+  });
+
+  it("creating a goal still answers when saving its outcome fails (concurrent reset)", async () => {
+    const repo = memoryRepo();
+    const d: Deps = { db: null, repo: { ...repo, saveOutcome: () => Promise.reject(new Error("outcomes_goal_id_fkey")) } };
+    const { plan, outcome } = await createGoalFor("sofie", { type: "BUY_AND_PREPARE_HOME", constraints: {}, priorities: [] }, d);
+    expect(plan.steps.length).toBeGreaterThan(0);
+    expect(outcome.goalId).toBe(plan.goalId);
+  });
 });
+

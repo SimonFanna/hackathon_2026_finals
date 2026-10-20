@@ -165,12 +165,15 @@ export async function runPipeline(slug: DemoSlug, deps: Deps, opts: { asOf?: str
   }
   lap("kate");
 
-  await Promise.all([
+  // Derived rows are a cache: a failed write must not fail the answer. On the shared demo deployment, a
+  // concurrent run's reset can delete the goal meanwhile (FK violation on scenarios/outcomes) → it used to 500.
+  const saved = await Promise.allSettled([
     deps.repo.saveRunOutput(ctx.customerId, signals, intents),
     deps.repo.saveScenarios(scenarios),
     ...outcomes.map((o) => deps.repo.saveOutcome(o)),
     kate ? deps.repo.saveKateMessage(kate) : null,
   ]);
+  for (const r of saved) if (r.status === "rejected") console.warn("[pipeline] persist skipped:", r.reason instanceof Error ? r.reason.message : r.reason);
   lap("persist");
 
   return {

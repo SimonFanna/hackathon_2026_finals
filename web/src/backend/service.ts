@@ -28,7 +28,8 @@ async function goalAndPlan(goalId: string, deps: Deps): Promise<{ goal: Goal; pl
 
 async function saveOutcome(goal: Goal, plan: Plan, deps: Deps, consents?: Consent[]): Promise<Outcome> {
   const outcome = trackOutcome(goal, plan, consents ?? (await deps.repo.getConsents(goal.id)));
-  await deps.repo.saveOutcome(outcome);
+  // The outcome is derived: if a concurrent reset deleted the goal (FK violation), still answer with it.
+  await deps.repo.saveOutcome(outcome).catch((e) => console.warn("[service] outcome not saved:", e instanceof Error ? e.message : e));
   return outcome;
 }
 
