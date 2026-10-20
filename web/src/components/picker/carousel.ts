@@ -42,8 +42,18 @@ export function nearestPlayable(focus: number): PlayableId {
   return best;
 }
 
-/** Drag in pixels → new continuous focus. A full-width drag moves about 2.5 items. */
+/** Drag in pixels → new continuous focus. A full-width drag moves about 4 items (switch at ~1/8 width). */
 export function dragFocus(start: number, dx: number, width: number): number {
-  const f = start - (dx / Math.max(width, 1)) * 2.5;
+  const f = start - (dx / Math.max(width, 1)) * 4;
   return Math.min(ORDER.length - 1 + 0.4, Math.max(-0.4, f));
+}
+
+/**
+ * Where a released drag should land: project the focus with the release velocity (items per second),
+ * so a quick flick moves on even when the finger travelled only a little.
+ */
+export function releaseTarget(focus: number, velocity: number, from: PlayableId): PlayableId {
+  const flick = Math.abs(velocity) > 1.2 ? Math.sign(velocity) : 0;
+  if (flick !== 0 && nearestPlayable(focus) === from) return nearestPlayable(indexOfId(from) + flick);
+  return nearestPlayable(focus + velocity * 0.12);
 }

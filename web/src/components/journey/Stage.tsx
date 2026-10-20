@@ -334,7 +334,8 @@ export function Stage() {
     const k = e.key.toLowerCase();
 
     if (screen === "select") {
-      if (k === "arrowleft" || k === "arrowright") return setPicked((p) => (p === "house" ? "business" : "house"));
+      if (k === "arrowleft") return setPicked("house"); // Thomas is on the left, Lina on the right
+      if (k === "arrowright") return setPicked("business");
       if (k === "1") return setPicked("house");
       if (k === "2") return setPicked("business");
       if (k === "enter" && !onControl) return (pickerPlay.current ?? play)(picked);

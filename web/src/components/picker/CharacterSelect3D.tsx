@@ -40,22 +40,30 @@ export function CharacterSelect3D({
   playRef?: MutableRefObject<((id: PersonaId) => void) | null>;
 }) {
   const reduce = !!useReducedMotion();
-  const [mode, setMode] = useState<"pending" | "3d" | "2d">("pending");
+  const [mode, setMode] = useState<"pending" | "3d" | "2d" | "skip">("pending");
   const [ready, setReady] = useState(false);
   const [playing, setPlaying] = useState(false);
   const diveRef = useRef<DiveFn | null>(null);
 
   // Decide after hydration (the server always renders the 3D shell; no mismatch).
   useEffect(() => {
-    const t = setTimeout(() => setMode(pickerMode({ compact, search: window.location.search, webgl: hasWebGL() })), 0);
+    const t = setTimeout(() => {
+      const search = window.location.search;
+      const p = new URLSearchParams(search);
+      // A deep link jumps straight past the picker: draw nothing for the split second before Stage switches.
+      if (p.has("player") || p.has("demo")) return setMode("skip");
+      setMode(pickerMode({ compact, search, webgl: hasWebGL() }));
+    }, 0);
     return () => clearTimeout(t);
   }, [compact]);
 
   const fail = useCallback(() => setMode("2d"), []);
 
+  const busy = useRef(false); // a ref, not state: two activations in the same task must not both start
   const play = useCallback(
     async (id: PersonaId) => {
-      if (playing) return;
+      if (busy.current) return;
+      busy.current = true;
       setPlaying(true);
       const h = createHandoff(reduce);
       try {
@@ -74,7 +82,7 @@ export function CharacterSelect3D({
         void h.land();
       }
     },
-    [onPlay, playing, ready, reduce],
+    [onPlay, ready, reduce],
   );
 
   // Let Stage's Enter key go through the dive too (only while the 3D is the picker).
@@ -87,6 +95,7 @@ export function CharacterSelect3D({
   }, [mode, play, playRef]);
 
   if (mode === "2d") return <CharacterSelect selected={selected} onSelect={onSelect} onPlay={onPlay} compact={compact} />;
+  if (mode === "skip") return <main className="min-h-[100dvh] bg-[linear-gradient(180deg,#021e43_0%,#0d2a50_100%)]" />;
 
   const persona = personas.find((p) => p.id === selected) ?? personas[0];
   const items: PickerItem[] = ORDER.map((id) => {
@@ -137,19 +146,9 @@ export function CharacterSelect3D({
         </div>
 
         <div className="mt-auto flex flex-col items-center">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.section
-              key={persona.id}
-              aria-live="polite"
-              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
-              transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-              className="pointer-events-auto w-full max-w-[860px]"
-            >
-              <PlayerCard persona={persona} onPlay={() => void play(persona.id)} disabled={playing} />
-            </motion.section>
-          </AnimatePresence>
+          <section className="pointer-events-auto w-full max-w-[860px]">
+            <PlayerCard persona={persona} onPlay={() => void play(persona.id)} disabled={playing} reduce={reduce} />
+          </section>
           <p className="mt-4 text-[13px] text-white/50">← → or drag to choose · Enter to play · locked goals: same engine, new data</p>
         </div>
       </motion.div>
@@ -157,7 +156,8 @@ export function CharacterSelect3D({
   );
 }
 
-function PlayerCard({ persona: p, onPlay, disabled }: { persona: Persona; onPlay: () => void; disabled: boolean }) {
+// The text crossfades per player; the Play button stays mounted so keyboard focus survives ← →.
+function PlayerCard({ persona: p, onPlay, disabled, reduce }: { persona: Persona; onPlay: () => void; disabled: boolean; reduce: boolean }) {
   const partners = new Set(p.journey.steps.flatMap((s) => (s.provider.kind === "partner" ? [s.provider.name] : [])));
   const stats = [
     { label: p.outcome.constraints.find((c) => c.key === "cost")!.label, value: eur(p.outcome.baseline.limits.cost) },
@@ -167,7 +167,16 @@ function PlayerCard({ persona: p, onPlay, disabled }: { persona: Persona; onPlay
   ];
   return (
     <div className="grid items-center gap-x-8 gap-y-4 rounded-[8px] bg-[rgb(2_30_67/0.72)] p-5 ring-1 ring-white/12 backdrop-blur-md sm:grid-cols-[1.25fr_1fr] sm:p-6">
-      <div className="min-w-0">
+      <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={p.id}
+        aria-live="polite"
+        initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={reduce ? { opacity: 0 } : { opacity: 0, y: -4 }}
+        transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+        className="min-w-0"
+      >
         <p className="text-[15px] font-semibold text-white/70">{p.customer.name}, {p.customer.age} · {p.customer.city}</p>
         <p className="mt-0.5 text-[clamp(24px,2.2vw,32px)] font-extrabold leading-[1.1] tracking-[-0.02em]">{p.copy.quest}</p>
         <p className="mt-1.5 text-[15px] leading-[21px] text-white/70">{p.copy.tagline}</p>
@@ -177,7 +186,8 @@ function PlayerCard({ persona: p, onPlay, disabled }: { persona: Persona; onPlay
           </span>
           {p.outcome.disruptions.length} things will go wrong
         </p>
-      </div>
+      </motion.div>
+      </AnimatePresence>
       <div>
         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-[8px] bg-white/[0.06] px-4 py-3 ring-1 ring-white/10">
           {stats.map((s) => (

@@ -7,7 +7,7 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
-import { dragFocus, indexOfId, layout, nearestPlayable, type PlayableId } from "./carousel";
+import { dragFocus, indexOfId, layout, releaseTarget, type PlayableId } from "./carousel";
 import { buildDiorama, pickerKit } from "./dioramaSource";
 import { loadCharacters } from "./characterGltf";
 import type { Character, CharacterId } from "./characterTypes";
@@ -120,6 +120,8 @@ export default function PickerCanvas(props: PickerCanvasProps) {
           dioramas[i].stand.add(c.root);
           people[i] = c;
         });
+        renderer.compile(scene, camera); // upload the skinned shaders now, not mid-animation
+        calmFrom = Math.max(calmFrom, performance.now() + 2500);
       })
       .catch(() => {
         /* the scenes still work without people */
@@ -142,6 +144,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       renderer.domElement.style.height = `${h}px`;
       composer.setPixelRatio(dpr);
       composer.setSize(w, h);
+      calmFrom = Math.max(calmFrom, performance.now() + 1500);
       bloom.resolution.set((w * dpr) / 2, (h * dpr) / 2);
       camera.aspect = w / h;
       // Keep the side items in frame on narrower screens.
@@ -155,7 +158,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     // ── State
     let focus = indexOfId(live.current.selected);
     let vel = 0;
-    let drag: { id: number; x: number; start: number; moved: boolean } | null = null;
+    let drag: { id: number; x: number; start: number; moved: boolean; samples: { x: number; t: number }[] } | null = null;
     let dragFocusValue = focus;
     let diving = false;
     const wiggle = new Array(items.length).fill(0);
@@ -188,8 +191,8 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     const canvas = renderer.domElement;
     canvas.style.touchAction = "pan-y";
     const onDown = (e: PointerEvent) => {
-      if (diving) return;
-      drag = { id: e.pointerId, x: e.clientX, start: focus, moved: false };
+      if (diving || e.button !== 0 || !e.isPrimary) return; // left button / first finger only
+      drag = { id: e.pointerId, x: e.clientX, start: focus, moved: false, samples: [{ x: e.clientX, t: performance.now() }] };
       canvas.setPointerCapture(e.pointerId);
     };
     const onMove = (e: PointerEvent) => {
@@ -197,6 +200,8 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         const dx = e.clientX - drag.x;
         if (Math.abs(dx) > 6) drag.moved = true;
         if (drag.moved) dragFocusValue = dragFocus(drag.start, dx, canvas.clientWidth);
+        drag.samples.push({ x: e.clientX, t: performance.now() });
+        if (drag.samples.length > 6) drag.samples.shift();
         return;
       }
       const i = pick(e.clientX, e.clientY);
@@ -205,9 +210,14 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     const onUp = (e: PointerEvent) => {
       if (!drag || e.pointerId !== drag.id) return;
       const wasDrag = drag.moved;
+      const first = drag.samples[0];
+      const lastS = drag.samples[drag.samples.length - 1];
+      const dtS = Math.max((lastS.t - first.t) / 1000, 1 / 120);
+      // px/s → items/s, with the same scale as dragFocus (a full width = 4 items, dragging left moves right).
+      const velocity = (-(lastS.x - first.x) / dtS / Math.max(canvas.clientWidth, 1)) * 4;
       drag = null;
       if (wasDrag) {
-        const id = nearestPlayable(dragFocusValue);
+        const id = releaseTarget(dragFocusValue, velocity, live.current.selected);
         focus = dragFocusValue;
         if (id !== live.current.selected) live.current.onSelect(id);
       } else {
@@ -289,11 +299,15 @@ export default function PickerCanvas(props: PickerCanvasProps) {
     const t0 = last;
     const times: number[] = [];
     let lowSince = 0;
+    let slowSince = 0;
+    let fastSince = 0;
+    let calmFrom = performance.now() + 3500; // ignore start-up, asset uploads and resizes
     let readySent = false;
     const stats = { fps: 60, calls: 0, triangles: 0, bloom: true, people: [] as unknown[] };
     (window as unknown as { __picker?: typeof stats }).__picker = stats;
     const proj = new THREE.Vector3();
 
+    renderer.info.autoReset = false; // count every pass of the composer in one frame
     renderer.setAnimationLoop(() => {
       const now = performance.now();
       const dt = Math.min((now - last) / 1000, 0.1);
@@ -356,6 +370,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         const size = (2.9 * s.scale * r.height) / (2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.distanceTo(h.position));
         const b = buttons.current[i];
         if (b) {
+          b.style.visibility = h.visible ? "visible" : "hidden";
           b.style.transform = `translate(${cx - size / 2}px, ${cy - size / 2}px)`;
           b.style.width = b.style.height = `${size}px`;
         }
@@ -372,6 +387,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
         camera.lookAt(CAM_LOOK);
       }
 
+      renderer.info.reset();
       if (useBloom) composer.render();
       else renderer.render(scene, camera);
       stats.calls = renderer.info.render.calls;
@@ -387,14 +403,30 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       times.push(now);
       while (times.length && now - times[0] > 2000) times.shift();
       if (times.length > 1) stats.fps = Math.round(((times.length - 1) * 1000) / (now - times[0]));
-      if (now - t0 > 3500 && !diving) {
-        if (useBloom && stats.fps < 45) {
-          useBloom = false;
-          stats.bloom = false;
-          times.length = 0;
-        } else if (stats.fps < 30) {
+      // Sustained only: a stutter (asset upload, resize, another app) never decides on its own.
+      if (now > calmFrom && !diving && times.length > 30) {
+        if (useBloom) {
+          if (stats.fps < 45) {
+            slowSince ||= now;
+            if (now - slowSince > 2000) {
+              useBloom = false;
+              stats.bloom = false;
+              slowSince = 0;
+              times.length = 0;
+              calmFrom = now + 1500;
+            }
+          } else slowSince = 0;
+        } else if (stats.fps > 57) {
+          fastSince ||= now;
+          if (now - fastSince > 4000) {
+            useBloom = true; // the GPU has headroom again
+            stats.bloom = true;
+            fastSince = 0;
+          }
+        } else fastSince = 0;
+        if (stats.fps < 30) {
           lowSince ||= now;
-          if (now - lowSince > 2000) live.current.onFail("fps");
+          if (now - lowSince > 2500) live.current.onFail("fps");
         } else lowSince = 0;
       }
     });
@@ -419,8 +451,10 @@ export default function PickerCanvas(props: PickerCanvasProps) {
       bloom.dispose();
       composer.dispose();
       renderer.dispose();
-      renderer.forceContextLoss();
+      if (!renderer.getContext().isContextLost()) renderer.forceContextLoss();
       canvas.remove();
+      const w = window as unknown as { __picker?: typeof stats };
+      if (w.__picker === stats) delete w.__picker;
     };
   }, []);
 
@@ -439,6 +473,7 @@ export default function PickerCanvas(props: PickerCanvasProps) {
             aria-checked={!it.locked && it.id === selected}
             aria-disabled={it.locked || undefined}
             aria-label={it.label}
+            tabIndex={!it.locked && it.id === selected ? 0 : -1}
             onClick={() => activateRef.current(i)}
             className="picker-hit absolute left-0 top-0 rounded-full outline-none focus-visible:ring-4 focus-visible:ring-accent focus-visible:ring-offset-0"
           />
