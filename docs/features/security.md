@@ -1,5 +1,5 @@
 # Feature — Security (Aikido 10%)
-> Owner: Kepa's UI terminal (hardening) · user (Aikido account) · Status: in progress · Last update: 11:05
+> Owner: Kepa's UI terminal (hardening) · user (Aikido account) · Status: in progress · Last update: 10:47
 
 ## Goal
 Score the full 10% for security. The finals guide requires:
