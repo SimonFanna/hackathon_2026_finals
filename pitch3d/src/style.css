@@ -59,8 +59,8 @@ canvas { display: block; }
 .counter-num { font-size: 44px; line-height: 1; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .counter-unit { font-size: 14px; color: var(--muted); }
 .phase-b { opacity: 0; transition: opacity 600ms ease; }
-body.phase-b .phase-b { opacity: 1; }
-body.phase-b .phase-a { opacity: 0.45; }
+body.field-on .phase-b { opacity: 1; }
+body.field-on .phase-a { opacity: 0.45; }
 
 .foot { position: absolute; left: clamp(24px, 4vw, 64px); right: clamp(24px, 3.5vw, 56px); bottom: 26px; display: flex; justify-content: space-between; align-items: center; }
 .dots { list-style: none; display: flex; gap: 8px; }

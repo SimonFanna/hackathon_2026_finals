@@ -84,9 +84,9 @@ label("Go Solid · partner", world.partner.goSolid.top.clone().add(new THREE.Vec
 label("Studio", SPOTS.workshop.clone().setY(2.9), "3");
 for (const d of story.districts) label(d.label, world.districts[d.id].center.clone().setY(2.2), "5");
 for (const c of belgium.cityAnchors.filter((a) => ["Antwerpen", "Gent", "Brussel", "Liège", "Namur", "Brugge", "Hasselt"].includes(a.city))) {
-  label(c.city, c.pos.clone().setY(6), "6", "city", belgium.root);
+  label(c.city, c.pos.clone().add(new THREE.Vector3(0, 6, -8)), "6", "city", belgium.root);
 }
-label("Leuven", new THREE.Vector3(0, 6, 0), "6", "city", belgium.root);
+label("Leuven", new THREE.Vector3(0, 6, -8), "6", "city", belgium.root);
 
 // ── Overlay + director
 const overlay = buildOverlay(story, BEAT_COUNT);

@@ -17,7 +17,7 @@ export function materialKit() {
     plinthSide: new THREE.MeshStandardMaterial({ color: "#081933", roughness: 0.8 }),
     street: new THREE.MeshStandardMaterial({ color: "#071630", roughness: 1 }),
     wall: new THREE.MeshStandardMaterial({ color: "#2a4670", roughness: 0.8 }),
-    roof: new THREE.MeshStandardMaterial({ color: "#3b4f6e", roughness: 0.45, metalness: 0.35 }),
+    roof: new THREE.MeshStandardMaterial({ color: "#2c3c58", roughness: 0.62, metalness: 0.15 }),
     landmark: new THREE.MeshStandardMaterial({ color: "#24426b", roughness: 0.6, metalness: 0.2 }),
     dark: new THREE.MeshStandardMaterial({ color: "#132541", roughness: 0.9 }),
     trim: new THREE.MeshStandardMaterial({ color: "#3a5b85", roughness: 0.5, metalness: 0.4 }),

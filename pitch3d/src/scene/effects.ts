@@ -44,7 +44,8 @@ export function buildEffects(world: World, m: MaterialKit, signalCount: number, 
 
   // ── Kate: a ring above Lucas's house that fills to the "ask" zone, with zone ticks.
   const kateGroup = new THREE.Group();
-  kateGroup.position.copy(world.tops.lucas).add(new THREE.Vector3(0, 1.4, 0));
+  kateGroup.position.copy(world.tops.lucas).add(new THREE.Vector3(0, 1.1, 0));
+  kateGroup.scale.setScalar(0.8);
   const track = new THREE.Mesh(new THREE.RingGeometry(0.62, 0.68, 96), new THREE.MeshBasicMaterial({ color: C.kate, transparent: true, opacity: 0.18, side: THREE.DoubleSide, toneMapped: false }));
   const fill = new THREE.Mesh(new THREE.RingGeometry(0.58, 0.72, 96, 1, Math.PI / 2, 0.0001), m.kateGlow);
   const ticks = new THREE.Group();
@@ -81,12 +82,14 @@ export function buildEffects(world: World, m: MaterialKit, signalCount: number, 
   const walls = new THREE.Mesh(box, m.landmark);
   walls.scale.set(1.4, 1.1, 1.0);
   walls.castShadow = true;
-  const glass = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.7), new THREE.MeshBasicMaterial({ color: C.warm.clone().multiplyScalar(1.6), toneMapped: false }));
+  const glass = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.6), new THREE.MeshBasicMaterial({ color: C.warm.clone().multiplyScalar(0.85), toneMapped: false }));
+  const mullions = new THREE.InstancedMesh(new THREE.BoxGeometry(0.03, 0.62, 0.02), m.trim, 5);
+  for (let i = 0; i < 5; i++) mullions.setMatrixAt(i, new THREE.Matrix4().makeTranslation(-0.6 + i * 0.3, 0.45, 0.515));
   glass.position.set(0, 0.45, 0.505);
   const sign = new THREE.Mesh(box, m.accentGlow);
   sign.scale.set(1.0, 0.07, 0.04);
   sign.position.set(0, 0.92, 0.52);
-  shop.add(slab, scaffold, crane, walls, glass, sign);
+  shop.add(slab, scaffold, crane, walls, glass, mullions, sign);
   root.add(shop);
 
   const sparkCount = Math.round(160 * Math.max(density, 0.4));
@@ -181,6 +184,7 @@ export function buildEffects(world: World, m: MaterialKit, signalCount: number, 
       walls.visible = b > 2.4;
       walls.scale.y = 1.1 * THREE.MathUtils.clamp((b - 2.4) / 1.2, 0.02, 1);
       glass.visible = b > 3.8;
+      mullions.visible = b > 3.8;
       sign.visible = b > 4.8;
       const step = Math.floor(b + 0.001);
       if (step > lastBuildStep && step <= 6) burst(SPOTS.workshop.clone().setY(0.9));

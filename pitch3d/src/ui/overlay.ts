@@ -156,7 +156,7 @@ export function buildOverlay(story: Story, beatCount: number): Overlay {
         li.classList.toggle("done", done && s.consent !== "declined");
         li.classList.toggle("declined", s.consent === "declined" && l.consent > 0.5);
       });
-      document.body.classList.toggle("phase-b", l.field > 0.15);
+      document.body.classList.toggle("field-on", l.field > 0.15);
       if (current === 6) {
         const k = Math.min(1, Math.max(0, (performance.now() - counterStart - 2400) / 1600));
         counters.forEach((c) => (c.num.textContent = String(Math.round(c.target * k))));

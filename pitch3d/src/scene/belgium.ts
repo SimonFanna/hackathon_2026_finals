@@ -22,6 +22,8 @@ export function buildBelgium(cities: CityLight[], sprite: THREE.Texture, density
   land.position.y = -0.6;
   const borderMat = new THREE.LineBasicMaterial({ color: C.accent, transparent: true, opacity: 0, toneMapped: false });
   const border = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(outline.map((p) => new THREE.Vector3(p.x, -0.5, p.z))), borderMat);
+  land.renderOrder = -2;
+  border.renderOrder = -1;
   root.add(land, border);
 
   // (a) 2,000 real synthetic customers, jittered around their city.
@@ -31,7 +33,8 @@ export function buildBelgium(cities: CityLight[], sprite: THREE.Texture, density
   const anchors = cities.map((c) => ({ city: c.city, pos: new THREE.Vector3(project(c.lat, c.lon).x, 0, project(c.lat, c.lon).z), customers: c.customers }));
   for (const c of anchors) {
     for (let i = 0; i < c.customers; i++) {
-      const r = 0.6 + Math.sqrt(rand()) * (2.2 + Math.sqrt(c.customers) * 0.12);
+      const sigma = 1.2 + Math.sqrt(c.customers) * 0.16;
+      const r = Math.abs(Math.sqrt(-2 * Math.log(Math.max(rand(), 1e-9)))) * sigma * 0.75;
       const a = rand() * Math.PI * 2;
       realPos.push(c.pos.x + Math.cos(a) * r, 0.2, c.pos.z + Math.sin(a) * r);
       const col = rand() < 0.85 ? C.warm : C.cool;
@@ -41,7 +44,7 @@ export function buildBelgium(cities: CityLight[], sprite: THREE.Texture, density
   const realGeo = new THREE.BufferGeometry();
   realGeo.setAttribute("position", new THREE.Float32BufferAttribute(realPos, 3));
   realGeo.setAttribute("color", new THREE.Float32BufferAttribute(realCol, 3));
-  const realMat = new THREE.PointsMaterial({ size: 2.1, map: sprite, vertexColors: true, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
+  const realMat = new THREE.PointsMaterial({ size: 2.6, map: sprite, vertexColors: true, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
   const real = new THREE.Points(realGeo, realMat);
   real.frustumCulled = false;
 
@@ -61,6 +64,8 @@ export function buildBelgium(cities: CityLight[], sprite: THREE.Texture, density
   const fieldMat = new THREE.PointsMaterial({ size: 1.05, map: sprite, vertexColors: true, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
   const field = new THREE.Points(fieldGeo, fieldMat);
   field.frustumCulled = false;
+  field.renderOrder = 1;
+  real.renderOrder = 2;
   root.add(field, real);
 
   return {
@@ -71,7 +76,7 @@ export function buildBelgium(cities: CityLight[], sprite: THREE.Texture, density
       (land.material as THREE.MeshBasicMaterial).opacity = 0.85 * map;
       borderMat.opacity = 0.55 * map;
       realMat.opacity = realLights;
-      realMat.size = 2.1 * (0.92 + 0.08 * Math.sin(t * 1.7));
+      realMat.size = 2.6 * (0.92 + 0.08 * Math.sin(t * 1.7));
       fieldMat.opacity = 0.75 * fieldLevel;
     },
   };

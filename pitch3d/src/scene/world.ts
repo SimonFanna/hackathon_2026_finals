@@ -9,7 +9,7 @@ export const SPOTS = {
   lucas: new THREE.Vector3(2.4, 0, 1.6),
   workshop: new THREE.Vector3(3.9, 0, 1.6),
   kbc: new THREE.Vector3(-4.6, 0, -4.2),
-  billit: new THREE.Vector3(6.4, 0, -4.4),
+  billit: new THREE.Vector3(1.2, 0, -7.4),
   goSolid: new THREE.Vector3(-6.2, 0, 5.2),
   home: new THREE.Vector3(9.4, 0, 9.6),
   mobility: new THREE.Vector3(-12.6, 0, -2.2),
@@ -131,7 +131,7 @@ export function buildWorld(m: MaterialKit, density: number, shadows: boolean): W
     walls.setMatrixAt(i, mat);
     wallTint.setHSL(0.58 + rand() * 0.05, 0.25 + rand() * 0.15, 0.5 + rand() * 0.25);
     walls.setColorAt(i, wallTint);
-    mat.compose(new THREE.Vector3(hs.x, hs.h, hs.z), new THREE.Quaternion(), new THREE.Vector3(hs.w, hs.w * 0.9, hs.d));
+    mat.compose(new THREE.Vector3(hs.x, hs.h, hs.z), new THREE.Quaternion(), new THREE.Vector3(hs.w, 0.55 + rand() * 0.25, hs.d));
     roofs.setMatrixAt(i, mat);
   });
   walls.castShadow = roofs.castShadow = shadows;
