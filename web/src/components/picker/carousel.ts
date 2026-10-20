@@ -1,10 +1,10 @@
 import type { DioramaId } from "./dioramaTypes";
 
-// Pure carousel maths. Cover-flow layout (no wrap): the two players sit in the middle,
-// the locked goals recede on both sides. `focus` is a continuous index (1 = Thomas centred).
+// Pure carousel maths. Cover-flow layout (no wrap): the entrepreneur first (the default), then the
+// house buyer; slot 3 is reserved for the "Your own" player. `focus` is a continuous index (0 = Lina centred).
 
-export const ORDER: DioramaId[] = ["retire", "house", "business", "baby", "car"];
-export const PLAYABLE = ["house", "business"] as const;
+export const ORDER: DioramaId[] = ["business", "house"];
+export const PLAYABLE = ["business", "house"] as const;
 export type PlayableId = (typeof PLAYABLE)[number];
 
 const SPACING = 4.0; // x distance of the first neighbour (no overlap with the centre plinth)

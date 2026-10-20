@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { ORDER, dragFocus, indexOfId, layout, nearestPlayable, releaseTarget } from "./carousel";
 
 describe("carousel layout (cover-flow, no wrap)", () => {
-  it("orders the two players in the middle and the locked goals on the sides", () => {
-    expect(ORDER).toEqual(["retire", "house", "business", "baby", "car"]);
+  it("puts the entrepreneur first, then the house buyer, nothing locked", () => {
+    expect(ORDER).toEqual(["business", "house"]);
+    expect(indexOfId("business")).toBe(0);
     expect(indexOfId("house")).toBe(1);
-    expect(indexOfId("business")).toBe(2);
   });
 
   it("puts the focused item front and centre, larger and fully lit", () => {
@@ -32,23 +32,23 @@ describe("carousel layout (cover-flow, no wrap)", () => {
   });
 
   it("snaps any position to the nearest playable item", () => {
-    expect(nearestPlayable(0)).toBe("house");
-    expect(nearestPlayable(1.4)).toBe("house");
-    expect(nearestPlayable(1.6)).toBe("business");
-    expect(nearestPlayable(4)).toBe("business");
+    expect(nearestPlayable(-1)).toBe("business");
+    expect(nearestPlayable(0.4)).toBe("business");
+    expect(nearestPlayable(0.6)).toBe("house");
+    expect(nearestPlayable(4)).toBe("house");
   });
 
   it("switches player after a short drag (about an eighth of the width)", () => {
-    expect(nearestPlayable(dragFocus(1, -220, 1600))).toBe("business");
-    expect(nearestPlayable(dragFocus(2, 220, 1600))).toBe("house");
-    expect(nearestPlayable(dragFocus(1, -120, 1600))).toBe("house");
+    expect(nearestPlayable(dragFocus(0, -220, 1600))).toBe("house");
+    expect(nearestPlayable(dragFocus(1, 220, 1600))).toBe("business");
+    expect(nearestPlayable(dragFocus(0, -120, 1600))).toBe("business");
   });
 
   it("follows a quick flick even when the finger barely moved", () => {
-    expect(releaseTarget(1.1, 3, "house")).toBe("business");
-    expect(releaseTarget(1.9, -3, "business")).toBe("house");
-    expect(releaseTarget(1.2, 0.2, "house")).toBe("house");
-    expect(releaseTarget(1.7, 0, "house")).toBe("business");
+    expect(releaseTarget(0.1, 3, "business")).toBe("house");
+    expect(releaseTarget(0.9, -3, "house")).toBe("business");
+    expect(releaseTarget(0.2, 0.2, "business")).toBe("business");
+    expect(releaseTarget(0.7, 0, "business")).toBe("house");
   });
 
   it("turns a horizontal drag into a focus change, clamped to the list", () => {
