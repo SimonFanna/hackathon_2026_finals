@@ -113,8 +113,12 @@ function renameIntent(be: BackendIntent, name: string): DetectedIntent {
 }
 
 /** A backend surprise shown in the local story: keeps the local id and month (the timeline, the finale) and the player's name. */
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+/** "ready by 2027-04-01" → "ready by April 2027". */
+const readableDates = (s: string) => s.replace(/\b(20\d\d)-(\d\d)-\d\d\b/g, (_, y: string, m: string) => `${MONTHS[Number(m) - 1]} ${y}`);
+
 function asLocalHit(be: PendingHit, local: PendingHit, from: string | undefined, name: string): PendingHit {
-  const swap = (s: string) => (from ? s.split(from).join(name) : s);
+  const swap = (s: string) => readableDates(from ? s.split(from).join(name) : s);
   const options = be.options.map((o) => ({ ...o, label: swap(o.label), tradeoff: swap(o.tradeoff) }));
   return {
     ...be,
@@ -149,6 +153,12 @@ export function Stage() {
   const [beBoard, setBeBoard] = useState<Scoreboard | null>(null);
   const [bePlan, setBePlan] = useState<OutcomePlan | null>(null);
   const [beScenarios, setBeScenarios] = useState<Record<string, string> | null>(null);
+  const [beHits, setBeHits] = useState<Record<string, PendingHit["disruption"]>>({});
+  // What the screens show: the backend's plan and surprises when they are live, the local story otherwise.
+  const shown: Persona = bePlan || Object.keys(beHits).length
+    ? { ...persona, outcome: { ...persona.outcome, baseline: bePlan ?? persona.outcome.baseline,
+        disruptions: persona.outcome.disruptions.map((d) => beHits[d.id] ?? d) } }
+    : persona;
   const keepGoal = useRef<string | null>(null); // the "Your own" player just created this slug's goal: don't wipe it
   const pendingReset = useRef<Promise<boolean> | null>(null); // startJourney waits for it instead of resetting again
   useEffect(() => {
@@ -314,6 +324,7 @@ export function Stage() {
     setBeBoard(null);
     setBePlan(null);
     setBeScenarios(null);
+    setBeHits({});
   };
 
   /** Mirrors a step decision (and its consents) to the backend; the backend's outcome becomes the scoreboard. */
@@ -503,8 +514,10 @@ export function Stage() {
         const live = preset ? await injectDisruption(slug, preset) : null;
         const fromBackend = !!live && live.pending.options.length > 0 && live.pending.disruption.kind === local.disruption.kind;
         if (fromBackend) {
-          p = asLocalHit(live.pending, local, beIntent?.customer.name, customer.name);
+          const hp = asLocalHit(live.pending, local, beIntent?.customer.name, customer.name);
+          p = hp;
           scenarios = live.scenarioIdByOption;
+          setBeHits((h) => ({ ...h, [hp.disruption.id]: hp.disruption }));
         }
       }
     }
@@ -716,14 +729,14 @@ export function Stage() {
             <PlanScreen state={state} onImpact={startPlan} onBack={back} onAdvisor={() => showToast("A KBC advisor will call you back. Nothing is booked in this demo.")} />
           )}
           {screen === "chapter" && state && run && current?.kind === "chapter" && (
-            <ChapterScreen persona={persona} state={state} run={run} chapter={current.chapter} position={chapterIndex} count={chapterCount} onNext={() => openPage(page + 1)} />
+            <ChapterScreen persona={shown} state={state} run={run} chapter={current.chapter} position={chapterIndex} count={chapterCount} onNext={() => openPage(page + 1)} />
           )}
           {screen === "event" && run && pending && (
-            <EventPage persona={persona} run={run} pending={pending} index={eventIndex} selected={selected} onSelect={setSelected} onChoose={choose} />
+            <EventPage persona={shown} run={run} pending={pending} index={eventIndex} selected={selected} onSelect={setSelected} onChoose={choose} />
           )}
           {stageFinale && state && run && (
             <LiveScreen
-              persona={persona}
+              persona={shown}
               state={state}
               run={run}
               lastChanged={lastChanged}
@@ -735,7 +748,7 @@ export function Stage() {
           )}
           {stageFinale && !run && state && <PlanScreen state={state} final onImpact={() => {}} onBack={back} onAdvisor={() => {}} />}
           {showAppFinale && (
-            <Finale variant="app" persona={persona} run={run} board={board} onEstimate={() => setSheet("estimate")} onRestart={() => reset()} onPlayers={toPlayers} />
+            <Finale variant="app" persona={shown} run={run} board={board} onEstimate={() => setSheet("estimate")} onRestart={() => reset()} onPlayers={toPlayers} />
           )}
         </motion.div>
       </AnimatePresence>
@@ -817,10 +830,10 @@ export function Stage() {
             </div>
           </motion.div>
           <AnimatePresence mode="popLayout">
-            {showHud && <EngineHud key="hud" persona={persona} run={run} pending={pending} phase={phase} adaptStep={screen === "event" ? adaptStep : null} />}
+            {showHud && <EngineHud key="hud" persona={shown} run={run} pending={pending} phase={phase} adaptStep={screen === "event" ? adaptStep : null} />}
             {stageFinale && (
               <motion.div key="finale" layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.2 } }}>
-                <Finale persona={persona} run={run} board={board} onEstimate={() => setSheet("estimate")} onRestart={() => reset()} onPlayers={toPlayers} />
+                <Finale persona={shown} run={run} board={board} onEstimate={() => setSheet("estimate")} onRestart={() => reset()} onPlayers={toPlayers} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -856,7 +869,7 @@ export function Stage() {
       <footer className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-between px-8 pb-4 text-[13px] text-white/60">
         <span>
           {customer.name}, {customer.age} · {customer.city} ·{" "}
-          {intent !== localIntent ? `live engine (${beIntent?.source ?? "api"})` : "offline engine"}
+          {(state ? !!beGoal : intent !== localIntent) ? "Live engine" : "Offline engine"}
         </span>
         <span>{presenter ? "" : "Press P for the presenter view · "}Built for the KBC challenge at Tectonic Hackathon 2026</span>
       </footer>

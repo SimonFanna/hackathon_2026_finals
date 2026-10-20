@@ -35,7 +35,7 @@ export type Slug = "sofie" | "lucas";
 export const SLUG_FOR = { house: "sofie", business: "lucas" } as const;
 export type Preset = "income_drop" | "cost_overrun" | "partner_delay";
 
-const TIMEOUT_MS = 4000;
+const TIMEOUT_MS = 8000; // a cold serverless start can take ~4 s on the first call
 
 // ---------- transport ----------
 
@@ -191,8 +191,21 @@ export function toJourney(plan: ApiPlan, goal: Pick<ApiGoal, "type" | "customerI
     intentId: slug ? INTENT_FOR[slug].intentId : goal.type.toLowerCase(),
     title: GOAL_TITLE[goal.type] ?? goal.type,
     chapters,
-    steps: visible.map(toStep),
+    steps: dedupeTitles(visible.map(toStep), visible),
   };
+}
+
+/** One partner item can serve two capabilities (Setle: costs, then grants): name the second by what it does. */
+function dedupeTitles(steps: JourneyStep[], api: ApiStep[]): JourneyStep[] {
+  const seen = new Set<string>();
+  return steps.map((st, i) => {
+    if (!seen.has(st.title)) {
+      seen.add(st.title);
+      return st;
+    }
+    const what = api[i].capability.replace(/_/g, " ");
+    return { ...st, title: what.charAt(0).toUpperCase() + what.slice(1) };
+  });
 }
 
 export function toState(journey: Journey, plan: ApiPlan): JourneyState {
