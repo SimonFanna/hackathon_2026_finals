@@ -3,11 +3,9 @@
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  buildJourney, decide, demoCustomer, demoSignals, detectIntents, initState, scoreboard, setConsent,
-  type JourneyState, type Scoreboard,
+  buildJourney, buyHouseSignalWeights, decide, demoCustomer, demoSignals, detectIntents, initState, scoreboard, setConsent,
+  type Journey, type JourneyState, type Scoreboard,
 } from "@/engine";
-// Weights are only read (never changed) for the presenter view; not yet re-exported by "@/engine".
-import { buyHouseSignalWeights } from "@/engine/data";
 import { providerName } from "./copy";
 import { Finale } from "./Finale";
 import { HomeScreen } from "./HomeScreen";
@@ -23,6 +21,18 @@ import { useViewport } from "./useViewport";
 type Screen = "home" | "intent" | "declined" | "path" | "step" | "plan" | "finale";
 type SheetName = null | "why" | "consent" | "estimate";
 type Move = "forward" | "accept" | "skip" | "back";
+/** "sofie" = the demo customer's real signals; "weak" = one weak signal, so the engine deliberately does nothing. */
+type Scenario = "sofie" | "weak";
+
+/** Accept every step and share every field: the state the ?demo=finale backup jumps to. */
+function acceptAll(journey: Journey): JourneyState {
+  let st = initState(journey);
+  for (const s of journey.steps) {
+    for (const f of s.dataShared) st = setConsent(st, s.id, f, true);
+    st = decide(st, s.id, "accepted");
+  }
+  return st;
+}
 
 const EMPTY: Scoreboard = {
   customer: { eurOneOff: 0, eurPerYear: 0, kwhPerYear: 0, co2KgPerYear: 0 },
@@ -32,8 +42,13 @@ const EMPTY: Scoreboard = {
 
 export function Stage() {
   const customer = demoCustomer;
-  const signals = useMemo(() => demoSignals.filter((s) => s.customerId === customer.id), [customer.id]);
+  const [scenario, setScenario] = useState<Scenario>("sofie");
+  const signals = useMemo(() => {
+    const own = demoSignals.filter((s) => s.customerId === customer.id);
+    return scenario === "weak" ? own.filter((s) => s.type === "epc_lookup") : own;
+  }, [customer.id, scenario]);
   const intent = useMemo(() => detectIntents(customer, signals)[0], [customer, signals]);
+  const speaks = !!intent && intent.level !== "none";
 
   const [screen, setScreen] = useState<Screen>("home");
   const [notif, setNotif] = useState(false);
@@ -58,12 +73,38 @@ export function Stage() {
   const step = screen === "step" ? steps[index] ?? null : null;
   const acceptedCount = state ? steps.filter((s) => state.decisions[s.id] === "accepted").length : 0;
 
-  // Kate's notification arrives shortly after the home screen settles.
+  // Kate's notification arrives shortly after the home screen settles, unless the engine chose NO_ACTION.
   useEffect(() => {
-    if (screen !== "home" || !intent) return;
+    if (screen !== "home" || !speaks) return;
     const t = setTimeout(() => setNotif(true), 1200);
     return () => clearTimeout(t);
-  }, [screen, intent]);
+  }, [screen, speaks]);
+
+  // Pitch backups: ?demo=finale, ?demo=step[&n=6], ?demo=intent, ?demo=weak (NO_ACTION).
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const demo = p.get("demo");
+    if (!demo) return;
+    const t = setTimeout(() => {
+      if (demo === "weak") return setScenario("weak");
+      if (!intent) return;
+      const journey = buildJourney(intent.intentId, customer);
+      if (demo === "intent") return setScreen("intent");
+      if (demo === "finale") {
+        setState(acceptAll(journey));
+        return setScreen("finale");
+      }
+      if (demo === "step") {
+        const n = Math.min(Math.max(Number(p.get("n") ?? 1) || 1, 1), journey.steps.length);
+        setState(initState(journey));
+        setIndex(n - 1);
+        setScreen("step");
+      }
+    }, 0);
+    return () => clearTimeout(t);
+    // Run once on load: deep links only set the starting point.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const showToast = useCallback((msg: string) => {
@@ -78,7 +119,8 @@ export function Stage() {
     setScreen(s);
   };
 
-  const reset = () => {
+  const reset = (next: Scenario = scenario) => {
+    setScenario(next);
     setState(null);
     setIndex(0);
     setModes({});
@@ -155,6 +197,7 @@ export function Stage() {
     const k = e.key.toLowerCase();
     if (k === "p") return setPresenter((v) => !v);
     if (k === "r") return reset();
+    if (k === "w" && presenter) return reset(scenario === "weak" ? "sofie" : "weak");
     if (sheet) return;
     if (k === "arrowleft") return back();
     if (k === "s") {
@@ -215,7 +258,7 @@ export function Stage() {
           {screen === "intent" && intent && (
             <IntentScreen intent={intent} onConfirm={confirm} onDecline={() => go("declined")} onBack={back} onWhy={() => setSheet("why")} />
           )}
-          {screen === "declined" && <DeclinedScreen onHome={reset} />}
+          {screen === "declined" && <DeclinedScreen onHome={() => reset()} />}
           {screen === "path" && state && <PathScreen journey={state.journey} city={customer.city} onStart={() => go("step")} onBack={back} />}
           {screen === "step" && state && step && (
             <StepScreen
@@ -233,7 +276,7 @@ export function Stage() {
           {(screen === "plan" || stageFinale) && state && (
             <PlanScreen state={state} final={stageFinale} onImpact={() => go("finale")} onBack={back} onAdvisor={() => showToast("A KBC advisor will call you back. Nothing is booked in this demo.")} />
           )}
-          {showAppFinale && <Finale variant="app" board={board} steps={acceptedCount} onEstimate={() => setSheet("estimate")} onRestart={reset} />}
+          {showAppFinale && <Finale variant="app" board={board} steps={acceptedCount} onEstimate={() => setSheet("estimate")} onRestart={() => reset()} />}
         </motion.div>
       </AnimatePresence>
 
@@ -285,7 +328,17 @@ export function Stage() {
         <div className="flex flex-1 items-center justify-center gap-14 px-10 py-[4vh]">
           <AnimatePresence>
             {presenter && (
-              <PresenterPanel key="presenter" signals={signals} weights={buyHouseSignalWeights} intent={intent} step={step} state={state} board={board} />
+              <PresenterPanel
+                key="presenter"
+                signals={signals}
+                weights={buyHouseSignalWeights}
+                intent={intent}
+                step={step}
+                state={state}
+                board={board}
+                weak={scenario === "weak"}
+                onToggleWeak={() => reset(scenario === "weak" ? "sofie" : "weak")}
+              />
             )}
           </AnimatePresence>
           <motion.div layout transition={{ type: "spring", bounce: 0, duration: 0.6 }}>
@@ -294,7 +347,7 @@ export function Stage() {
           <AnimatePresence>
             {stageFinale && (
               <motion.div key="finale" layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.2 } }}>
-                <Finale board={board} steps={acceptedCount} onEstimate={() => setSheet("estimate")} onRestart={reset} />
+                <Finale board={board} steps={acceptedCount} onEstimate={() => setSheet("estimate")} onRestart={() => reset()} />
               </motion.div>
             )}
           </AnimatePresence>
