@@ -133,7 +133,7 @@ export function EngineHud({
       </ol>
 
       <p className="mt-4 text-[12px] leading-[17px] text-white/45">
-        Deterministic: every option is scored as goal health minus 1 point per €1,000 of hidden cost. No language model decides. Illustrative figures.
+        Score = goal health − 1 pt per €1k hidden cost. No language model decides.
       </p>
     </motion.aside>
   );

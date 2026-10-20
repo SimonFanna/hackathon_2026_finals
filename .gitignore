@@ -23,3 +23,7 @@ next-env.d.ts
 # local editor/agent files
 .~lock.*#
 .claude/launch.json
+
+# generated synthetic bank (regenerate with scripts/bank_data/generate.py)
+scripts/bank_data/out/
+__pycache__/

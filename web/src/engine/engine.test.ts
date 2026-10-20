@@ -9,7 +9,12 @@ describe("detectIntents", () => {
     expect(intent.intentId).toBe("buy_house");
     expect(intent.confidence).toBeCloseTo(0.69, 2);
     expect(intent.needsConfirmation).toBe(true);
-    expect(intent.reasons).toHaveLength(3);
+    expect(intent.reasons).toHaveLength(4);
+  });
+
+  it("uses Sofie's Supabase rows as the offline demo customer", () => {
+    expect(demoCustomer).toEqual({ id: "1", name: "Sofie", age: 32, city: "Gent", household: "Couple, 1 child" });
+    expect(demoSignals.find((s) => s.type === "mortgage_simulation")?.amountEur).toBe(251000);
   });
 
   it("is confident without confirmation once a notary contact is observed", () => {

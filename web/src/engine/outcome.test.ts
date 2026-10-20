@@ -22,6 +22,15 @@ describe.each(personas.map((p) => [p.id, p] as const))("outcome engine · %s", (
     expect(planHealth(p.outcome.baseline, p.outcome.constraints)).toBe(100);
   });
 
+  it("never calls a plan with a broken constraint on track", () => {
+    let run = startRun(p.outcome);
+    for (let pending = hit(run, p.outcome, everything(p)); pending; pending = hit(run, p.outcome, everything(p))) {
+      expect(pending.healthHit).toBeLessThan(80);
+      for (const o of pending.options) if (!o.feasible) expect(o.health).toBeLessThan(80);
+      run = resolve(run, p.outcome, pending, pending.options.find((o) => o.recommended)!.id);
+    }
+  });
+
   it("has four disruptions in time order, each breaking at least one constraint", () => {
     const months = p.outcome.disruptions.map((d) => d.month);
     expect(months).toHaveLength(4);

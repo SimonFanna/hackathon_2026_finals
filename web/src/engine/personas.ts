@@ -1,9 +1,7 @@
 import {
   businessChapters, businessCustomer, businessIntentModel, businessOutcome, businessSignals, businessSteps,
 } from "./business";
-import {
-  BUY_HOUSE_ASK_THRESHOLD, BUY_HOUSE_THRESHOLD, buyHouseSignalWeights, buyHouseSteps, demoCustomer, demoSignals,
-} from "./data";
+import { BUY_HOUSE_ASK_THRESHOLD, BUY_HOUSE_THRESHOLD, buyHouseSignalWeights, buyHouseSteps } from "./data";
 import type { Customer, IntentModel, Journey, OutcomeModel, Signal } from "./types";
 
 // One registry, one engine. A persona is pure data: signals, an intent model, a journey and an outcome model.
@@ -39,6 +37,15 @@ export interface Persona {
 
 const kbc = { kind: "kbc" } as const;
 const partner = (name: string) => ({ kind: "partner", name }) as const;
+
+// Static demo player for the home goal (the Supabase-backed Sofie stays in data.ts for the bank pipeline).
+export const houseCustomer: Customer = { id: "c-001", name: "Thomas", age: 30, city: "Gent", household: "Couple, first home" };
+
+export const houseSignals: Signal[] = [
+  { id: "s1", customerId: "c-001", type: "property_search", label: "Saved 4 searches for houses built before 1980 in Immoscoop (opted into extra convenience)", source: "KBC Mobile · Immoscoop", observedAt: "2026-10-12" },
+  { id: "s2", customerId: "c-001", type: "mortgage_simulation", label: "Ran a €320k home loan simulation in KBC Mobile", source: "KBC Mobile", observedAt: "2026-10-15", amountEur: 320000 },
+  { id: "s3", customerId: "c-001", type: "epc_lookup", label: "Looked up the EPC label of a listed house (label E)", source: "KBC Mobile", observedAt: "2026-10-18" },
+];
 
 export const houseIntentModel: IntentModel = {
   intentId: "buy_house",
@@ -205,8 +212,8 @@ export const houseOutcome: OutcomeModel = {
 export const personas: Persona[] = [
   {
     id: "house",
-    customer: demoCustomer,
-    signals: demoSignals,
+    customer: houseCustomer,
+    signals: houseSignals,
     intentModel: houseIntentModel,
     journey: { intentId: "buy_house", title: "From house hunt to an energy-efficient home", chapters: houseChapters, steps: buyHouseSteps },
     outcome: houseOutcome,

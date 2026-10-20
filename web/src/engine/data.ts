@@ -1,21 +1,13 @@
-import type { Customer, JourneyStep, Signal, SignalType } from "./types";
+import { mapBankProfile } from "./bank";
+import { sofieEvents, sofieRow } from "./bankSnapshot";
+import type { JourneyStep, SignalType } from "./types";
 
-// Synthetic demo data. Catalogue labels are copied verbatim from KBC_Ecosystems.xlsx;
+// Catalogue labels are copied verbatim from KBC_Ecosystems.xlsx;
 // euro / kWh / CO2 figures are illustrative estimates for the demo, not KBC data.
 
-export const demoCustomer: Customer = {
-  id: "c-001",
-  name: "Thomas",
-  age: 30,
-  city: "Gent",
-  household: "Couple, first home",
-};
-
-export const demoSignals: Signal[] = [
-  { id: "s1", customerId: "c-001", type: "property_search", label: "Saved 4 searches for houses built before 1980 in Immoscoop (opted into extra convenience)", source: "KBC Mobile · Immoscoop", observedAt: "2026-10-12" },
-  { id: "s2", customerId: "c-001", type: "mortgage_simulation", label: "Ran a €320k home loan simulation in KBC Mobile", source: "KBC Mobile", observedAt: "2026-10-15" },
-  { id: "s3", customerId: "c-001", type: "epc_lookup", label: "Looked up the EPC label of a listed house (label E)", source: "KBC Mobile", observedAt: "2026-10-18" },
-];
+// Demo customer and signals come from Supabase (synthetic bank); this is the offline snapshot of those rows.
+export const SNAPSHOT_DATE = "2026-10-20";
+export const { customer: demoCustomer, signals: demoSignals } = mapBankProfile(sofieRow, sofieEvents, SNAPSHOT_DATE);
 
 // Below ASK: no action at all. Between ASK and SUGGEST: ask the customer. Above SUGGEST: proactively suggest the plan.
 export const BUY_HOUSE_ASK_THRESHOLD = 0.4;
@@ -27,6 +19,7 @@ export const buyHouseSignalWeights: Partial<Record<SignalType, number>> = {
   savings_transfer: 0.15,
   epc_lookup: 0.2,
   notary_contact: 0.5,
+  renovation_research: 0.2,
 };
 
 const kbc = { kind: "kbc" } as const;

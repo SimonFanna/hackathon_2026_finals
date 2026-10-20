@@ -79,12 +79,14 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 |---|---|---|---|
 | Journey engine (steps, consent, scoreboard) | coordinator (kepa) | done (V0) | `journey-house-v0.md` |
 | Intent detection & confidence scoring (signals → intent, levels none/ask/suggest) | DB + ML team | todo — engine has a placeholder (`detectIntents`, thresholds 0.4/0.75) to replace; keep the `DetectedIntent` contract | `backend/backend.md` |
+| **Outcome Engine backend** (events → signals → context → intents → decision → Kate goal confirmation → capability orchestrator → rules → consent → outcome tracker → disruption replanning + scenarios) | Mathias | design agreed, build starting | `backend/backend.md` |
 | Journey UI V0 | peer agent (kepa) | replaced by UX redesign V1 | `journey-house-v0.md` |
 | UX redesign V1 (KBC brand, Kate voice, phone stage, triple-win finale) | peer agent (kepa) | done (V1) | `ux-redesign.md` |
 | Adaptive Outcome Engine: players screen (home + business), live plan, 4 unexpected events per goal, scored re-planning, engine HUD | Victor | done (V1, branch `victor`) | `outcome-engine.md` |
-| Supabase catalogue + data | Simon | in progress | — (Simon to add `supabase.md`) |
+| Supabase catalogue + data | Simon | done (applied + loaded) | `bank-data.md` |
+| Supabase live data in the demo (Sofie + signals, offline snapshot) | kepa | done on `main`; **not wired into the UI on branch `victor`** (Victor's call: static players Thomas + Lina for now). `bank.ts`, `bankSnapshot.ts`, `bankClient.ts` and their tests are kept as is. | `supabase-live-data.md` |
 | Deck + demo (GIF/video) | — | todo | — |
-| Security (Aikido) + public repo | — | todo | — |
+| Security (Aikido) + public repo | Kepa UI terminal (hardening) · user/Simon (Aikido) | in progress: headers + CSP done, Aikido not connected | `docs/features/security.md` |
 
 ## Open questions
 
@@ -100,4 +102,8 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
 - **10:05** — Supabase access OK (empty DB). V0 UI judged too cluttered → UX redesign started (KBC brand + market benchmark). `CLAUDE.md` team rules added; docs switched to English.
 - **10:20** — UX redesign V1 shipped in `web/`: a KBC Design Language look (tokens read live from kbc.be), Kate's voice, one step at a time with a consent sentence per partner, a hidden presenter panel (key P) and a triple-win finale. Screenshots in `docs/screenshots/`. MyHome finding added (Differentiation, Open questions).
 - **10:32** — MyHome verified (KBC press release, 29 Jan 2026, opt-in "extra convenience"). Immoscoop × KBC integration and haalbaarheidsattest documented. Our Immoscoop-signal assumption is labelled and gated on the same opt-in.
+- **10:50** — Quick wins from `docs/review-1100.md`: root README rewritten (run, architecture, status, team, Vercel steps); CSP + security headers; stale `pitch/idea-a.html` removed; `docs/features/security.md` (Aikido steps) and `docs/assumptions.md` (every figure sourced or flagged) added.
+- **11:10** — Demo wired to Supabase: Sofie and her signals are read live from the synthetic bank (`app_events`), with a bundled snapshot of the same rows as offline fallback. Kate's line and the budget step are built from data (latest simulation €251k, was a hardcoded €320k).
+- **11:20** — Backend redesigned as the **KBC Outcome Engine** (`backend/backend.md`): an 11-stage data-driven pipeline on Simon's facts tables. Kate confirms goals and answers plan questions (the LLM phrases, the engine decides). New: disruption detection (income drop, cost overrun, partner delay) → impact → replan → scenarios A/B the customer chooses; multi-goal arbitration. The V0 engine structure is not reused.
 - **11:10** — Adaptive Outcome Engine (branch `victor`): a "Choose your player" start screen (Thomas, first home · Lina, first business), the plan goes live, and 4 unexpected events per goal (cost overrun, partner 3 months late, rate rise / late payer, job loss / injury declared to Kate). The engine recalculates constraints, scores every option and recommends one; the customer decides. One engine with no goal-specific code: Lina is a data file. 30/30 tests.
+- **11:25** — Merged `main` into `victor`. The UI uses static players (Thomas, Lina) and makes no Supabase call for now; the bank pipeline code stays in the repo. Note for Mathias: `web/src/engine/outcome.ts` already implements disruption → impact → scored options → customer choice, deterministic and tested. It can be the reference for the backend replanning stage.

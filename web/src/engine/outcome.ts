@@ -28,6 +28,9 @@ export function checkPlan(plan: OutcomePlan, defs: ConstraintDef[]): ConstraintC
   });
 }
 
+/** A plan with a broken constraint is never "on track" (80+), whatever the penalty. */
+const BROKEN_CAP = 79;
+
 /** Goal health, 0–100: every broken constraint costs a lot, being close to an edge costs a little. */
 export function health(checks: ConstraintCheck[]): number {
   let penalty = 0;
@@ -35,7 +38,8 @@ export function health(checks: ConstraintCheck[]): number {
     if (!c.ok) penalty += Math.min(40, 15 + 100 * Math.abs(c.usage - 1));
     else if (c.usage > EDGE) penalty += (c.usage - EDGE) * 100;
   }
-  return Math.max(5, Math.round(100 - penalty));
+  const h = Math.max(5, Math.round(100 - penalty));
+  return checks.some((c) => !c.ok) ? Math.min(h, BROKEN_CAP) : h;
 }
 
 export function planHealth(plan: OutcomePlan, defs: ConstraintDef[]): number {

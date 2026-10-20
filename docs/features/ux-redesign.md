@@ -376,6 +376,10 @@ Tapping the notification goes to S2. The rest of the home screen is inert decor 
   - the toast sits at the top of the phone so it never covers the actions;
   - no `autoFocus` on CTAs, since presenter keys are global and auto focus drew a double outline on projector.
 - **Engine export request:** the presenter panel reads `buyHouseSignalWeights` from `@/engine/data` (read only). Ask the engine owner to re-export it from `@/engine`.
+- **Presenter clicker (review #10, not implemented yet):** pitch clickers send `PageDown` / `PageUp` (sometimes `Space` / `B`), not `→`.
+  - Map `PageDown` and `Space` to next, and `PageUp` to back, in the Stage key handler.
+  - Keep `→` / `←`.
+  - Test on a borrowed laptop at 1920×1080 and 1280×720, full screen (F11), and keep the `?demo=` links on a backup slide.
 - **Next ideas:**
   - a `?demo=finale` deep link, as a pitch backup if a click fails;
   - a 20s screen recording of the flow for the deck (the guide requires the demo embedded in PPT/PDF);

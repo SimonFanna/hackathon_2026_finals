@@ -9,13 +9,14 @@ export type SignalType =
   | "savings_transfer"
   | "epc_lookup"
   | "notary_contact"
+  | "renovation_research"
   // Business
   | "start_it_visit"
   | "investment_loan_simulation"
   | "company_registration"
   | "first_customer_invoices";
 
-export interface Signal { id: string; customerId: string; type: SignalType; label: string; source: string; observedAt: string }
+export interface Signal { id: string; customerId: string; type: SignalType; label: string; source: string; observedAt: string; amountEur?: number }
 
 /** How one goal is recognised from signals. Data, not code: a new goal is a new model. */
 export interface IntentModel {

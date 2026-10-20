@@ -20,10 +20,10 @@ Show that the product is **not a house widget** but one engine that takes **any 
 | `personas.ts` | Registry: a persona = customer + signals + intent model + journey + outcome model + copy. House outcome model lives here. |
 | `business.ts` | Lina's data: signals, intent model, 10 steps (verbatim catalogue labels), outcome model + 4 events. |
 | `engine.ts` | `detectIntents(customer, signals, model = houseIntentModel)` and `buildJourney` now read the registry. Contract `DetectedIntent` unchanged (DB + ML team can still replace the scoring). |
-| `outcome.test.ts` | 22 tests: both personas start at 100% health, each event breaks a constraint, Kate always recommends a feasible option, the goal is reached when following Kate, options re-scored on the customer's real choices, the insurance claim only exists if the insurance step was accepted. |
+| `outcome.test.ts` | 24 tests: both personas start at 100% health, each event breaks a constraint, Kate always recommends a feasible option, the goal is reached when following Kate, options re-scored on the customer's real choices, the insurance claim only exists if the insurance step was accepted. |
 
 **Model.** Every goal is held to 4 constraints (labels per goal): `cost` (max), `monthly` (max), `finish` (max month), `buffer` (min).
-- Goal health = 100 − penalties: a broken constraint costs 15–40 points; being within 2% of a limit costs a little.
+- Goal health = 100 − penalties: a broken constraint costs 15–40 points; being within 2% of a limit costs a little. A plan with any broken constraint is capped at 79% (never "on track").
 - Option score = health − 1 point per €1,000 of hidden long-term cost (extra interest, lost savings).
 - Recommendation = best **available** option that keeps **every** constraint; otherwise the best available one.
 - Options can depend on earlier choices (`requiresStep`). Example: Lina's "Claim your guaranteed income insurance" exists only if she accepted that step. Otherwise it is shown locked: "you skipped …".
@@ -67,7 +67,8 @@ Income and health shocks are **declared by the customer** ("You told Kate"), nev
 - The danger colour is not from KDL (no public token found).
 
 ## Status checklist
-- [x] Engine + 22 new tests (30/30 green)
+- [x] Engine + 24 new tests (37/37 green with the bank tests)
 - [x] Players screen, live plan, events, options, HUD, finale
 - [x] Lint, build green; full keyboard run of both players checked in Chrome (no console errors)
-- [ ] Merge into `main` (Stage.tsx also edited by Kepa: merge with care)
+- [x] `main` merged into `victor` (11:10). The UI uses static players, with no Supabase call (Victor's decision); the bank code is kept.
+- [ ] Merge `victor` into `main`: this disconnects the live Supabase customer from the UI, so agree with Kepa/Simon first
