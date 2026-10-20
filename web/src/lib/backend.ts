@@ -254,6 +254,11 @@ export interface BackendIntent {
   source: string;
 }
 
+/** Wipe the persona's runtime state (goals, plans, injected events), so a new demo run starts from the detection. */
+export async function resetPersona(slug: Slug): Promise<boolean> {
+  return (await post(`/customers/${slug}/reset`)) !== null;
+}
+
 export async function fetchIntent(slug: Slug): Promise<BackendIntent | null> {
   const r = await call<PipelineLike>(`/customers/${slug}/pipeline`);
   return r ? safe(() => toIntent(slug, r)) : null;

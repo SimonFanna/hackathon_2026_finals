@@ -127,3 +127,4 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
   - locked goals are night silhouettes, there is a KBC-blue selection ring, and the people have contact shadows;
   - production default is high quality (bloom + MSAA, no automatic downgrade; `?q=low`, `?bloom=0`, `?q=auto` are manual switches).
   Prod full flow Thomas → C → Lina: 0 console/CSP errors.
+- **13:48** — UI wired to the backend (`Stage.tsx` + `lib/backend.ts`). The ML intent, real plan, consents, outcome and T6 scenarios are shown on screen, with an automatic fallback to the local engine. Verified in headless Chrome (house 44 / business 20 API calls, all 200; twice in a row; /api blocked → local fallback OK).
