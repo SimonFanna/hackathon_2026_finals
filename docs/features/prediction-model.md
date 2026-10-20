@@ -7,7 +7,7 @@
 Replace the hand-tuned signal weights (`buyHouseSignalWeights`, noisy-OR) with a **learned, explainable model** that scales to KBC's 2.3M app users, and show it on stage.
 
 - **No LLM in the decision.** At 2.3M users, a per-customer LLM call is costly, non-reproducible and hard to audit.
-- **Logistic regression per intent:** `confidence = sigmoid(b + Σ wᵢ·xᵢ)`. It is real ML, each weight is explainable as "why am I seeing this", and scoring takes about 1 µs per customer.
+- **Logistic regression per intent:** `confidence = sigmoid(b + Σ wᵢ·xᵢ)`. It is real ML, each weight is explainable as "why am I seeing this", and scoring takes about 1 µs per customer (benchmark in `model.test.ts`, run on demand with `BENCH=1 npm test` because wall-clock timing is flaky on a loaded machine).
 - **Event-driven:** only re-score customers whose signals changed. That is thousands per day, not millions.
 - **Honesty line for the pitch:** "Initial weights are learned on synthetic data. In production they are retrained on real accept/skip feedback, which Kate's 125+ proactive situations already produce."
 
