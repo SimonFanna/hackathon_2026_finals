@@ -1,0 +1,1821 @@
+{
+ "_source": "Supabase project endbafjcxanzmlwiezwe (synthetic bank). Rows read 2026-10-20 via the Data API (publishable key, RLS); cityCounts is an aggregate of public.customers. No real personal data.",
+ "snapshotAt": "2026-10-20",
+ "customer": {
+  "id": 2,
+  "first_name": "Lucas",
+  "birth_date": "1997-08-24",
+  "gender": "m",
+  "language": "nl",
+  "city": "Leuven",
+  "region": "flanders",
+  "postal_code": "3000",
+  "marital_status": "single",
+  "segment": "private",
+  "customer_since": "2024-07-10",
+  "demo_slug": "lucas"
+ },
+ "childrenCount": 0,
+ "employment": [
+  {
+   "customer_id": 2,
+   "status": "employee",
+   "sector": "IT",
+   "employer_name": "Brabo Consulting",
+   "company_name": null,
+   "company_vat": null,
+   "company_founded_on": null,
+   "monthly_net_income_eur": 2733.44,
+   "since": "2023-02-08"
+  }
+ ],
+ "events": [
+  {
+   "id": 137,
+   "occurred_at": "2026-04-07T21:43:53+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 52,
+   "detail": {}
+  },
+  {
+   "id": 138,
+   "occurred_at": "2026-04-13T17:49:28+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 110,
+   "detail": {}
+  },
+  {
+   "id": 139,
+   "occurred_at": "2026-04-13T20:09:28+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 171,
+   "detail": {}
+  },
+  {
+   "id": 140,
+   "occurred_at": "2026-04-16T22:10:27+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 37,
+   "detail": {}
+  },
+  {
+   "id": 141,
+   "occurred_at": "2026-04-16T22:14:38+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 44,
+   "detail": {}
+  },
+  {
+   "id": 142,
+   "occurred_at": "2026-04-17T21:33:14+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 127,
+   "detail": {}
+  },
+  {
+   "id": 143,
+   "occurred_at": "2026-04-18T09:50:59+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 48,
+   "detail": {}
+  },
+  {
+   "id": 144,
+   "occurred_at": "2026-04-18T14:29:36+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 49,
+   "detail": {}
+  },
+  {
+   "id": 145,
+   "occurred_at": "2026-04-18T16:27:57+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 109,
+   "detail": {}
+  },
+  {
+   "id": 146,
+   "occurred_at": "2026-04-18T19:44:44+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 50,
+   "detail": {}
+  },
+  {
+   "id": 147,
+   "occurred_at": "2026-04-18T21:09:49+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 49,
+   "detail": {}
+  },
+  {
+   "id": 148,
+   "occurred_at": "2026-04-24T15:29:23+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 117,
+   "detail": {}
+  },
+  {
+   "id": 149,
+   "occurred_at": "2026-04-28T09:49:53+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 44,
+   "detail": {}
+  },
+  {
+   "id": 150,
+   "occurred_at": "2026-04-28T10:53:08+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 176,
+   "detail": {}
+  },
+  {
+   "id": 151,
+   "occurred_at": "2026-04-28T16:18:53+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 176,
+   "detail": {}
+  },
+  {
+   "id": 152,
+   "occurred_at": "2026-04-28T19:16:30+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 8,
+   "detail": {}
+  },
+  {
+   "id": 153,
+   "occurred_at": "2026-04-28T20:44:13+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 127,
+   "detail": {}
+  },
+  {
+   "id": 154,
+   "occurred_at": "2026-04-29T12:05:40+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 109,
+   "detail": {}
+  },
+  {
+   "id": 155,
+   "occurred_at": "2026-05-06T07:15:17+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 199,
+   "detail": {}
+  },
+  {
+   "id": 156,
+   "occurred_at": "2026-05-06T12:32:12+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 25,
+   "detail": {}
+  },
+  {
+   "id": 157,
+   "occurred_at": "2026-05-06T14:53:11+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 110,
+   "detail": {}
+  },
+  {
+   "id": 158,
+   "occurred_at": "2026-05-06T20:13:33+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 171,
+   "detail": {}
+  },
+  {
+   "id": 159,
+   "occurred_at": "2026-05-10T20:10:55+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 171,
+   "detail": {}
+  },
+  {
+   "id": 160,
+   "occurred_at": "2026-05-14T01:40:09+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 194,
+   "detail": {}
+  },
+  {
+   "id": 161,
+   "occurred_at": "2026-05-16T18:59:44+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 52,
+   "detail": {}
+  },
+  {
+   "id": 162,
+   "occurred_at": "2026-05-19T07:47:09+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 44,
+   "detail": {}
+  },
+  {
+   "id": 163,
+   "occurred_at": "2026-05-19T18:04:02+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 117,
+   "detail": {}
+  },
+  {
+   "id": 164,
+   "occurred_at": "2026-05-19T21:44:11+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 171,
+   "detail": {}
+  },
+  {
+   "id": 165,
+   "occurred_at": "2026-05-26T08:26:21+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 49,
+   "detail": {}
+  },
+  {
+   "id": 166,
+   "occurred_at": "2026-05-26T12:55:30+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 109,
+   "detail": {}
+  },
+  {
+   "id": 167,
+   "occurred_at": "2026-05-26T13:18:06+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 213,
+   "detail": {}
+  },
+  {
+   "id": 168,
+   "occurred_at": "2026-05-26T21:53:44+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 176,
+   "detail": {}
+  },
+  {
+   "id": 169,
+   "occurred_at": "2026-05-27T10:36:07+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 171,
+   "detail": {}
+  },
+  {
+   "id": 170,
+   "occurred_at": "2026-05-30T10:22:18+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 181,
+   "detail": {}
+  },
+  {
+   "id": 171,
+   "occurred_at": "2026-05-31T01:27:37+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 9,
+   "detail": {}
+  },
+  {
+   "id": 172,
+   "occurred_at": "2026-05-31T09:34:17+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 223,
+   "detail": {}
+  },
+  {
+   "id": 173,
+   "occurred_at": "2026-05-31T15:08:10+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 127,
+   "detail": {}
+  },
+  {
+   "id": 174,
+   "occurred_at": "2026-05-31T21:26:45+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 199,
+   "detail": {}
+  },
+  {
+   "id": 175,
+   "occurred_at": "2026-06-03T20:31:53+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 114,
+   "detail": {}
+  },
+  {
+   "id": 176,
+   "occurred_at": "2026-06-03T20:42:57+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 44,
+   "detail": {}
+  },
+  {
+   "id": 177,
+   "occurred_at": "2026-06-03T21:00:57+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 37,
+   "detail": {}
+  },
+  {
+   "id": 178,
+   "occurred_at": "2026-06-09T20:03:15+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 176,
+   "detail": {}
+  },
+  {
+   "id": 179,
+   "occurred_at": "2026-06-11T07:07:32+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 171,
+   "detail": {}
+  },
+  {
+   "id": 180,
+   "occurred_at": "2026-06-11T18:56:11+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 48,
+   "detail": {}
+  },
+  {
+   "id": 181,
+   "occurred_at": "2026-06-20T14:04:34+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 8,
+   "detail": {}
+  },
+  {
+   "id": 182,
+   "occurred_at": "2026-06-20T17:57:15+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 44,
+   "detail": {}
+  },
+  {
+   "id": 183,
+   "occurred_at": "2026-06-20T21:31:34+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 8,
+   "detail": {}
+  },
+  {
+   "id": 184,
+   "occurred_at": "2026-06-25T16:29:20+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 176,
+   "detail": {}
+  },
+  {
+   "id": 185,
+   "occurred_at": "2026-06-25T21:52:53+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 115,
+   "detail": {}
+  },
+  {
+   "id": 186,
+   "occurred_at": "2026-06-26T07:01:16+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 127,
+   "detail": {}
+  },
+  {
+   "id": 187,
+   "occurred_at": "2026-06-26T12:52:38+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 109,
+   "detail": {}
+  },
+  {
+   "id": 188,
+   "occurred_at": "2026-06-26T21:36:02+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 114,
+   "detail": {}
+  },
+  {
+   "id": 189,
+   "occurred_at": "2026-06-29T12:59:33+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 110,
+   "detail": {}
+  },
+  {
+   "id": 190,
+   "occurred_at": "2026-06-29T13:16:08+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 25,
+   "detail": {}
+  },
+  {
+   "id": 191,
+   "occurred_at": "2026-06-29T21:07:45+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 44,
+   "detail": {}
+  },
+  {
+   "id": 192,
+   "occurred_at": "2026-06-30T09:37:15+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 115,
+   "detail": {}
+  },
+  {
+   "id": 193,
+   "occurred_at": "2026-06-30T12:26:56+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 48,
+   "detail": {}
+  },
+  {
+   "id": 194,
+   "occurred_at": "2026-06-30T22:29:28+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 110,
+   "detail": {}
+  },
+  {
+   "id": 195,
+   "occurred_at": "2026-07-05T07:49:49+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 48,
+   "detail": {}
+  },
+  {
+   "id": 196,
+   "occurred_at": "2026-07-05T10:39:11+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 117,
+   "detail": {}
+  },
+  {
+   "id": 197,
+   "occurred_at": "2026-07-10T17:14:10+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 59,
+   "detail": {}
+  },
+  {
+   "id": 198,
+   "occurred_at": "2026-07-13T22:03:10+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 156,
+   "detail": {}
+  },
+  {
+   "id": 199,
+   "occurred_at": "2026-07-14T07:26:19+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 153,
+   "detail": {}
+  },
+  {
+   "id": 200,
+   "occurred_at": "2026-07-14T07:51:38+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 156,
+   "detail": {}
+  },
+  {
+   "id": 201,
+   "occurred_at": "2026-07-15T12:23:46+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 156,
+   "detail": {}
+  },
+  {
+   "id": 202,
+   "occurred_at": "2026-07-18T11:41:59+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 153,
+   "detail": {}
+  },
+  {
+   "id": 203,
+   "occurred_at": "2026-07-19T11:16:08+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 114,
+   "detail": {}
+  },
+  {
+   "id": 204,
+   "occurred_at": "2026-07-29T20:13:03+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 128,
+   "detail": {}
+  },
+  {
+   "id": 205,
+   "occurred_at": "2026-07-31T20:17:19+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 128,
+   "detail": {}
+  },
+  {
+   "id": 206,
+   "occurred_at": "2026-08-01T07:44:21+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 109,
+   "detail": {}
+  },
+  {
+   "id": 207,
+   "occurred_at": "2026-08-03T02:31:15+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 73,
+   "detail": {}
+  },
+  {
+   "id": 208,
+   "occurred_at": "2026-08-05T07:17:30+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 2,
+   "detail": {}
+  },
+  {
+   "id": 209,
+   "occurred_at": "2026-08-05T14:40:31+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 109,
+   "detail": {}
+  },
+  {
+   "id": 210,
+   "occurred_at": "2026-08-05T18:39:21+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 37,
+   "detail": {}
+  },
+  {
+   "id": 211,
+   "occurred_at": "2026-08-05T19:17:14+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 44,
+   "detail": {}
+  },
+  {
+   "id": 212,
+   "occurred_at": "2026-08-09T08:16:57+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 49,
+   "detail": {}
+  },
+  {
+   "id": 213,
+   "occurred_at": "2026-08-09T22:34:33+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 115,
+   "detail": {}
+  },
+  {
+   "id": 214,
+   "occurred_at": "2026-08-10T07:43:46+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 153,
+   "detail": {}
+  },
+  {
+   "id": 215,
+   "occurred_at": "2026-08-10T08:37:30+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 153,
+   "detail": {}
+  },
+  {
+   "id": 216,
+   "occurred_at": "2026-08-12T12:35:09+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 2,
+   "detail": {}
+  },
+  {
+   "id": 217,
+   "occurred_at": "2026-08-12T23:17:52+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 169,
+   "detail": {}
+  },
+  {
+   "id": 218,
+   "occurred_at": "2026-08-13T17:55:11+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 110,
+   "detail": {}
+  },
+  {
+   "id": 219,
+   "occurred_at": "2026-08-13T18:14:34+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 49,
+   "detail": {}
+  },
+  {
+   "id": 220,
+   "occurred_at": "2026-08-15T11:32:01+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 169,
+   "detail": {}
+  },
+  {
+   "id": 221,
+   "occurred_at": "2026-08-15T17:47:11+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 66,
+   "detail": {}
+  },
+  {
+   "id": 222,
+   "occurred_at": "2026-08-15T19:28:03+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 66,
+   "detail": {}
+  },
+  {
+   "id": 223,
+   "occurred_at": "2026-08-16T07:53:15+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 153,
+   "detail": {}
+  },
+  {
+   "id": 224,
+   "occurred_at": "2026-08-17T08:46:57+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 49,
+   "detail": {}
+  },
+  {
+   "id": 225,
+   "occurred_at": "2026-08-17T20:33:08+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 59,
+   "detail": {}
+  },
+  {
+   "id": 226,
+   "occurred_at": "2026-08-19T18:19:32+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 44,
+   "detail": {}
+  },
+  {
+   "id": 227,
+   "occurred_at": "2026-08-19T19:41:22+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 184,
+   "detail": {}
+  },
+  {
+   "id": 228,
+   "occurred_at": "2026-08-21T04:26:53+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 50,
+   "detail": {}
+  },
+  {
+   "id": 229,
+   "occurred_at": "2026-08-21T13:17:20+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 109,
+   "detail": {}
+  },
+  {
+   "id": 230,
+   "occurred_at": "2026-08-21T18:11:59+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 110,
+   "detail": {}
+  },
+  {
+   "id": 231,
+   "occurred_at": "2026-08-21T20:42:32+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 205,
+   "detail": {}
+  },
+  {
+   "id": 232,
+   "occurred_at": "2026-08-24T15:53:56+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 156,
+   "detail": {}
+  },
+  {
+   "id": 233,
+   "occurred_at": "2026-08-24T18:36:59+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 66,
+   "detail": {}
+  },
+  {
+   "id": 234,
+   "occurred_at": "2026-08-26T08:17:06+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 176,
+   "detail": {}
+  },
+  {
+   "id": 235,
+   "occurred_at": "2026-08-26T21:44:01+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 50,
+   "detail": {}
+  },
+  {
+   "id": 236,
+   "occurred_at": "2026-08-26T22:30:45+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 48,
+   "detail": {}
+  },
+  {
+   "id": 237,
+   "occurred_at": "2026-08-27T04:47:32+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 48,
+   "detail": {}
+  },
+  {
+   "id": 238,
+   "occurred_at": "2026-08-27T09:04:02+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 153,
+   "detail": {}
+  },
+  {
+   "id": 239,
+   "occurred_at": "2026-08-27T14:05:54+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 110,
+   "detail": {}
+  },
+  {
+   "id": 240,
+   "occurred_at": "2026-08-27T14:20:57+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 114,
+   "detail": {}
+  },
+  {
+   "id": 241,
+   "occurred_at": "2026-08-31T08:04:24+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 9,
+   "detail": {}
+  },
+  {
+   "id": 242,
+   "occurred_at": "2026-08-31T18:58:44+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 50,
+   "detail": {}
+  },
+  {
+   "id": 243,
+   "occurred_at": "2026-08-31T20:52:23+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 109,
+   "detail": {}
+  },
+  {
+   "id": 244,
+   "occurred_at": "2026-09-01T20:57:45+00:00",
+   "channel": "kate",
+   "event_type": "kate_question",
+   "ecosystem_item_id": 49,
+   "detail": {
+    "question": "Block my debit card"
+   }
+  },
+  {
+   "id": 245,
+   "occurred_at": "2026-09-02T07:01:00+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 153,
+   "detail": {}
+  },
+  {
+   "id": 246,
+   "occurred_at": "2026-09-02T15:20:23+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 48,
+   "detail": {}
+  },
+  {
+   "id": 247,
+   "occurred_at": "2026-09-02T15:34:03+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 114,
+   "detail": {}
+  },
+  {
+   "id": 248,
+   "occurred_at": "2026-09-02T16:04:03+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 114,
+   "detail": {}
+  },
+  {
+   "id": 249,
+   "occurred_at": "2026-09-02T19:56:53+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 73,
+   "detail": {}
+  },
+  {
+   "id": 250,
+   "occurred_at": "2026-09-03T11:18:52+00:00",
+   "channel": "kate",
+   "event_type": "kate_question",
+   "ecosystem_item_id": null,
+   "detail": {
+    "question": "How do I open a business account?"
+   }
+  },
+  {
+   "id": 251,
+   "occurred_at": "2026-09-04T13:01:58+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 41,
+   "detail": {}
+  },
+  {
+   "id": 252,
+   "occurred_at": "2026-09-06T20:41:03+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 117,
+   "detail": {}
+  },
+  {
+   "id": 253,
+   "occurred_at": "2026-09-07T06:26:01+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 127,
+   "detail": {}
+  },
+  {
+   "id": 254,
+   "occurred_at": "2026-09-07T16:48:49+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 50,
+   "detail": {}
+  },
+  {
+   "id": 255,
+   "occurred_at": "2026-09-07T21:38:57+00:00",
+   "channel": "kate",
+   "event_type": "kate_question",
+   "ecosystem_item_id": 50,
+   "detail": {
+    "question": "Transfer 50 euros to my savings account"
+   }
+  },
+  {
+   "id": 256,
+   "occurred_at": "2026-09-11T08:10:42+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 48,
+   "detail": {}
+  },
+  {
+   "id": 257,
+   "occurred_at": "2026-09-12T16:51:52+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 171,
+   "detail": {}
+  },
+  {
+   "id": 258,
+   "occurred_at": "2026-09-12T20:13:12+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 1,
+   "detail": {}
+  },
+  {
+   "id": 259,
+   "occurred_at": "2026-09-14T09:40:51+00:00",
+   "channel": "kbc_touch",
+   "event_type": "page_view",
+   "ecosystem_item_id": 2,
+   "detail": {}
+  },
+  {
+   "id": 260,
+   "occurred_at": "2026-09-17T08:33:03+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 153,
+   "detail": {}
+  },
+  {
+   "id": 261,
+   "occurred_at": "2026-09-17T12:32:41+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 37,
+   "detail": {}
+  },
+  {
+   "id": 262,
+   "occurred_at": "2026-09-17T20:40:50+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 8,
+   "detail": {}
+  },
+  {
+   "id": 263,
+   "occurred_at": "2026-09-19T10:25:16+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 171,
+   "detail": {}
+  },
+  {
+   "id": 264,
+   "occurred_at": "2026-09-19T11:42:16+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 25,
+   "detail": {}
+  },
+  {
+   "id": 265,
+   "occurred_at": "2026-09-19T21:45:00+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 114,
+   "detail": {}
+  },
+  {
+   "id": 266,
+   "occurred_at": "2026-09-21T14:55:41+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 127,
+   "detail": {}
+  },
+  {
+   "id": 267,
+   "occurred_at": "2026-09-21T15:20:52+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 52,
+   "detail": {}
+  },
+  {
+   "id": 268,
+   "occurred_at": "2026-09-21T22:06:07+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 50,
+   "detail": {}
+  },
+  {
+   "id": 269,
+   "occurred_at": "2026-09-26T21:29:35+00:00",
+   "channel": "kate",
+   "event_type": "kate_question",
+   "ecosystem_item_id": null,
+   "detail": {
+    "question": "How do I send invoices?"
+   }
+  },
+  {
+   "id": 270,
+   "occurred_at": "2026-09-29T13:59:11+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 50,
+   "detail": {}
+  },
+  {
+   "id": 271,
+   "occurred_at": "2026-09-29T15:27:00+00:00",
+   "channel": "kate",
+   "event_type": "kate_question",
+   "ecosystem_item_id": null,
+   "detail": {
+    "question": "Do I need a VAT number as a freelancer?"
+   }
+  },
+  {
+   "id": 272,
+   "occurred_at": "2026-09-29T18:01:14+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 8,
+   "detail": {}
+  },
+  {
+   "id": 273,
+   "occurred_at": "2026-09-29T21:22:57+00:00",
+   "channel": "kbc_mobile",
+   "event_type": "page_view",
+   "ecosystem_item_id": 44,
+   "detail": {}
+  }
+ ],
+ "ecosystemItems": [
+  {
+   "id": 1,
+   "name": "Pay for parking",
+   "raw_label": "Pay for parking - 4411",
+   "ecosystem_id": 2,
+   "partner_id": 1,
+   "via_partner_hub": false
+  },
+  {
+   "id": 2,
+   "name": "E-invoicing",
+   "raw_label": "E-invoicing - Billit",
+   "ecosystem_id": 6,
+   "partner_id": 2,
+   "via_partner_hub": false
+  },
+  {
+   "id": 8,
+   "name": "Bus and tram tickets",
+   "raw_label": "Bus and tram tickets - De Lijn",
+   "ecosystem_id": 2,
+   "partner_id": 8,
+   "via_partner_hub": false
+  },
+  {
+   "id": 9,
+   "name": "Financial news",
+   "raw_label": "Financial news - De Tijd, VRT NWS and KBC",
+   "ecosystem_id": 18,
+   "partner_id": 9,
+   "via_partner_hub": false
+  },
+  {
+   "id": 12,
+   "name": "Collect unpaid invoices",
+   "raw_label": "Collect unpaid invoices - Go Solid",
+   "ecosystem_id": 6,
+   "partner_id": 12,
+   "via_partner_hub": false
+  },
+  {
+   "id": 25,
+   "name": "Train tickets",
+   "raw_label": "Train tickets - NMBS",
+   "ecosystem_id": 2,
+   "partner_id": 21,
+   "via_partner_hub": false
+  },
+  {
+   "id": 26,
+   "name": "Find flexible workers",
+   "raw_label": "Find flexible workers - NOWJOBS",
+   "ecosystem_id": 13,
+   "partner_id": 22,
+   "via_partner_hub": false
+  },
+  {
+   "id": 30,
+   "name": "Electronic invoicing",
+   "raw_label": "Electronic invoicing - Soluz.io",
+   "ecosystem_id": 6,
+   "partner_id": 26,
+   "via_partner_hub": false
+  },
+  {
+   "id": 37,
+   "name": "Online fraud insurance",
+   "raw_label": "Online fraud insurance",
+   "ecosystem_id": 20,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 41,
+   "name": "KBC Business app",
+   "raw_label": "KBC Business app",
+   "ecosystem_id": 19,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 44,
+   "name": "Kate",
+   "raw_label": "Kate",
+   "ecosystem_id": 19,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 48,
+   "name": "Query income and expenses via Kate",
+   "raw_label": "Query income and expenses via Kate",
+   "ecosystem_id": 19,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 49,
+   "name": "Manage cards via Kate",
+   "raw_label": "Manage cards via Kate",
+   "ecosystem_id": 19,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 50,
+   "name": "Make transfers via Kate",
+   "raw_label": "Make transfers via Kate",
+   "ecosystem_id": 19,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 52,
+   "name": "Joyn loyalty points",
+   "raw_label": "Joyn loyalty points",
+   "ecosystem_id": 18,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 59,
+   "name": "Digital vault",
+   "raw_label": "Digital vault",
+   "ecosystem_id": 17,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 66,
+   "name": "Professional liability insurance",
+   "raw_label": "Professional liability insurance",
+   "ecosystem_id": 15,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 73,
+   "name": "Guaranteed income insurance for the self-employed",
+   "raw_label": "Guaranteed income insurance for the self-employed",
+   "ecosystem_id": 15,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 109,
+   "name": "Debit cards",
+   "raw_label": "Debit cards",
+   "ecosystem_id": 9,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 110,
+   "name": "Credit cards",
+   "raw_label": "Credit cards",
+   "ecosystem_id": 9,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 114,
+   "name": "Apple Pay",
+   "raw_label": "Apple Pay",
+   "ecosystem_id": 9,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 115,
+   "name": "Wero",
+   "raw_label": "Wero",
+   "ecosystem_id": 9,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 117,
+   "name": "Split group expenses",
+   "raw_label": "Split group expenses",
+   "ecosystem_id": 9,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 127,
+   "name": "Travel insurance",
+   "raw_label": "Travel insurance",
+   "ecosystem_id": 7,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 128,
+   "name": "KBC Business PRO Account",
+   "raw_label": "KBC Business PRO Account",
+   "ecosystem_id": 6,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 146,
+   "name": "Business Budget Facility",
+   "raw_label": "Business Budget Facility",
+   "ecosystem_id": 6,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 147,
+   "name": "Current account advance",
+   "raw_label": "Current account advance",
+   "ecosystem_id": 6,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 153,
+   "name": "Start it @KBC",
+   "raw_label": "Start it @KBC",
+   "ecosystem_id": 6,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 156,
+   "name": "Tax and legal advice for SMEs",
+   "raw_label": "Tax and legal advice for SMEs",
+   "ecosystem_id": 6,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 162,
+   "name": "Working capital forecasts",
+   "raw_label": "Working capital forecasts",
+   "ecosystem_id": 6,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 169,
+   "name": "Bancontact Pro Online",
+   "raw_label": "Bancontact Pro Online",
+   "ecosystem_id": 6,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 171,
+   "name": "Savings accounts",
+   "raw_label": "Savings accounts",
+   "ecosystem_id": 5,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 176,
+   "name": "KBC investment plan",
+   "raw_label": "KBC investment plan",
+   "ecosystem_id": 4,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 181,
+   "name": "Managed investing",
+   "raw_label": "Managed investing",
+   "ecosystem_id": 4,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 184,
+   "name": "Pension savings fund",
+   "raw_label": "Pension savings fund",
+   "ecosystem_id": 3,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 194,
+   "name": "Plug-in hybrid car loan",
+   "raw_label": "Plug-in hybrid car loan",
+   "ecosystem_id": 2,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 199,
+   "name": "Car insurance",
+   "raw_label": "Car insurance",
+   "ecosystem_id": 2,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 205,
+   "name": "Calculate monthly car costs",
+   "raw_label": "Calculate monthly car costs",
+   "ecosystem_id": 2,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 213,
+   "name": "Bridging loan",
+   "raw_label": "Bridging loan",
+   "ecosystem_id": 1,
+   "partner_id": null,
+   "via_partner_hub": false
+  },
+  {
+   "id": 223,
+   "name": "Calculate housing budget",
+   "raw_label": "Calculate housing budget",
+   "ecosystem_id": 1,
+   "partner_id": null,
+   "via_partner_hub": false
+  }
+ ],
+ "ecosystems": [
+  {
+   "id": 1,
+   "name": "Housing",
+   "slug": "housing",
+   "position": 1
+  },
+  {
+   "id": 2,
+   "name": "Mobility",
+   "slug": "mobility",
+   "position": 2
+  },
+  {
+   "id": 3,
+   "name": "Pensions",
+   "slug": "pensions",
+   "position": 3
+  },
+  {
+   "id": 4,
+   "name": "Investing",
+   "slug": "investing",
+   "position": 4
+  },
+  {
+   "id": 5,
+   "name": "Savings",
+   "slug": "savings",
+   "position": 5
+  },
+  {
+   "id": 6,
+   "name": "Business",
+   "slug": "business",
+   "position": 6
+  },
+  {
+   "id": 7,
+   "name": "Travel",
+   "slug": "travel",
+   "position": 7
+  },
+  {
+   "id": 8,
+   "name": "Energy and sustainability",
+   "slug": "energy-and-sustainability",
+   "position": 8
+  },
+  {
+   "id": 9,
+   "name": "Everyday banking and payments",
+   "slug": "everyday-banking-and-payments",
+   "position": 9
+  },
+  {
+   "id": 10,
+   "name": "Family and protection",
+   "slug": "family-and-protection",
+   "position": 10
+  },
+  {
+   "id": 11,
+   "name": "Health and wellbeing",
+   "slug": "health-and-wellbeing",
+   "position": 11
+  },
+  {
+   "id": 12,
+   "name": "Wealth and estate planning",
+   "slug": "wealth-and-estate-planning",
+   "position": 12
+  },
+  {
+   "id": 13,
+   "name": "Work and employees",
+   "slug": "work-and-employees",
+   "position": 13
+  },
+  {
+   "id": 14,
+   "name": "International business",
+   "slug": "international-business",
+   "position": 14
+  },
+  {
+   "id": 15,
+   "name": "Business protection",
+   "slug": "business-protection",
+   "position": 15
+  },
+  {
+   "id": 16,
+   "name": "Agriculture and horticulture",
+   "slug": "agriculture-and-horticulture",
+   "position": 16
+  },
+  {
+   "id": 17,
+   "name": "Administration and documents",
+   "slug": "administration-and-documents",
+   "position": 17
+  },
+  {
+   "id": 18,
+   "name": "Shopping and everyday services",
+   "slug": "shopping-and-everyday-services",
+   "position": 18
+  },
+  {
+   "id": 19,
+   "name": "Digital platforms and assistance",
+   "slug": "digital-platforms-and-assistance",
+   "position": 19
+  },
+  {
+   "id": 20,
+   "name": "Security",
+   "slug": "security",
+   "position": 20
+  },
+  {
+   "id": 21,
+   "name": "General integrations",
+   "slug": "general-integrations",
+   "position": 21
+  }
+ ],
+ "partners": [
+  {
+   "id": 1,
+   "name": "4411"
+  },
+  {
+   "id": 2,
+   "name": "Billit"
+  },
+  {
+   "id": 3,
+   "name": "Blue-bike"
+  },
+  {
+   "id": 4,
+   "name": "Bolero"
+  },
+  {
+   "id": 5,
+   "name": "Brussels Airport"
+  },
+  {
+   "id": 6,
+   "name": "Cambio"
+  },
+  {
+   "id": 7,
+   "name": "De Immowinkel"
+  },
+  {
+   "id": 8,
+   "name": "De Lijn"
+  },
+  {
+   "id": 9,
+   "name": "De Tijd, VRT NWS and KBC"
+  },
+  {
+   "id": 10,
+   "name": "Encon"
+  },
+  {
+   "id": 11,
+   "name": "Firsty"
+  },
+  {
+   "id": 12,
+   "name": "Go Solid"
+  },
+  {
+   "id": 13,
+   "name": "Helena"
+  },
+  {
+   "id": 14,
+   "name": "IPEX"
+  },
+  {
+   "id": 15,
+   "name": "Immoscoop"
+  },
+  {
+   "id": 16,
+   "name": "Impact us today"
+  },
+  {
+   "id": 17,
+   "name": "MIVB"
+  },
+  {
+   "id": 18,
+   "name": "Mobit"
+  },
+  {
+   "id": 19,
+   "name": "MoveSmart and VAB"
+  },
+  {
+   "id": 20,
+   "name": "MoveSmart integration"
+  },
+  {
+   "id": 21,
+   "name": "NMBS"
+  },
+  {
+   "id": 22,
+   "name": "NOWJOBS"
+  },
+  {
+   "id": 23,
+   "name": "Q-Park"
+  },
+  {
+   "id": 24,
+   "name": "Q8"
+  },
+  {
+   "id": 25,
+   "name": "Setle"
+  },
+  {
+   "id": 26,
+   "name": "Soluz.io"
+  },
+  {
+   "id": 27,
+   "name": "Sweco"
+  },
+  {
+   "id": 28,
+   "name": "Velo Antwerpen"
+  }
+ ],
+ "cityCounts": [
+  {
+   "city": "Antwerpen",
+   "region": "flanders",
+   "customers": 293
+  },
+  {
+   "city": "Gent",
+   "region": "flanders",
+   "customers": 242
+  },
+  {
+   "city": "Leuven",
+   "region": "flanders",
+   "customers": 171
+  },
+  {
+   "city": "Mechelen",
+   "region": "flanders",
+   "customers": 133
+  },
+  {
+   "city": "Hasselt",
+   "region": "flanders",
+   "customers": 121
+  },
+  {
+   "city": "Brugge",
+   "region": "flanders",
+   "customers": 112
+  },
+  {
+   "city": "Aalst",
+   "region": "flanders",
+   "customers": 102
+  },
+  {
+   "city": "Kortrijk",
+   "region": "flanders",
+   "customers": 90
+  },
+  {
+   "city": "Brussel",
+   "region": "brussels",
+   "customers": 89
+  },
+  {
+   "city": "Genk",
+   "region": "flanders",
+   "customers": 75
+  },
+  {
+   "city": "Roeselare",
+   "region": "flanders",
+   "customers": 75
+  },
+  {
+   "city": "Sint-Niklaas",
+   "region": "flanders",
+   "customers": 67
+  },
+  {
+   "city": "Turnhout",
+   "region": "flanders",
+   "customers": 66
+  },
+  {
+   "city": "Ixelles",
+   "region": "brussels",
+   "customers": 50
+  },
+  {
+   "city": "Namur",
+   "region": "wallonia",
+   "customers": 47
+  },
+  {
+   "city": "Lier",
+   "region": "flanders",
+   "customers": 46
+  },
+  {
+   "city": "Schaerbeek",
+   "region": "brussels",
+   "customers": 40
+  },
+  {
+   "city": "Dendermonde",
+   "region": "flanders",
+   "customers": 38
+  },
+  {
+   "city": "Liège",
+   "region": "wallonia",
+   "customers": 36
+  },
+  {
+   "city": "Charleroi",
+   "region": "wallonia",
+   "customers": 32
+  },
+  {
+   "city": "Mons",
+   "region": "wallonia",
+   "customers": 29
+  },
+  {
+   "city": "Wavre",
+   "region": "wallonia",
+   "customers": 27
+  },
+  {
+   "city": "Ieper",
+   "region": "flanders",
+   "customers": 19
+  }
+ ]
+}
