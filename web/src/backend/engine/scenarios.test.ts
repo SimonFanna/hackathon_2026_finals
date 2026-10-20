@@ -43,4 +43,8 @@ describe("simulate (what-if)", () => {
     expect(asked.goalPatch.ratePct).toBeCloseTo(4.2);
     expect(asked.monthlyPayment!).toBeGreaterThan(F.sofiePlan.summary!.monthlyPayment);
   });
+
+  it("rejects budgets above €10M instead of searching forever (REVIEW P0 #1)", () => {
+    expect(() => simulate(F.sofieGoal, F.sofiePlan, F.sofieCtx, { budget: 9_000_000_000_000 }, F.t6Rules, F.ASOF)).toThrow(RangeError);
+  });
 });

@@ -19,6 +19,8 @@ export const WHATIF_FIXES = 2;
  * Returns the scenario "as asked" first; if it breaks a constraint, up to 2 repaired scenarios follow.
  */
 export function simulate(goal: Goal, plan: Plan, ctx: PersistentContext, change: WhatIf, rules: RuleSet, asOf: string): Scenario[] {
+  if (change.budget !== undefined && !(Number.isFinite(change.budget) && change.budget >= 0 && change.budget <= 10_000_000))
+    throw new RangeError("budget must be between 0 and €10M");   // REVIEW P0 #1: never search an unbounded budget
   const g = clone(goal);
   const c = g.constraints;
   const x = clone(ctx);

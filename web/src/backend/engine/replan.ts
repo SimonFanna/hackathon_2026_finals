@@ -257,8 +257,8 @@ function searchBudgetDown(
   const top = at(hi * step);
   if (!fitsMoney(top.plan, top.goal, ctx, rules, combo)) return null;
   let best = top;
-  while (hi - lo > 1) {
-    const mid = (lo + hi) >> 1;
+  for (let guard = 0; hi - lo > 1 && guard < 64; guard++) {    // bounded: no 32-bit overflow, at most 64 halvings
+    const mid = Math.floor((lo + hi) / 2);
     const r = at(mid * step);
     if (fitsMoney(r.plan, r.goal, ctx, rules, combo)) { hi = mid; best = r; } else lo = mid;
   }

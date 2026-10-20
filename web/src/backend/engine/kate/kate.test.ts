@@ -4,7 +4,7 @@ import {
   sofieDecision, sofieGoal, sofieMoment, sofiePlan, sofieSignals, stubDeps, t8Rules,
 } from "../../fixtures/t8-inputs";
 import { draftAnswer, type QaInput } from "./answers";
-import { goalSetup, kateForDecision, kateForScenarios, kateWhy } from "./messages";
+import { evidenceWords, goalSetup, kateForDecision, kateForScenarios, kateWhy } from "./messages";
 import { parseAmount, parseWhatIf, routeQuestion } from "./router";
 
 const input: QaInput = { ctx: sofieCtx, goal: sofieGoal, plan: sofiePlan, consents: sofieConsents, rules: t8Rules, asOf: ASOF };
@@ -90,6 +90,7 @@ describe("kateWhy", () => {
 describe("router", () => {
   it("parses amounts", () => {
     expect(parseAmount("€280k")).toBe(280_000);
+    expect(parseAmount("What if the budget is 9,000,000,000,000?")).toBeUndefined(); // REVIEW P0 #1: no unbounded what-if
     expect(parseAmount("280,000 euros")).toBe(280_000);
     expect(parseAmount("280.000")).toBe(280_000);
     expect(parseAmount("over 30 years")).toBeUndefined();
@@ -166,5 +167,20 @@ describe("fallback answers (the 4 demo questions)", () => {
     expect(a.route).toBe("general");
     expect(a.text).toContain("Your home plan has 13 steps");
     expect(a.text).toContain("Next up: search for a home with Immoscoop");
+  });
+});
+
+describe("evidenceWords (REVIEW P0 #4)", () => {
+  it("never repeats the same reason when sig_X and cnt_X share a label", () => {
+    const label = "You've been putting more aside each month";
+    const words = evidenceWords({
+      type: "HOME_BUYING", confidence: 0.9, evidence: [], since: "2026-09-01", expiresAt: "2026-12-01", source: "ml",
+      contributions: [
+        { feature: "sig_SAVINGS_INCREASE", label, value: 1, weight: 2 },
+        { feature: "cnt_SAVINGS_INCREASE", label, value: 1, weight: 1.5 },
+        { feature: "sig_MORTGAGE_SIMULATION", label: "You simulated a home loan", value: 1, weight: 1 },
+      ],
+    });
+    expect(words).toBe("you've been putting more aside each month and you simulated a home loan");
   });
 });

@@ -6,7 +6,7 @@ import type { KateDeps } from "./deps";
 import { goalSetup, type SetupQuestion } from "./messages";
 
 export type ReplyAction = "yes" | "not_now" | "no" | "advisor" | `choose:${string}`;
-export const REPLY_ACTION = /^(yes|not_now|no|advisor|choose:[\w-]{1,64})$/;
+export const REPLY_ACTION = /^(yes|not_now|no|advisor|choose:[\w:.+-]{1,160})$/;   // T6 ids contain ":" and "+" (REVIEW P0 #2)
 
 export interface ReplyResult {
   message: KateMessage;
