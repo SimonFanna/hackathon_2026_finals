@@ -127,3 +127,4 @@ Authentication, LLM decisioning, Kate voice, real partner integrations.
   - locked goals are night silhouettes, there is a KBC-blue selection ring, and the people have contact shadows;
   - production default is high quality (bloom + MSAA, no automatic downgrade; `?q=low`, `?bloom=0`, `?q=auto` are manual switches).
   Prod full flow Thomas → C → Lina: 0 console/CSP errors.
+- **14:25** — Demo V2 P1 + P2 on `kepa` (6eeb34b, 10f1991): Kate's notification no longer blocks the home screen (click outside / Esc, a Kate pill brings it back); the carousel shows Lina first and by default, then Thomas, no locked goals (3D and 2D). Verified on a prod build, 0 console errors.
