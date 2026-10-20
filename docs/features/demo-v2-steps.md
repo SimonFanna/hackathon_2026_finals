@@ -1,5 +1,5 @@
 # Feature — Demo V2: rework the steps of the in-app demo
-> Owner: peer session "README hackathon 2026" (Fable 5.1) · Coordinator: kepa · App owner: Victor (tell him before touching his files) · Status: in progress (P1–P4 done, P5 optional) · Last update: 14:05
+> Owner: peer session "README hackathon 2026" (Fable 5.1) · Coordinator: kepa · App owner: Victor (tell him before touching his files) · Status: in progress (P1–P6 done) · Last update: 14:50
 
 ## Goal
 Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a shorter post-plan phase, and a visible "it's being built" 3D moment. User decisions, 13:30. Backend = Simon's area.
@@ -38,6 +38,16 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 ### P5 · Optional: "Your own" player, backend-driven · only if P1–P4 are done and verified
 - A third carousel card: pick one of the 6 Supabase demo customers. Simon's adapter `web/src/lib/backend.ts` (`fetchIntent`, `startJourney`, …) detects the moment and builds the plan; only BUY_HOME and START_BUSINESS have plan templates (others → Kate explains "no plan yet" / NO_ACTION for Els/Thomas). Coordinate with Simon; don't edit `web/src/backend/`.
 
+### P6 · Live-demo feedback (user, 14:30) · by 15:00
+- (a) "4 surprises is useless" → **2 per player**. (b) The event page ("the house turns red") bugs often and has too much text → lighter, calm transition. (c) On the finale, "Play again" and "How we estimate this" don't respond.
+- **Done (14:50, peer agent, worktree branch `worktree-agent-a0ec2770c7f10545d`, to merge into `kepa`).** How it works:
+  - `web/src/components/journey/demoDisruptions.ts` — `DEMO_DISRUPTIONS` (house = `quote-overrun` cost m4 + `job-loss` income m9; business = `fit-out-delay` delay m1 + `equipment-overrun` cost m3: all kinds Simon's backend replays, `PRESET_FOR` in Stage) and `demoPersona(p)` = the persona with only those two in `outcome.disruptions` (cached, stable identity). Engine data in `web/src/engine/` untouched. Used by `Stage.tsx` (`persona`, deep links) and the picker card (`CharacterSelect3D.tsx`, "2 things will go wrong"); everything downstream (sequence, HUD "Unexpected events", "1 of 2", finale "Life hit 2 times") follows. Tests: `demoDisruptions.test.ts` (10: two per player, engine order, replayable kinds, each breaks a limit on its own and Kate's pick keeps the goal, the sequence has two event pages).
+  - `EventPage.tsx` + `OptionCard` (`OutcomeScreens.tsx`): headline, one line, health bar, the broken limit before → after · limit as one row each, Kate's one line, compact option cards (number, label, one-line trade-off, Health %, "Kate recommends" badge; the "Not available: you skipped …" lock stays). Gone: "Source: …", the kind label, the strategy/provider chips, the per-constraint ✓/✕ chips, the badge pop-in and Kate's delayed fade (only the page slide + the phone jolt remain).
+  - Bug behind "bugs often": `showPage` awaits the backend (`injectDisruption`, up to seconds); a second → / Enter / click meanwhile ran it twice (two hit flashes, two jolts, pages racing). `Stage.tsx` now has a `navigating` ref: `showPage` and `choose` ignore input while a page change is in flight (`chooseScenario` failures also fall back to the local pick instead of rejecting).
+  - Finale buttons, root cause: in the stage variant Stage rendered a full-height, invisible 560 px centre column (`pointer-events-auto`) to host the estimate sheet, always, even with the sheet closed. At ≥1600 px (with the 3D build column) it sits over the phone and nothing is hurt; on a laptop (1100–1599 px, no build column) it covers the finale's left buttons: "How we estimate this" and "Play again" dead, "Choose another player" alive (elementFromPoint probe at 1440/1536: both left buttons hit the column; fixed → the buttons). Fix: the column is `pointer-events-none` unless `sheet === "estimate"`.
+  - Verified on a prod build, headless GPU Chrome 1920×1080, `?player=business|house&demo=live` through both surprises to the finale, "How we estimate this" opens the sheet, Esc closes it, "Play again" → home screen of the same player; same with `/api/**` blocked (local engine); 0 console errors. Screenshots `event-light.png`, `finale-buttons.png`.
+  - Open: `LiveScreen` (stage finale, left of the finale) still says "n of 2 surprises handled" — fine; `demoSequence.test.ts` pitch-order cases still describe the 4-event engine sequence (they test the pure sequencer, not the demo).
+
 ## Rules
 - No "pain story" before the demo (user, 13:40): don't bring it back.
 - Victor's files (`Stage.tsx`, journey screens, `personas.ts`, `CharacterSelect.tsx`): small, explicit diffs; put "Victor FYI" in those commit messages.
@@ -50,3 +60,4 @@ Tighten the live demo for the pitch: no blocking UI, the entrepreneur first, a s
 - [x] P3 one page per chapter + one page per event (interleaved) (14:05, peer agent; worktree branch, to merge into `kepa`)
 - [x] P4 3D build on the left (13:55, peer agent on kepa's worktree; see `build-stage-3d.md`)
 - [x] P5 "Your own" player (14:30, branch `custom-player`; see `custom-player.md`)
+- [x] P6 live-demo feedback: 2 surprises per player, lighter event page, finale buttons (14:50, peer agent; worktree branch, to merge into `kepa`)
